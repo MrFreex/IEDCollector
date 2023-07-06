@@ -6,8 +6,7 @@ using System.Diagnostics;
 using IEC61850.Client;
 using Ookii.Dialogs.Wpf;
 using System.IO;
-using System.Xml.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace FSync
 {
@@ -19,7 +18,25 @@ namespace FSync
     static class Globals
     {
         public const string FOLDERSNAME = "AutoFetcher";
-        
+        public static OnProfileChange profileChangeHandler = null;
+
+        public delegate void OnProfileChange(bool renameOnly);
+
+        public static Profile currentProfile
+        {
+            get { return currProfile; }
+            set
+            {
+                currProfile = value;
+                if (profileChangeHandler != null)
+                {
+                    profileChangeHandler(false);
+                }
+            }
+        }
+
+        private static Profile currProfile;
+
         public static Logs logs;
         public static GlobalConfiguration globalConfiguration;
     }
@@ -57,9 +74,6 @@ namespace FSync
 
     public partial class MainWindow : Window
     {
-        
-
-
         private static readonly string[] NEEDEDFOLDERS =
         {
             ConfigFolder.LOGS,
@@ -74,13 +88,53 @@ namespace FSync
             {
                 this.Logs
             });
+            
             Globals.logs.log("Software started");
             Globals.globalConfiguration = new GlobalConfiguration();
             ConfigFolder.Path = Globals.globalConfiguration.getCurrentConfigFolder();
+            initializeFolders(Globals.globalConfiguration.Folder);
             Globals.logs.setFolder(ConfigFolder.extend(ConfigFolder.LOGS));
 
-            
-            initializeFolders(Globals.globalConfiguration.Folder);
+            Globals.profileChangeHandler = (bool renameOnly) =>
+            {
+                this.currentProfileName.Text = Globals.currentProfile.Name;
+                if (renameOnly)
+                {
+                    return;
+                }
+                iedSelector.Items.Clear();
+                foreach (IEDConfig ied in Globals.currentProfile.IEDs)
+                {
+                    iedSelector.Items.Add(ied.name);
+                }
+
+                if (iedSelector.Items.Count > 0)
+                {
+                    iedSelector.IsEnabled = true;
+                    iedSelector.SelectedIndex = 0;
+                }
+                else
+                {
+                    iedSelector.Items.Add(new ListBoxItem().Content = "No IEDs configured");
+                    iedSelector.IsEnabled = false;
+                }
+            };
+
+            var placeholder = new TreeViewItem();
+            placeholder.Header = "No IED Configured";
+            iedTree.Items.Add(placeholder);
+
+            Progress.Value = 0;
+            ProgressLabel.Text = "Idling";
+
+            actionsbox.Items.Add(new ListBoxItem().Content = "No actions queued");
+
+            // Load Configurations list
+
+            if (iedSelector.Items.Count == 0 || iedSelector.SelectedIndex == -1)
+            {
+                iedSettings.Visibility = Visibility.Hidden;
+            }
         }
 
         public static bool receiveF(object param, byte[] data)
@@ -88,7 +142,6 @@ namespace FSync
             if (param is FileData)
             {
                 FileData fd = (FileData)param;
-                Debug.WriteLine(fd.getFileName());
             }
             return true;
         }
@@ -159,6 +212,121 @@ namespace FSync
         {
             About about = new About();
             about.Show();
+        }
+
+        // Configuration view
+
+        private void addIed(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void deleteIed(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void saveIeds(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void loadProfile(object sender, RoutedEventArgs e)
+        {
+            Ookii.Dialogs.Wpf.VistaOpenFileDialog dialog = new Ookii.Dialogs.Wpf.VistaOpenFileDialog();
+            dialog.CheckFileExists = true;
+            dialog.CheckPathExists = true;
+
+            dialog.Title = "Select a profile to load";
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML Files (*.xml)|*.xml";
+            Debug.WriteLine(ConfigFolder.extend(ConfigFolder.PROFILES));
+            dialog.InitialDirectory = ConfigFolder.extend(ConfigFolder.PROFILES);
+            dialog.ValidateNames = true;
+            Nullable<bool> profileSelected = dialog.ShowDialog();
+
+            if (profileSelected != null && (bool)profileSelected)
+            {
+                Globals.currentProfile = new Profile(Path.GetFileName(dialog.FileName));
+                
+            }
+        }
+
+        private void iedSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (iedSelector.SelectedIndex == -1 && iedSettings.Visibility.Equals(Visibility.Visible))
+            {
+                iedSettings.Visibility = Visibility.Hidden;
+            }
+            else if (iedSelector.SelectedIndex >= 0 && iedSettings.Visibility.Equals(Visibility.Hidden))
+            {
+                iedSettings.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void createProfile(object sender, RoutedEventArgs e)
+        {
+            if (Globals.currentProfile != null && Globals.currentProfile.HasUnsavedChanges)
+            {
+                TaskDialog dialog = new TaskDialog();
+
+                dialog.WindowTitle = "Confirm profile creation";
+                dialog.Content = "Are you sure you want to create a new profile? All unsaved changes will be lost.";
+                dialog.MainInstruction = "Confirm profile creation";
+                dialog.MainIcon = TaskDialogIcon.Warning;
+                TaskDialogButton autoSave = new TaskDialogButton("Save");
+                autoSave.ButtonType = ButtonType.Custom;
+                dialog.Buttons.Add(autoSave);
+                dialog.Buttons.Add(new TaskDialogButton(Ookii.Dialogs.Wpf.ButtonType.Yes));
+                dialog.Buttons.Add(new TaskDialogButton(Ookii.Dialogs.Wpf.ButtonType.No));
+
+                TaskDialogButton result = dialog.ShowDialog();
+                if (result != null)
+                {
+                    if (result.Equals(autoSave))
+                    {
+                        Globals.currentProfile.save();
+                    } else if (result.ButtonType == ButtonType.No)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            Globals.logs.log("Creating new profile");
+
+            NewProfileDialog profileDialog = new NewProfileDialog();
+            Nullable<bool> res = profileDialog.ShowDialog();
+           
+            if ((bool)res)
+            {
+                Globals.currentProfile = new Profile(profileDialog.profileName);
+            }
+        }
+
+        private void scrollToBottom(object sender, TextChangedEventArgs e)
+        {
+            Logs.ScrollToEnd();
+            //this.Logs.ScrollToLine(this.Logs.LineCount - 1);
+        }
+
+        private void renameProfile(object sender, RoutedEventArgs e)
+        {
+            NewProfileDialog newProfileDialog = new NewProfileDialog();
+            newProfileDialog.Title = "Rename profile";
+            newProfileDialog.ProfileName.Text = Globals.currentProfile.Name;
+            newProfileDialog.ok.Content = "Rename";
+
+            Nullable<bool> result = newProfileDialog.ShowDialog();
+
+            if ((bool)result)
+            {
+                Globals.currentProfile.rename(newProfileDialog.profileName);
+                if (Globals.profileChangeHandler != null)
+                {
+                    Globals.profileChangeHandler(true);
+                }
+            }
         }
     }
 }

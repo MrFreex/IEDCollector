@@ -88,6 +88,11 @@
     <Compile Include="Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GlobalConfiguration.cs" />
+    <Compile Include="NewProfileDialog.xaml.cs">
+      <DependentUpon>NewProfileDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profile.cs" />
     <Compile Include="Preferences.xaml.cs">
       <DependentUpon>Preferences.xaml</DependentUpon>
     </Compile>
@@ -114,6 +119,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewProfileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Play.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -185,6 +194,9 @@
     <Resource Include="Icons\save-fill.png" />
     <Resource Include="Icons\stop-fill.png" />
     <Resource Include="Images\logo.png" />
+    <Resource Include="Icons\file-plus-fill.png" />
+    <Resource Include="Icons\pencil-fill.png" />
+    <Resource Include="Icons\trash-fill.png" />
     <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup />

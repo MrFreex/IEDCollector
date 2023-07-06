@@ -5,13 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSync"
         mc:Ignorable="d"
-        Title="About" Height="230" Width="553">
+        ResizeMode="CanMinimize"
+        Title="About" Height="250" Width="553">
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <Image Margin="10" Width="198" Source="Images/logo.png" Height="120" />
             <StackPanel Width="315">
                 <TextBlock Margin="10" FontWeight="Bold">Automatic IED Log Fetcher version 0.0.1</TextBlock>
-                <TextBlock TextWrapping="Wrap" Text="Automatic IED log fetcher is a software designed, developed and published by Engiprot LDA. All rights reserved." Margin="10" Width="280"/>
+                <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="Automatic IED log fetcher is a software designed, developed and published by Engiprot LDA. All rights reserved."/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Right" Margin="10,0,10,0">
+                    <Run Text="Website: https://engiprot.pt" />
+                    <LineBreak />
+                    <Run Text="Email: geral@engiprot.pt" />
+                    <LineBreak />
+                    <Run Text="Phone: +351 211 920 004" />
+                </TextBlock>
             </StackPanel>
 
 

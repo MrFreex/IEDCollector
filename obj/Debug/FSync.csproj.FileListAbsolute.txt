@@ -49,3 +49,5 @@ C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Configuration.g.cs
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Configuration.baml
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\About.g.cs
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\About.baml
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\NewProfileDialog.g.cs
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\NewProfileDialog.baml

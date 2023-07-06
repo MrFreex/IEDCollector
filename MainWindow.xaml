@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSync"
         mc:Ignorable="d"
-        Title="MainWindow" Height="478" Width="800" ResizeMode="CanMinimize">
+        Title="MainWindow" Height="500" Width="800" ResizeMode="CanMinimize">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -19,16 +19,12 @@
             </MenuItem>
             <MenuItem Header="About" Click="openAbout"/>
         </Menu>
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Top">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <TabControl Grid.Row="0"  Height="Auto">
+        <DockPanel DockPanel.Dock="Top">
+            <TabControl DockPanel.Dock="Top" Grid.Row="0"  Height="310" Width="800">
                 <TabItem x:Name="viewerModeTab" Header="Viewer mode">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TreeView Width="147" Height="269" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
+                            <TreeView x:Name="iedTree" Width="147" Height="269" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
                                 <TreeView.Background>
                                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
                                 </TreeView.Background>
@@ -59,8 +55,9 @@
                                     <CheckBox Content="Resume at startup" IsChecked="False"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <ProgressBar x:Name="Progress" Height="21" Value="50"/>
-                                    <ListBox Margin="0,10,0,0" d:ItemsSource="{d:SampleData ItemCount=5}" Height="194"/>
+                                    <TextBlock x:Name="ProgressLabel" Margin="0,0,0,10" />
+                                    <ProgressBar x:Name="Progress" Height="21" Value="50" />
+                                    <ListBox x:Name="actionsbox" Margin="0,10,0,0" d:ItemsSource="{d:SampleData ItemCount=5}" Height="167"/>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
@@ -71,43 +68,54 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
+                                <TextBlock TextAlignment="Center" ToolTip="Profile Name" x:Name="currentProfileName" Text="No Profile" Width="122" />
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Center">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Margin" Value="5,0,5,0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Button ToolTip="Rename Profile">
+                                        <Image Width="20" Source="Icons/pencil-fill.png"/>
+                                    </Button>
+                                    <Button ToolTip="Delete Profile">
+                                        <Image Width="20" Source="Icons/trash-fill.png"/>
+                                    </Button>
+                                    <Button ToolTip="New Profile" Click="createProfile">
+                                        <Image Width="20" Source="Icons/file-plus-fill.png"/>
+                                    </Button>
+                                    <Button Click="saveIeds">
+                                        <Image Width="20" Source="Icons/save-fill.png"/>
+                                    </Button>
+                                    <Button Click="loadProfile">
+                                        <Image Width="20" Source="Icons/folder-fill.png"/>
+                                    </Button>
+                                </StackPanel>
                                 <StackPanel Margin="0,5,0,5" Orientation="Horizontal" HorizontalAlignment="Center">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type Button}">
                                             <Setter Property="Margin" Value="0,0,10,0"/>
                                         </Style>
+
                                     </StackPanel.Resources>
-                                    <Button>
-                                        <Button.Content>
-                                            <Image Width="20" Source="Icons/plus-lg.png"/>
-                                        </Button.Content>
+                                    <Button Click="addIed">
+                                        <Image Width="20" Source="Icons/plus-lg.png"/>
                                     </Button>
-                                    <Button>
-                                        <Button.Content>
-                                            <Image Width="20" Source="Icons/dash.png"/>
-                                        </Button.Content>
+                                    <Button Click="deleteIed">
+                                        <Image Width="20" Source="Icons/dash.png"/>
                                     </Button>
-                                    <Button>
-                                        <Button.Content>
-                                            <Image Width="20" Source="Icons/save-fill.png"/>
-                                        </Button.Content>
-                                    </Button>
-                                    <Button>
-                                        <Button.Content>
-                                            <Image Width="20" Source="Icons/folder-fill.png"/>
-                                        </Button.Content>
-                                    </Button>
+
                                 </StackPanel>
-                                <TreeView Width="147" Height="269" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
-                                    <TreeView.Background>
+                                <ListBox x:Name="iedSelector" Width="146" Height="191" RenderTransformOrigin="0.5,0.505" SelectionChanged="iedSelector_SelectionChanged">
+                                    <ListBox.Background>
                                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
-                                    </TreeView.Background>
-                                </TreeView>
+                                    </ListBox.Background>
+                                </ListBox>
                             </StackPanel>
                             <StackPanel Width="646">
                                 <TextBlock x:Name="iedName" Margin="10">Select a device to continue</TextBlock>
                                 <!-- Options Columns -->
-                                <StackPanel Margin="10,0,10,10" Orientation="Horizontal">
+                                <StackPanel x:Name="iedSettings" Margin="10,0,10,10" Orientation="Horizontal">
                                     <StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Name</TextBlock>
@@ -123,7 +131,7 @@
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Password (Leave empty for default)</TextBlock>
-                                            <PasswordBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" IsEnabled="False" />
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" IsEnabled="False" />
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Port (Leave empty for default)</TextBlock>
@@ -131,7 +139,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Margin="20,0,0,0">
-                                        
+
                                         <StackPanel>
                                             <TextBlock>Logs Folder</TextBlock>
                                             <StackPanel Orientation="Horizontal">
@@ -141,14 +149,14 @@
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>Included logs folders</TextBlock>
-                                            <ListBox Margin="0,5,0,0" x:Name="iedLogFoldersIncludedInput" Height="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                            <ListBox Margin="0,5,0,0" x:Name="iedLogFoldersIncludedInput" Height="63" d:ItemsSource="{d:SampleData ItemCount=5}"/>
                                         </StackPanel>
                                         <StackPanel Margin="0,5,0,0">
                                             <TextBlock>Included logs extensions</TextBlock>
-                                            <ListBox Margin="0,5,0,0" x:Name="iedLogExtensionsIncludedInput" Height="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                            <ListBox Margin="0,5,0,0" x:Name="iedLogExtensionsIncludedInput" Height="83" d:ItemsSource="{d:SampleData ItemCount=5}"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    
+
                                 </StackPanel>
                             </StackPanel>
 
@@ -157,8 +165,8 @@
                 </TabItem>
 
             </TabControl>
-            <TextBox Grid.Row="1" x:Name="Logs" Margin="0,0,0,-142" />
+            <TextBox DockPanel.Dock="Top" VerticalScrollBarVisibility="Visible" x:Name="Logs" Height="139" TextChanged="scrollToBottom" />
 
-        </Grid>
+        </DockPanel>
     </DockPanel>
 </Window>

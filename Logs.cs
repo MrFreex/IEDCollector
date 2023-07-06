@@ -36,6 +36,11 @@ namespace FSync
             string finalMsg = string.Format("[{0}] {1}", DateTime.Now.ToString(), message);
             this.logContent += finalMsg + "\n";
 
+            foreach (TextBox output in outputs)
+            {
+                output.AppendText(finalMsg + "\n");
+            }
+
             if (this.filePath == null)
             {
                 return;
@@ -44,11 +49,6 @@ namespace FSync
             using (StreamWriter logStream = new StreamWriter(this.filePath))
             {
                 logStream.WriteLine(this.logContent);
-
-                foreach (TextBox output in outputs)
-                {
-                    output.AppendText(finalMsg + "\n");
-                }
             }
           
         }
