@@ -1,0 +1,24 @@
+﻿<Window x:Class="FSync.Preferences"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FSync"
+        mc:Ignorable="d"
+        Title="Preferences" Height="128" Width="847">
+    <StackPanel Margin="20">
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Margin" Value="0,0,0,10" />
+            </Style>
+        </StackPanel.Resources>
+        <StackPanel>
+            <TextBlock Margin="0,0,0,5">Language</TextBlock>
+            <ComboBox>
+                <ComboBoxItem>English</ComboBoxItem>
+                <ComboBoxItem>Italian</ComboBoxItem>
+                <ComboBoxItem>Portoguese</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+    </StackPanel>
+</Window>

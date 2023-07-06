@@ -40,3 +40,12 @@ C:\Users\FL\Desktop\Source\Fsync\obj\Debug\FSync.exe
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\FSync.pdb
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\FSync_Content.g.cs
 C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Play.baml
+C:\Users\FL\Desktop\Source\Fsync\bin\Debug\Ookii.Dialogs.Wpf.dll
+C:\Users\FL\Desktop\Source\Fsync\bin\Debug\Ookii.Dialogs.Wpf.pdb
+C:\Users\FL\Desktop\Source\Fsync\bin\Debug\Ookii.Dialogs.Wpf.xml
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Preferences.g.cs
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Preferences.baml
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Configuration.g.cs
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\Configuration.baml
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\About.g.cs
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\About.baml

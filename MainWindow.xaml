@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSync"
         mc:Ignorable="d"
-        Title="MainWindow" Height="478" Width="800">
-    <DockPanel>
+        Title="MainWindow" Height="478" Width="800" ResizeMode="CanMinimize">
+    <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="Login" />
@@ -14,61 +14,151 @@
                 <MenuItem Header="Save" />
             </MenuItem>
             <MenuItem Header="Options">
-                <MenuItem Header="Configuration"/>
-                <MenuItem Header="Preferences"/>
+                <MenuItem Header="Configuration" Click="openConfiguration"/>
+                <MenuItem Header="Preferences" Click="openPreferences"/>
             </MenuItem>
-            <MenuItem Header="About"/>
+            <MenuItem Header="About" Click="openAbout"/>
         </Menu>
-        <Grid>
-            <TabControl>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TabControl Grid.Row="0"  Height="Auto">
                 <TabItem x:Name="viewerModeTab" Header="Viewer mode">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="151*"/>
-                            <ColumnDefinition Width="643*"/>
-                        </Grid.ColumnDefinitions>
-                        <DockPanel LastChildFill="False" Grid.ColumnSpan="2">
-                            <TreeView Width="147" Height="276" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TreeView Width="147" Height="269" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
                                 <TreeView.Background>
                                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
                                 </TreeView.Background>
                             </TreeView>
-                            <Grid Height="274" Width="619" VerticalAlignment="Top">
-                                <Button Content="Single Fetch" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                                <Button Content="Cyclic Fetch" HorizontalAlignment="Left" Margin="83,10,0,0" VerticalAlignment="Top"/>
-                                <Button Content="Stop" HorizontalAlignment="Left" Margin="154,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.834,0.707"/>
-                                <CheckBox Content="Resume when interrupted" HorizontalAlignment="Left" Margin="198,13,0,0" VerticalAlignment="Top" IsChecked="False"/>
-                                <ProgressBar x:Name="Progress" Height="21" Margin="10,46,10,0" VerticalAlignment="Top" Value="50"/>
-                                <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,72,10,0"/>
-                            </Grid>
-                        </DockPanel>
-                        <TextBox x:Name="Logs0" Grid.ColumnSpan="2" Margin="0,278,0,0" />
-                    </Grid>
+                            <StackPanel Margin="10,0,0,0"  Height="274" Width="619" VerticalAlignment="Top">
+
+                                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Margin" Value="0,0,10,0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Button ToolTip="Cyclic Fetch" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <Button.Content>
+                                            <Image Source="Icons/arrow-repeat.png" Width="20" Height="20" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button ToolTip="Single Fetch" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <Button.Content>
+                                            <Image Source="Icons/play-fill.png" Width="20" Height="20" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <Button.Content>
+                                            <Image Source="Icons/stop-fill.png" Width="20" Height="20" />
+                                        </Button.Content>
+                                    </Button>
+                                    <CheckBox Content="Resume at startup" IsChecked="False"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <ProgressBar x:Name="Progress" Height="21" Value="50"/>
+                                    <ListBox Margin="0,10,0,0" d:ItemsSource="{d:SampleData ItemCount=5}" Height="194"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
 
                 </TabItem>
                 <TabItem Header="Configuration mode">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="151*"/>
-                            <ColumnDefinition Width="643*"/>
-                        </Grid.ColumnDefinitions>
-                        <DockPanel LastChildFill="False" Grid.ColumnSpan="2">
-                            <TreeView Width="147" Height="276" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
-                                <TreeView.Background>
-                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
-                                </TreeView.Background>
-                            </TreeView>
-                            <Grid Height="274" Width="619" VerticalAlignment="Top">
-                                
-                            </Grid>
-                        </DockPanel>
-                        <TextBox x:Name="Logs1" Grid.ColumnSpan="2" Margin="0,278,0,0" />
-                    </Grid>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Margin="0,5,0,5" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Margin" Value="0,0,10,0"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <Button>
+                                        <Button.Content>
+                                            <Image Width="20" Source="Icons/plus-lg.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button>
+                                        <Button.Content>
+                                            <Image Width="20" Source="Icons/dash.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button>
+                                        <Button.Content>
+                                            <Image Width="20" Source="Icons/save-fill.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button>
+                                        <Button.Content>
+                                            <Image Width="20" Source="Icons/folder-fill.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                                <TreeView Width="147" Height="269" RenderTransformOrigin="0.5,0.505" VerticalAlignment="Top">
+                                    <TreeView.Background>
+                                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
+                                    </TreeView.Background>
+                                </TreeView>
+                            </StackPanel>
+                            <StackPanel Width="646">
+                                <TextBlock x:Name="iedName" Margin="10">Select a device to continue</TextBlock>
+                                <!-- Options Columns -->
+                                <StackPanel Margin="10,0,10,10" Orientation="Horizontal">
+                                    <StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>IED Name</TextBlock>
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedNameInput" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>IED IP</TextBlock>
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedIpInput" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>IED Username (Leave empty for default)</TextBlock>
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedUsernameInput" IsEnabled="False" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>IED Password (Leave empty for default)</TextBlock>
+                                            <PasswordBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" IsEnabled="False" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>IED Port (Leave empty for default)</TextBlock>
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPortInput" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Margin="20,0,0,0">
+                                        
+                                        <StackPanel>
+                                            <TextBlock>Logs Folder</TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="0,5,5,5" Width="200" x:Name="iedLogFolderInput" />
+                                                <Button Width="50" Content="Browse" x:Name="iedLogFolderBrowse" Click="iedLogFolderBrowse_Click" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock>Included logs folders</TextBlock>
+                                            <ListBox Margin="0,5,0,0" x:Name="iedLogFoldersIncludedInput" Height="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,5,0,0">
+                                            <TextBlock>Included logs extensions</TextBlock>
+                                            <ListBox Margin="0,5,0,0" x:Name="iedLogExtensionsIncludedInput" Height="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    
+                                </StackPanel>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </StackPanel>
                 </TabItem>
-                <TabItem x:Name="Logs2" Header="User configuration mode">
-                    <Grid/>
-                </TabItem>
+
             </TabControl>
+            <TextBox Grid.Row="1" x:Name="Logs" Margin="0,0,0,-142" />
+
         </Grid>
     </DockPanel>
 </Window>

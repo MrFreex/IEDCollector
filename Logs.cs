@@ -10,12 +10,16 @@ namespace FSync
 {
     internal class Logs
     {
-        public readonly string filePath;
+        private string filePath = null;
         public readonly List<TextBox> outputs;
-        public Logs(string folderPath, List<TextBox> outputs)
+
+        private string logContent = "";
+        public string Log { get { return this.logContent; } }
+
+        public Logs(List<TextBox> outputs)
         {
-            this.filePath = Path.Combine(folderPath, string.Format("{0}-{1}-{2} {3}-{4}-{5}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
-            Directory.CreateDirectory(folderPath);
+            //
+            //Directory.CreateDirectory(folderPath);
 
             foreach (TextBox output in outputs)
             {
@@ -30,10 +34,16 @@ namespace FSync
         public void log(string message)
         {
             string finalMsg = string.Format("[{0}] {1}", DateTime.Now.ToString(), message);
+            this.logContent += finalMsg + "\n";
+
+            if (this.filePath == null)
+            {
+                return;
+            }
 
             using (StreamWriter logStream = new StreamWriter(this.filePath))
             {
-                logStream.WriteLine(finalMsg);
+                logStream.WriteLine(this.logContent);
 
                 foreach (TextBox output in outputs)
                 {
@@ -41,6 +51,16 @@ namespace FSync
                 }
             }
           
+        }
+
+        public void setFolder(string folderPath)
+        {
+            if (this.filePath != null) throw new InvalidOperationException("filePath already defined");
+
+            this.filePath = Path.Combine(folderPath, string.Format("{0}-{1}-{2} {3}-{4}-{5}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
+            Directory.CreateDirectory(folderPath);
+
+            this.log(String.Format("Log file set: {0}", filePath));
         }
     }
 }
