@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSync"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" ResizeMode="CanMinimize">
+        Title="MainWindow" Height="500" Width="800" ResizeMode="CanMinimize" Closing="handleClosing">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -75,19 +75,19 @@
                                             <Setter Property="Margin" Value="5,0,5,0"/>
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button ToolTip="Rename Profile">
+                                    <Button ToolTip="Rename Profile" Click="renameProfile">
                                         <Image Width="20" Source="Icons/pencil-fill.png"/>
                                     </Button>
-                                    <Button ToolTip="Delete Profile">
+                                    <Button ToolTip="Delete Profile" Click="deleteProfile">
                                         <Image Width="20" Source="Icons/trash-fill.png"/>
                                     </Button>
                                     <Button ToolTip="New Profile" Click="createProfile">
                                         <Image Width="20" Source="Icons/file-plus-fill.png"/>
                                     </Button>
-                                    <Button Click="saveIeds">
+                                    <Button ToolTip="Save profile" Click="saveIeds">
                                         <Image Width="20" Source="Icons/save-fill.png"/>
                                     </Button>
-                                    <Button Click="loadProfile">
+                                    <Button ToolTip="Load profile" Click="loadProfile">
                                         <Image Width="20" Source="Icons/folder-fill.png"/>
                                     </Button>
                                 </StackPanel>
@@ -98,13 +98,15 @@
                                         </Style>
 
                                     </StackPanel.Resources>
-                                    <Button Click="addIed">
+                                    <Button x:Name="newIedBtn" ToolTip="New IED" Click="addIed">
                                         <Image Width="20" Source="Icons/plus-lg.png"/>
                                     </Button>
-                                    <Button Click="deleteIed">
+                                    <Button x:Name="cloneIedBtn" ToolTip="Clone selected IED" Click="cloneIed">
+                                        <Image Width="20" Source="Icons/clipboard-fill.png"/>
+                                    </Button>
+                                    <Button x:Name="deleteIedBtn" ToolTip="Delete IED" Click="deleteIed">
                                         <Image Width="20" Source="Icons/dash.png"/>
                                     </Button>
-
                                 </StackPanel>
                                 <ListBox x:Name="iedSelector" Width="146" Height="191" RenderTransformOrigin="0.5,0.505" SelectionChanged="iedSelector_SelectionChanged">
                                     <ListBox.Background>
@@ -113,29 +115,47 @@
                                 </ListBox>
                             </StackPanel>
                             <StackPanel Width="646">
-                                <TextBlock x:Name="iedName" Margin="10">Select a device to continue</TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" x:Name="iedName" Margin="10">Select a device to continue</TextBlock>
+                                    <Button ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="10" IsEnabled="False">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image VerticalAlignment="Center" Source="Icons/arrow-repeat.png" Width="20" />
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Fetch data</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button ToolTip="Save the IED data to the profile" x:Name="saveIED" Margin="10" IsEnabled="False" Click="saveIed">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image VerticalAlignment="Center" Source="Icons/save-fill.png" Width="20" />
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Save IED</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
                                 <!-- Options Columns -->
                                 <StackPanel x:Name="iedSettings" Margin="10,0,10,10" Orientation="Horizontal">
                                     <StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Name</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedNameInput" />
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedNameInput" TextChanged="updateNameLabel"  />
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED IP</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedIpInput" />
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Username (Leave empty for default)</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedUsernameInput" IsEnabled="False" />
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedUsernameInput" TextChanged="iedFieldChanged" />
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock>IED Password (Leave empty for default)</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" IsEnabled="False" />
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" TextChanged="iedFieldChanged"/>
                                         </StackPanel>
                                         <StackPanel>
-                                            <TextBlock>IED Port (Leave empty for default)</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPortInput" />
+                                            <TextBlock>IED Port</TextBlock>
+                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPortInput" TextChanged="iedFieldChanged" LostFocus="checkPortInt" />
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Margin="20,0,0,0">
@@ -143,7 +163,7 @@
                                         <StackPanel>
                                             <TextBlock>Logs Folder</TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="0,5,5,5" Width="200" x:Name="iedLogFolderInput" />
+                                                <TextBox Margin="0,5,5,5" Width="200" x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" LostFocus="validateLogsPath" />
                                                 <Button Width="50" Content="Browse" x:Name="iedLogFolderBrowse" Click="iedLogFolderBrowse_Click" />
                                             </StackPanel>
                                         </StackPanel>
@@ -165,7 +185,7 @@
                 </TabItem>
 
             </TabControl>
-            <TextBox DockPanel.Dock="Top" VerticalScrollBarVisibility="Visible" x:Name="Logs" Height="139" TextChanged="scrollToBottom" />
+            <TextBox DockPanel.Dock="Top" HorizontalScrollBarVisibility="Visible"  VerticalScrollBarVisibility="Visible" x:Name="Logs" Height="139" TextChanged="scrollToBottom" />
 
         </DockPanel>
     </DockPanel>

@@ -197,6 +197,8 @@
     <Resource Include="Icons\file-plus-fill.png" />
     <Resource Include="Icons\pencil-fill.png" />
     <Resource Include="Icons\trash-fill.png" />
+    <Resource Include="Icons\clipboard-fill.png" />
+    <Resource Include="clipboard-fill.png" />
     <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup />
