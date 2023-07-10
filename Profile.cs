@@ -100,7 +100,7 @@ namespace FSync
                 try
                 {
                     this.load();
-                } catch(IOException loadException)
+                } catch(IOException)
                 {
                     this.resetConfigAndSaveBackup();
                 }
@@ -119,7 +119,7 @@ namespace FSync
             try
             {
                 profileXml = XDocument.Load(this.FilePath);
-            } catch (Exception ex)
+            } catch (Exception)
             {
                 Globals.logs.log(String.Format("Error while reading profile {0}", this.profileName));
                 throw new IOException("Error reading file");
@@ -248,7 +248,7 @@ namespace FSync
             try
             {
                 File.Delete(this.FilePath);
-            } catch(Exception e)
+            } catch(Exception)
             {
                 Globals.logs.log("Error deleting profile");
                 return false;

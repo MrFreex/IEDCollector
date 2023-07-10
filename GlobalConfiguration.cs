@@ -94,7 +94,7 @@ namespace FSync
             {
                 config = XDocument.Load(filePath);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 resetConfigAndSaveBackup();
             }

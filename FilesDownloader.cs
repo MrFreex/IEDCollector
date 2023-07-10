@@ -61,7 +61,8 @@ namespace FSync
                 try
                 {
                     File.WriteAllBytes(Path.Combine("files", entry.Key), fileBytes);
-                } catch (UnauthorizedAccessException uae) {
+                } catch (UnauthorizedAccessException)
+                {
                     Debug.WriteLine("Skipped file " + entry.Key);
                 } catch (Exception e) { Debug.WriteLine(Path.Combine("files", entry.Key) + "\t" + e.Message); }
             }
