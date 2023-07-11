@@ -8,6 +8,8 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace FSync
@@ -105,7 +107,7 @@ namespace FSync
                     else
                     {
                         //iedName.Text = iedNameInput.Text + "*";
-                        ((ListBoxItem)iedSelector.SelectedItem).Content = ((string)(((ListBoxItem)iedSelector.SelectedItem).Content)) + "*";
+                        ((ListBoxItem)iedSelector.SelectedItem).Content = ((IEDConfig)((ListBoxItem)iedSelector.SelectedItem).Tag).name + "*";
                     }
                 }
                 
@@ -341,6 +343,18 @@ namespace FSync
             }
 
             Globals.profileChangeHandler(false);
+
+            this.KeyDown += (object sender, KeyEventArgs e) =>
+            {
+                 if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+                {
+                    if (Keyboard.IsKeyDown(Key.S))
+                    {
+                        saveIed(sender, e);
+                        saveIeds(sender, e);
+                    }
+                }
+            };
         }
 
         private void toggleIedButtonsEnabled(bool toggle)
@@ -710,9 +724,18 @@ namespace FSync
                 return;
             }
 
-            if (!validateLogsPath())
+            LogFolderValidationResult result = validateLogsPath();
+
+            if (result != LogFolderValidationResult.VALID)
             {
-                MessageBox.Show("Invalid logs path. The directory path is invalid or doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == LogFolderValidationResult.NOTEXIST)
+                {
+                    MessageBox.Show("Invalid logs path. The directory path is invalid or doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                } else
+                {
+                    MessageBox.Show("The logs path is being used by another IED.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
                 return;
             }
 
@@ -795,33 +818,38 @@ namespace FSync
 
         }
 
-        private bool validateLogsPath()
+        private enum LogFolderValidationResult
+        {
+            VALID,
+            USED,
+            NOTEXIST
+        }
+
+        private LogFolderValidationResult validateLogsPath()
         {
             try
             {
                 if (Directory.Exists(iedLogFolderInput.Text))
                 {
-                    return true;
+                    foreach (IEDConfig config in Globals.currentProfile.IEDs)
+                    {
+                        if (config.logsFolder.Equals(iedLogFolderInput.Text) && !config.Equals(((ListBoxItem)iedSelector.SelectedItem).Tag))
+                        {
+                            return LogFolderValidationResult.USED;
+                        }
+                    }
+
+                    return LogFolderValidationResult.VALID;
                 }
                 else
                 {
-                    return false;
+                    return LogFolderValidationResult.NOTEXIST;
                 }
             }
             catch (Exception)
             {
-                return false;
+                return LogFolderValidationResult.NOTEXIST;
             }
-        }
-
-        private void validateLogsPath(object sender, RoutedEventArgs e)
-        {
-            if (!validateLogsPath())
-            {
-                MessageBox.Show("Invalid logs path", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                iedLogFolderInput.Text = ConfigFolder.extend(ConfigFolder.IEDLOGSROOT);
-            }
-
         }
 
         private void updateNameLabel(object sender, TextChangedEventArgs e)
@@ -909,6 +937,8 @@ namespace FSync
 
             if (selectedIed == null) return;
 
+            fetchDataText.Text = "Fetching data...";
+
             using (IED ied = new IED(selectedIed))
             {
                 if (!ied.connect())
@@ -962,6 +992,8 @@ namespace FSync
 
                 this.isIedSaved = false;
 
+                fetchDataText.Text = "Fetch data";
+
                 if (MessageBox.Show("Operation successful, save the IED?", "Success", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     saveIed(sender, null);
@@ -970,16 +1002,36 @@ namespace FSync
             }
         }
 
+        private void iedProcessed_Callback(IED ied, bool status)
+        {
+            foreach (TreeViewItem iedItem in iedTree.Items)
+            {
+                if (iedItem.Tag != null && iedItem.Tag is IED && ((IED)iedItem.Tag).config.Equals(ied.config))
+                {
+                    StackPanel header = (StackPanel)iedItem.Header;
+                    TextBlock name = (TextBlock)header.Children[1];
+                    name.Foreground = status ? Brushes.Green : Brushes.Red;
+                }
+            }
+        }
+
         private void runSingle(object sender, RoutedEventArgs e)
         {
             if (Globals.currentProfile == null) return;
 
+            foreach (TreeViewItem ied in iedTree.Items)
+            {
+                if (ied.Tag != null)
+                {
+                    StackPanel header = (StackPanel)ied.Header;
+                    TextBlock name = (TextBlock)header.Children[1];
+                    name.Foreground = Brushes.Black;
+                }
+            }
+
             Runner runner = new Runner(() => {
                 IsRunning = false;
-            }, RunType.SINGLE, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, (IED ied) =>
-            {
-
-            });
+            }, RunType.SINGLE, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, iedProcessed_Callback);
 
             runner.Start();
 
@@ -988,19 +1040,28 @@ namespace FSync
             Globals.currentProcess = runner;
         }
 
+        
+
         private void runPolling(object sender, RoutedEventArgs e)
         {
             if (Globals.currentProfile == null) return;
+
+            foreach (TreeViewItem ied in iedTree.Items)
+            {
+                if (ied.Tag != null)
+                {
+                    StackPanel header = (StackPanel)ied.Header;
+                    TextBlock name = (TextBlock)header.Children[1];
+                    name.Foreground = Brushes.Black;
+                }
+            }
 
             Runner runner = new Runner(() => { 
                 this.IsRunning = false;
                 Progress.IsIndeterminate = false;
                 Progress.Value = 0;
                 actionsbox.Items.Clear();
-            },RunType.POLLING, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, (IED ied) =>
-            {
-
-            });
+            },RunType.POLLING, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, iedProcessed_Callback);
 
             runner.Start();
 
@@ -1049,7 +1110,7 @@ namespace FSync
                 return;
             }
 
-            if (iedSaved && profileSaved) return;
+            if ((iedSaved && profileSaved) || configurationModeTab.IsFocused) return;
 
             if (MessageBox.Show("Save changes?", "Save changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {

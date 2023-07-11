@@ -18,7 +18,7 @@ namespace FSync
 
     internal class Runner
     {
-        public delegate void IedFinishedCallback(IED subject);
+        public delegate void IedFinishedCallback(IED subject, bool status);
 
         private ProgressBar progress;
         private ListBox queue;
@@ -67,9 +67,9 @@ namespace FSync
                     {
                         this.status.Text = "Transferring from " + ied.ToString();
                         Globals.logs.log("Transferring from " + ied.ToString());
-                    }); 
+                    });
 
-
+                    bool success = true;
                     
                     if (ied.connect())
                     {
@@ -130,6 +130,7 @@ namespace FSync
                                 }
                                 catch (Exception)
                                 {
+                                    success = false;
                                     Application.Current.Dispatcher.Invoke(() =>
                                     {
                                     Globals.logs.log(String.Format("Failed to download file '{0}' from IED '{1}'", entry.GetFileName(), ied.ToString()));
@@ -144,21 +145,22 @@ namespace FSync
                             }
                         } catch(Exception)
                         {
+                            success = false;
                             Application.Current.Dispatcher.Invoke(() => { Globals.logs.log("Failed to fetch directories from IED " + ied.ToString()); realQueue.removeFirst(); });
                         }
 
 
                     } else
                     {
+                        success = false;
                         Globals.logs.log(String.Format("[WARNING] IED '{0}' is unreachable, skipping.", ied.ToString()));
                     }
 
                     Application.Current.Dispatcher.Invoke(() => {
                         Globals.logs.log("Finished processing IED " + ied.ToString());
                         this.queue.Items.Clear();
+                        this.onSingleExecutionOver(ied, success);
                     });
-
-                    this.onSingleExecutionOver(ied);
                 }
                 
             }
