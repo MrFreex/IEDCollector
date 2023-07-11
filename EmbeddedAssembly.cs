@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Diagnostics;
 
 /// <summary>
 /// A class for loading Embedded Assembly
@@ -61,7 +60,7 @@ public class EmbeddedAssembly
         {
             // Get the hash value from embedded DLL/assembly
             string fileHash = BitConverter.ToString(sha1.ComputeHash(ba)).Replace("-", string.Empty);
-            
+
             // Define the temporary storage location of the DLL/assembly
             //tempFile = Path.GetTempPath() + fileName;
             tempFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
@@ -97,7 +96,7 @@ public class EmbeddedAssembly
         {
             System.IO.File.WriteAllBytes(tempFile, ba);
         }
-        
+
         // Load it into memory
         //asm = Assembly.LoadFile(tempFile);
 

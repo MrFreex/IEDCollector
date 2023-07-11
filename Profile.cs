@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -33,8 +29,9 @@ namespace FSync
         public Dictionary<string, bool> logEnabledFolders;
         public Dictionary<string, bool> logEnabledExtensions;
 
-        public IEDConfig() { 
-            
+        public IEDConfig()
+        {
+
         }
 
         public IEDConfig(IEDConfig toClone)
@@ -49,7 +46,8 @@ namespace FSync
             this.logEnabledExtensions = new Dictionary<string, bool>(toClone.logEnabledExtensions);
         }
 
-        public IEDConfig(string name, string ip, string username, string password, int port, string logsFolder, Dictionary<string, bool> logEnabledFolders, Dictionary<string, bool> logEnabledExtensions) { 
+        public IEDConfig(string name, string ip, string username, string password, int port, string logsFolder, Dictionary<string, bool> logEnabledFolders, Dictionary<string, bool> logEnabledExtensions)
+        {
             this.name = name;
             this.ip = ip;
             this.username = username;
@@ -68,7 +66,7 @@ namespace FSync
 
     internal class Profile
     {
-        public const string PROFILEEXTENSION = ".alfp";
+        public const string PROFILEEXTENSION = ".iedcprofile";
         private string folderPath => ConfigFolder.extend(ConfigFolder.PROFILES);
         private string profileName;
 
@@ -81,13 +79,29 @@ namespace FSync
 
         private readonly List<IEDConfig> ieds = new List<IEDConfig>();
 
-        public List<IEDConfig> IEDs { get
+        private readonly List<IedsChangedHandler> iedsChangedHandlers = new List<IedsChangedHandler>();
+
+        public IedsChangedHandler IedsChanged
+        {
+            set
+            {
+                value();
+                this.iedsChangedHandlers.Add(value);
+            }
+        }
+
+
+        public List<IEDConfig> IEDs
+        {
+            get
             {
                 this.hasUnsavedChanges = true;
                 return this.ieds;
-            } }
+            }
+        }
 
-        public Profile(string profileName) { 
+        public Profile(string profileName)
+        {
             if (profileName.EndsWith(PROFILEEXTENSION))
             {
                 profileName = profileName.Substring(0, profileName.Length - PROFILEEXTENSION.Length);
@@ -100,26 +114,31 @@ namespace FSync
                 try
                 {
                     this.load();
-                } catch(IOException)
+                }
+                catch (IOException)
                 {
                     this.resetConfigAndSaveBackup();
                 }
-                
-            } else
+
+            }
+            else
             {
                 this.save();
             }
         }
 
+        public delegate void IedsChangedHandler();
+
         public void load()
         {
             Globals.logs.log("Loading profile " + this.profileName + " from disk");
             XDocument profileXml;
-            
+
             try
             {
                 profileXml = XDocument.Load(this.FilePath);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 Globals.logs.log(String.Format("Error while reading profile {0}", this.profileName));
                 throw new IOException("Error reading file");
@@ -182,24 +201,28 @@ namespace FSync
                 XConfig.Save(this.FilePath);
                 this.hasUnsavedChanges = false;
                 Globals.logs.log("Saved profile " + this.profileName);
-            } catch (Exception e)
+                foreach (IedsChangedHandler handler in this.iedsChangedHandlers)
+                {
+                    try { handler(); } catch (Exception) { }
+                }
+            }
+            catch (Exception e)
             {
                 Globals.logs.log(String.Format("Error while saving profile {0} {1}", this.profileName, e.ToString()));
                 MessageBox.Show("Error while saving profile", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private Dictionary<string,bool> decodeDict(string encodedDict)
+        private Dictionary<string, bool> decodeDict(string encodedDict)
         {
-            Dictionary<string,bool> output = new Dictionary<string, bool>();
+            Dictionary<string, bool> output = new Dictionary<string, bool>();
 
             if (encodedDict.Contains(","))
             {
                 foreach (string pair in encodedDict.Split(','))
                 {
-                    Globals.logs.log("Decoding pair " + pair);
                     string[] splittedPair = pair.Split(':');
-                    //output.Add(splittedPair[0], bool.Parse(splittedPair[1]));
+                    output.Add(splittedPair[0], bool.Parse(splittedPair[1]));
                 }
             }
 
@@ -210,7 +233,7 @@ namespace FSync
         {
             string output = String.Empty;
 
-            foreach (KeyValuePair<string,bool> pair in dict)
+            foreach (KeyValuePair<string, bool> pair in dict)
             {
                 output += pair.Key + ":" + pair.Value + ",";
             }
@@ -248,12 +271,13 @@ namespace FSync
             try
             {
                 File.Delete(this.FilePath);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 Globals.logs.log("Error deleting profile");
                 return false;
             }
-            
+
             Globals.logs.log("Profile deleted");
             return true;
         }

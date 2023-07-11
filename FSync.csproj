@@ -89,6 +89,8 @@
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalConfiguration.cs" />
+    <Compile Include="IED.cs" />
+    <Compile Include="ListBoxAsQueue.cs" />
     <Compile Include="NewProfileDialog.xaml.cs">
       <DependentUpon>NewProfileDialog.xaml</DependentUpon>
     </Compile>
@@ -96,6 +98,7 @@
     <Compile Include="Preferences.xaml.cs">
       <DependentUpon>Preferences.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Runner.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,10 +176,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="iec61850.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="iec61850dotnet.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +202,10 @@
     <Resource Include="Icons\trash-fill.png" />
     <Resource Include="Icons\clipboard-fill.png" />
     <Resource Include="clipboard-fill.png" />
+    <Resource Include="Icons\folder-check.png" />
+    <Resource Include="Icons\folder-plus.png" />
+    <Resource Include="Icons\folder-x.png" />
+    <Resource Include="Icons\hdd-network-fill.png" />
     <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup />

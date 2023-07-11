@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSync"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" ResizeMode="CanMinimize" Closing="handleClosing">
+        Title="IED Collector" Height="500" Width="800" ResizeMode="CanMinimize" Closing="handleClosing">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -20,7 +20,7 @@
             <MenuItem Header="About" Click="openAbout"/>
         </Menu>
         <DockPanel DockPanel.Dock="Top">
-            <TabControl DockPanel.Dock="Top" Grid.Row="0"  Height="310" Width="800">
+            <TabControl x:Name="tabControl" DockPanel.Dock="Top" Grid.Row="0"  Height="310" Width="800" SelectionChanged="tabChangeHandler">
                 <TabItem x:Name="viewerModeTab" Header="Viewer mode">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -37,22 +37,22 @@
                                             <Setter Property="Margin" Value="0,0,10,0"/>
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button ToolTip="Cyclic Fetch" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Button IsEnabled="False" x:Name="startPolling" ToolTip="Cyclic Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runPolling">
                                         <Button.Content>
                                             <Image Source="Icons/arrow-repeat.png" Width="20" Height="20" />
                                         </Button.Content>
                                     </Button>
-                                    <Button ToolTip="Single Fetch" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Button IsEnabled="False" x:Name="startSingle" ToolTip="Single Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runSingle">
                                         <Button.Content>
                                             <Image Source="Icons/play-fill.png" Width="20" Height="20" />
                                         </Button.Content>
                                     </Button>
-                                    <Button HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Button IsEnabled="False" x:Name="stop" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Stop">
                                         <Button.Content>
                                             <Image Source="Icons/stop-fill.png" Width="20" Height="20" />
                                         </Button.Content>
                                     </Button>
-                                    <CheckBox Content="Resume at startup" IsChecked="False"/>
+                                    <CheckBox Content="Resume polling at startup" IsChecked="False"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
                                     <TextBlock x:Name="ProgressLabel" Margin="0,0,0,10" />
@@ -64,7 +64,7 @@
                     </StackPanel>
 
                 </TabItem>
-                <TabItem Header="Configuration mode">
+                <TabItem x:Name="configurationModeTab" Header="Configuration mode">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
@@ -116,8 +116,7 @@
                             </StackPanel>
                             <StackPanel Width="646">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" x:Name="iedName" Margin="10">Select a device to continue</TextBlock>
-                                    <Button ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="10" IsEnabled="False">
+                                    <Button ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="10" IsEnabled="False" Click="fetchIedData">
                                         <Button.Content>
                                             <StackPanel Orientation="Horizontal">
                                                 <Image VerticalAlignment="Center" Source="Icons/arrow-repeat.png" Width="20" />

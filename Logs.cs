@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace FSync
 {
     internal class Logs
     {
-        private string filePath = null;
-        public readonly List<TextBox> outputs;
+        private string filePath
+        {
+            get
+            {
+                if (this.folderPath == null)
+                {
+                    return null;
+                }
 
-        private string logContent = "";
-        public string Log { get { return this.logContent; } }
+                return Path.Combine(folderPath, string.Format("{0}-{1}-{2}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+            }
+        }
+        private string folderPath = null;
+        public readonly List<TextBox> outputs;
 
         public Logs(List<TextBox> outputs)
         {
-            //
-            //Directory.CreateDirectory(folderPath);
 
             foreach (TextBox output in outputs)
             {
@@ -29,38 +35,82 @@ namespace FSync
             this.outputs = outputs;
         }
 
-       
-
-        public void log(string message)
+        public void log(List<string> lines)
         {
-            string finalMsg = string.Format("[{0}] {1}", DateTime.Now.ToString(), message);
-            this.logContent += finalMsg + "\n";
-
-            foreach (TextBox output in outputs)
+            for (int i = 0; i < lines.Count; i++)
             {
-                output.AppendText(finalMsg + "\n");
+                lines[i] = string.Format("[{0}] {1} \n", DateTime.Now.ToString(), lines[i]);
             }
+
+            string joinedText = string.Join("\n", lines);
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                foreach (TextBox output in outputs)
+                {
+                    output.AppendText(joinedText);
+
+                    if (output.LineCount > 200)
+                    {
+                        // Remove the lines needed so the textbox will have 200 lines
+
+                        int linesToRemove = output.LineCount - 200;
+
+                        for (int i = 0; i < linesToRemove; i++)
+                        {
+                            output.Text = output.Text.Substring(output.Text.IndexOf('\n') + 1);
+                        }
+                    }
+                }
+            }), System.Windows.Threading.DispatcherPriority.Input);
 
             if (this.filePath == null)
             {
                 return;
             }
 
-            using (StreamWriter logStream = new StreamWriter(this.filePath))
+            using (StreamWriter logStream = new StreamWriter(this.filePath, true))
             {
-                logStream.WriteLine(this.logContent);
+                logStream.Write(joinedText);
             }
-          
+        }
+
+        public void log(string message)
+        {
+            string finalMsg = string.Format("[{0}] {1} \n", DateTime.Now.ToString(), message);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (TextBox output in outputs)
+                {
+                    output.AppendText(finalMsg);
+                    if (output.LineCount > 200)
+                    {
+                        output.Text = output.Text.Substring(output.Text.IndexOf('\n') + 1);
+                    }
+                }
+            }, System.Windows.Threading.DispatcherPriority.Background);
+
+            if (this.filePath == null)
+            {
+                return;
+            }
+
+            using (StreamWriter logStream = new StreamWriter(this.filePath, true))
+            {
+                logStream.Write(finalMsg);
+            }
+
         }
 
         public void setFolder(string folderPath)
         {
-            if (this.filePath != null) throw new InvalidOperationException("filePath already defined");
+            if (this.folderPath != null) throw new InvalidOperationException("folderPath already defined");
 
-            this.filePath = Path.Combine(folderPath, string.Format("{0}-{1}-{2} {3}-{4}-{5}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
+            this.folderPath = folderPath; // Path.Combine(folderPath, string.Format("{0}-{1}-{2} {3}-{4}-{5}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
             Directory.CreateDirectory(folderPath);
 
-            this.log(String.Format("Log file set: {0}", filePath));
+            //this.log(String.Format("Log file set: {0}", filePath));
         }
     }
 }
