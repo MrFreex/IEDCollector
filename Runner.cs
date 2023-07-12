@@ -28,6 +28,8 @@ namespace FSync
         private List<IEDConfig> subjects;
         private readonly OnThreadOver threadOverCallback;
 
+        public RunType RunType { get => runType; }
+
         private Thread worker;
         public Thread Worker {  get => worker; }
 
@@ -48,9 +50,12 @@ namespace FSync
 
         private void Execution()
         {
+            
+
             foreach (IEDConfig subject in this.subjects)
             {
-                
+                if (!this.IsRunning) return;
+
                 ListBoxAsQueue realQueue = new ListBoxAsQueue(this.queue);
 
                 Application.Current.Dispatcher.Invoke(() =>
@@ -59,8 +64,8 @@ namespace FSync
                     realQueue.addLast(new ListBoxItem() { Content = "Fetch directories" });
                 });
 
-                
-                
+                if (!this.IsRunning) return;
+
                 using (IED ied = new IED(subject))
                 {
                     Application.Current.Dispatcher.Invoke(() =>
@@ -69,20 +74,37 @@ namespace FSync
                         Globals.logs.log("Transferring from " + ied.ToString());
                     });
 
+                    if (!this.IsRunning) return;
+
                     bool success = true;
                     
                     if (ied.connect())
                     {
+                        if (!this.IsRunning) return;
+
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             realQueue.removeFirst();
                         });
-                        
-                        List<FileDirectoryEntry> tree;
+
+                        if (!this.IsRunning) return;
+
+                        List<EditableFileDirectoryEntry> tree;
                         try
                         {
+
+                            tree = ied.ReadFileTree("\\");
+
+                            if (tree.Count == 0)
+                                tree = ied.ReadFileTree("/");
+
+                            if (!this.IsRunning) return;
+
+                            foreach (EditableFileDirectoryEntry entry in tree)
+                            {
+                                Globals.logs.log("[DEBUG] Tree file: " + entry.fileName);
+                            }
                             
-                            tree = ied.ReadFileTree("/");
                             double addProgress = (this.ProgressPerIed + 0.0) / (tree.Count + 0.0);
 
                             Application.Current.Dispatcher.Invoke(() =>
@@ -90,20 +112,32 @@ namespace FSync
                                 realQueue.removeFirst();
                             });
 
+                            if (!this.IsRunning) return;
+
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                foreach (FileDirectoryEntry entry in tree)
+                                foreach (EditableFileDirectoryEntry entry in tree)
                                 {
                                     realQueue.addLast(new ListBoxItem() { Content = String.Format("[{1}] Download file '{0}'", entry.GetFileName(), ied.ToString()) });
                                 }
                             });
-                            
 
-                            foreach (FileDirectoryEntry entry in tree)
+                            if (!this.IsRunning) return;
+
+                            foreach (EditableFileDirectoryEntry entry in tree)
                             {
+                                if (!this.IsRunning) return;
+
                                 try
                                 {
-                                    DownloadedFileState state = ied.DownloadFile(entry, Path.Combine(ied.config.logsFolder, entry.GetFileName()), false);
+                                    string fixEntry = entry.fileName.Replace("/", "\\");
+
+                                    if (fixEntry.StartsWith("\\") || fixEntry.StartsWith("/"))
+                                    {
+                                        fixEntry = fixEntry.Substring(1);
+                                    }
+
+                                    DownloadedFileState state = ied.DownloadFile(entry, Path.Combine(ied.config.logsFolder, fixEntry), false);
 
                                     string log = String.Empty;
 
@@ -217,7 +251,7 @@ namespace FSync
             {
                 this.worker = new Thread(() =>
                 {
-                    while (running)
+                    while (this.IsRunning)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {

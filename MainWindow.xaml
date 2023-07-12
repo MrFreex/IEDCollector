@@ -14,8 +14,8 @@
                 <MenuItem Header="Save" />
             </MenuItem>
             <MenuItem Header="Options">
-                <MenuItem Header="Configuration" Click="openConfiguration"/>
-                <MenuItem Header="Preferences" Click="openPreferences"/>
+                <MenuItem x:Name="menuOpenConfiguration" Header="Configuration" Click="openConfiguration"/>
+                <MenuItem x:Name="menuOpenPreferences" Header="Preferences" Click="openPreferences"/>
             </MenuItem>
             <MenuItem Header="About" Click="openAbout"/>
         </Menu>
@@ -52,7 +52,7 @@
                                             <Image Source="Icons/stop-fill.png" Width="20" Height="20" />
                                         </Button.Content>
                                     </Button>
-                                    <CheckBox Content="Resume polling at startup" IsChecked="False"/>
+                                    <CheckBox x:Name="resumePollingStartup" Content="Resume polling at startup" IsChecked="False" Checked="resumePollingStartup_Checked" Unchecked="resumePollingStartup_Checked"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
                                     <TextBlock x:Name="ProgressLabel" Margin="0,0,0,10" />

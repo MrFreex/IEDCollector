@@ -24,6 +24,7 @@ namespace FSync
         public const string FOLDERSNAME = "IEDCollector";
         public static OnProfileChange profileChangeHandler = null;
         public static Runner currentProcess = null;
+        public static UserConfig config = null;
 
 
         public delegate void OnProfileChange(bool renameOnly);
@@ -139,6 +140,7 @@ namespace FSync
                 canExecute = value;
                 startSingle.IsEnabled = value;
                 startPolling.IsEnabled = value;
+                alreadyClicked = false;
             }
 
             get
@@ -154,6 +156,8 @@ namespace FSync
             set
             {
                 CanExecute = !value;
+                menuOpenConfiguration.IsEnabled = !value;
+                menuOpenPreferences.IsEnabled = !value;
                 stop.IsEnabled = value;
                 isRunning = value;
             }
@@ -231,6 +235,21 @@ namespace FSync
             ConfigFolder.Path = Globals.globalConfiguration.getCurrentConfigFolder();
             initializeFolders(Globals.globalConfiguration.Folder);
             Globals.logs.setFolder(ConfigFolder.extend(ConfigFolder.LOGS));
+
+            Globals.config = new UserConfig(ConfigFolder.Path, (FSyncConfiguration config, FSyncPreferences pref) =>
+            {
+                resumePollingStartup.IsChecked = config.resumePollingOnStartup;
+            });
+            /*
+            new Thread(() =>
+            {
+                IED ied = new IED(new IEDConfig("Test", "10.1.21.211", "", "", 102, "C:\\Users\\FL\\AppData\\Local\\IEDCollector\\IEDlogs\\Test", new Dictionary<string, bool>(), new Dictionary<string, bool>()));
+                ied.connect();
+                foreach (string entry in ied.ReadFileTree())
+                {
+                    Globals.logs.log(entry);
+                }
+            }).Start();
 
             /*
             new Thread(() =>
@@ -310,6 +329,20 @@ namespace FSync
                     add.Content = "No IEDs configured";
                     iedSelector.Items.Add(add);
                     iedSelector.IsEnabled = false;
+                }
+
+                if (File.Exists(ConfigFolder.extend(".resumepolling")))
+                {
+                    if (Globals.config.config.resumePollingOnStartup)
+                    {
+                        runPolling(null, null);
+                    } else
+                    {
+                        try
+                        {
+                            File.Delete(ConfigFolder.extend(".resumepolling"));
+                        } catch { }
+                    }
                 }
             };
 
@@ -412,7 +445,9 @@ namespace FSync
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
             dialog.Description = "Select the folder where the logs will be saved";
+            dialog.InitialDirectory = this.iedLogFolderInput.Text;
             dialog.ShowNewFolderButton = true;
+            
             Nullable<bool> result = dialog.ShowDialog();
 
             if (result == true)
@@ -432,6 +467,21 @@ namespace FSync
             //TODO: Add logged in check
 
             Configuration configuration = new Configuration();
+            
+            configuration.cyclePeriod.Text = Globals.config.config.cyclePeriod.ToString();
+            
+            if (Globals.config.config.logFilesKept < 0)
+            {
+                configuration.keepAllLogFiles.IsChecked = true;
+                configuration.logFilesKept.IsEnabled = false;
+            } else
+            {
+                configuration.logFilesKept.Text = Globals.config.config.logFilesKept.ToString();
+            }
+
+            configuration.startWithWindows.IsChecked = Globals.config.config.startWithWindows;
+            configuration.dataLocation.Text = ConfigFolder.Path;
+
             configuration.Show();
         }
 
@@ -889,6 +939,8 @@ namespace FSync
         {
             if (Globals.currentProcess != null && Globals.currentProcess.IsRunning)
             {
+                
+
                 if (Globals.currentProcess.IsIdling) {
                     Globals.currentProcess.Abort();
                 } else
@@ -1029,6 +1081,8 @@ namespace FSync
                 }
             }
 
+            IsRunning = true;
+
             Runner runner = new Runner(() => {
                 IsRunning = false;
             }, RunType.SINGLE, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, iedProcessed_Callback);
@@ -1063,21 +1117,38 @@ namespace FSync
                 actionsbox.Items.Clear();
             },RunType.POLLING, Globals.currentProfile.IEDs, Progress, actionsbox, ProgressLabel, iedProcessed_Callback);
 
+
+
+            try
+            {
+                if (Globals.config.config.resumePollingOnStartup)
+                {
+                    File.WriteAllText(ConfigFolder.extend(".resumepolling"), "");
+                }
+            } catch { Globals.logs.log("[WARNING] Couldn't write resumepolling file, the polling won't resume on startup."); }
+
+            
+
             runner.Start();
+
+
 
             this.IsRunning = true;
 
             Globals.currentProcess = runner;
         }
 
+        private bool alreadyClicked = false;
         private void Stop(object sender, RoutedEventArgs e)
         {
             Globals.logs.log("Stopping execution");
+            Debug.WriteLine(Globals.currentProcess == null);
             if (Globals.currentProcess != null)
             {
-                if (Globals.currentProcess.IsRunning)
+                Debug.WriteLine(alreadyClicked);
+                if (!alreadyClicked && Globals.currentProcess.IsRunning)
                 {
-                    
+                    alreadyClicked = true;
                     Globals.currentProcess.Dispose();
                     return;
                 } else
@@ -1116,6 +1187,15 @@ namespace FSync
             {
                 saveIed(sender, null);
                 saveIeds(sender, null);
+            }
+        }
+
+        private void resumePollingStartup_Checked(object sender, RoutedEventArgs e)
+        {
+            if (Globals.config != null && Globals.config.config.resumePollingOnStartup != resumePollingStartup.IsChecked)
+            {
+                Globals.config.config.resumePollingOnStartup = (bool)resumePollingStartup.IsChecked;
+                Globals.config.save();
             }
         }
     }

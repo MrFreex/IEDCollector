@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace FSync
@@ -25,6 +26,37 @@ namespace FSync
     public enum DownloadedFileState
     {
         DOWNLOADED, SKIPPED_DIRECTORY, SKIPPED_FILTER, SKIPPED_NEWER
+    }
+
+    internal class EditableFileDirectoryEntry
+    {
+        public string fileName;
+
+        public uint fileSize;
+
+        public ulong lastModified;
+
+        public EditableFileDirectoryEntry(FileDirectoryEntry fd)
+        {
+            fileName = fd.GetFileName();
+            fileSize = fd.GetFileSize();
+            lastModified = fd.GetLastModified();
+        }
+
+        public string GetFileName()
+        {
+            return fileName;
+        }
+
+        public uint GetFileSize()
+        {
+            return fileSize;
+        }
+
+        public ulong GetLastModified()
+        {
+            return lastModified;
+        }
     }
 
     internal class IED : IDisposable
@@ -116,10 +148,12 @@ namespace FSync
 
             foreach (string entry in dir)
             {
-                if (!Path.HasExtension(entry))
-                {
-                    folders[entry.Substring(0, entry.Length - 1)] = true;
-                }
+                string folderPath = Path.GetDirectoryName(entry).Replace("\\", "/");
+                Globals.logs.log("File: " + entry);
+                if (!folders.ContainsKey(folderPath))
+                    Globals.logs.log(String.Format("[DEBUG] Adding folder '{0}'", folderPath));
+
+                folders[folderPath] = true;
             }
 
             return folders;
@@ -130,7 +164,7 @@ namespace FSync
             return GetAllUsedExtensions(this.ReadFileTree());
         }
 
-        public List<FileDirectoryEntry> ReadFileTree(string root)
+        public Dictionary<EditableFileDirectoryEntry, bool> ReadFileTree(string root, bool a)
         {
             List<FileDirectoryEntry> files;
             
@@ -146,19 +180,52 @@ namespace FSync
                 }
                 catch (IedConnectionException e)
                 {
-                    Globals.logs.log(String.Format("Error: {0}", e.ToString()));
-                    throw;
+                    //Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root));
+                    files = new List<FileDirectoryEntry>();
+                    //throw;
                 }
             }
 
-            return files;
+            Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>();
+
+            foreach (FileDirectoryEntry file in files)
+            {
+                EditableFileDirectoryEntry efd = new EditableFileDirectoryEntry(file);
+
+                efd.fileName = Path.Combine(root, efd.fileName);
+                completeTree[efd] = Path.HasExtension(file.GetFileName());
+            }
+
+            Dictionary<EditableFileDirectoryEntry, bool> newTree = new Dictionary<EditableFileDirectoryEntry, bool>(completeTree);
+
+            foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in completeTree)
+            {
+                if (!entry.Value)
+                {
+                    Dictionary<EditableFileDirectoryEntry, bool> temp = ReadFileTree(entry.Key.GetFileName(), false);
+
+                    foreach (KeyValuePair<EditableFileDirectoryEntry, bool> subEntry in temp)
+                    {
+                        newTree[subEntry.Key] = subEntry.Value;
+                    }
+                }
+            }
+
+         
+
+            return newTree;
+        }
+
+        public List<EditableFileDirectoryEntry> ReadFileTree(string root)
+        {
+            return new List<EditableFileDirectoryEntry>(ReadFileTree(root, true).Keys);
         }
 
         public List<string> ReadFileTree()
         {
             List<string> converted = new List<string>();
             
-            foreach (FileDirectoryEntry entry in this.ReadFileTree(""))
+            foreach (EditableFileDirectoryEntry entry in this.ReadFileTree(""))
             {
                 converted.Add(entry.GetFileName());
             }
@@ -221,13 +288,13 @@ namespace FSync
             public List<byte[]> data = new List<byte[]>();
         }
 
-        public DownloadedFileState DownloadFile(FileDirectoryEntry path, string destination, bool overwrite)
+        public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, bool overwrite)
         {
             if (!overwrite && File.Exists(destination) && (ulong)File.GetLastWriteTime(destination).Ticks >= (path.GetLastModified())) return DownloadedFileState.SKIPPED_NEWER;
             if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
 
             bool filterPassed = false;
-
+            
             if (!this.config.logEnabledExtensions.TryGetValue(Path.GetExtension(path.GetFileName()), out filterPassed) || !filterPassed)
             {
                 return DownloadedFileState.SKIPPED_FILTER;
@@ -235,13 +302,30 @@ namespace FSync
 
             filterPassed = false;
 
-            foreach (KeyValuePair<string, bool> pair in this.config.logEnabledFolders)
-            {
-                Debug.WriteLine(String.Format("{0} {1}", Path.GetDirectoryName(path.GetFileName()), pair.Key));
-            }
-            
+            string dir = Path.GetDirectoryName(path.GetFileName());
 
-            if (!this.config.logEnabledFolders.TryGetValue(Path.GetDirectoryName(path.GetFileName()).Replace("\\", "/"), out filterPassed) || !filterPassed)
+            string[] dirAlternatives =
+            {
+                dir, dir.TrimStart('\\'), dir.Replace("\\", "/"), dir.Replace("\\", "/").TrimStart('/')
+            };
+
+            foreach (string alternative in dirAlternatives)
+            {
+                bool value = false;
+                bool has = this.config.logEnabledFolders.TryGetValue(alternative, out value);
+
+                if (has)
+                {
+                    if (value)
+                    {
+                        filterPassed = true;
+                    }
+
+                    break;
+                }
+            }
+
+            if (!filterPassed)
             {
                 return DownloadedFileState.SKIPPED_FILTER;
             }

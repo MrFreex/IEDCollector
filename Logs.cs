@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,6 +11,16 @@ namespace FSync
 {
     internal class Logs
     {
+        private Thread countChecker = null;
+
+        private string twoChars(int component)
+        {
+            string conv = component.ToString();
+
+            if (conv.Length == 2) return conv;
+
+            return "0" + conv;
+        }
         private string filePath
         {
             get
@@ -18,7 +30,7 @@ namespace FSync
                     return null;
                 }
 
-                return Path.Combine(folderPath, string.Format("{0}-{1}-{2}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+                return Path.Combine(folderPath, string.Format("{0}{1}{2}.log", DateTime.Now.Year, twoChars(DateTime.Now.Month), twoChars(DateTime.Now.Day), twoChars(DateTime.Now.Hour), twoChars(DateTime.Now.Minute), twoChars(DateTime.Now.Second)));
             }
         }
         private string folderPath = null;
@@ -109,6 +121,37 @@ namespace FSync
 
             this.folderPath = folderPath; // Path.Combine(folderPath, string.Format("{0}-{1}-{2} {3}-{4}-{5}.log", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
             Directory.CreateDirectory(folderPath);
+
+            if (this.countChecker == null)
+            {
+                this.countChecker = new Thread(() =>
+                {
+                    while (Globals.config == null) Thread.Sleep(1000); // Wait for config to be loaded
+                    while (true)
+                    {
+                        int filesKept = ((Globals.config != null) ? Globals.config.config.logFilesKept : 20);
+                        
+                        if (filesKept > 0)
+                        {
+                            string[] files = Directory.GetFiles(folderPath, "*.log");
+                            if (files.Length > filesKept)
+                            {
+                                Array.Sort(files);
+
+                                for (int i = 0; i < files.Length - filesKept; i++)
+                                {
+                                    File.Delete(files[i]);
+                                }
+                            }
+                        }
+
+                        Thread.Sleep(1000 * 60 * 60 * 1); // 1 hour
+                    }
+                });
+
+                this.countChecker.IsBackground = true;
+                this.countChecker.Start();
+            }
 
             //this.log(String.Format("Log file set: {0}", filePath));
         }
