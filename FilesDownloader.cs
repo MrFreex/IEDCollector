@@ -1,13 +1,9 @@
 ﻿using IEC61850.Client;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FSync
 {
@@ -17,7 +13,8 @@ namespace FSync
         private IedConnection conn;
 
         public delegate void ThreadOverHandler(List<string> filePaths);
-        public FilesDownloader(string directory, ThreadOverHandler cb, IedConnection conn) {
+        public FilesDownloader(string directory, ThreadOverHandler cb, IedConnection conn)
+        {
             this.conn = conn;
 
             List<FileDirectoryEntry> files = conn.GetFileDirectory(directory);
@@ -61,10 +58,12 @@ namespace FSync
                 try
                 {
                     File.WriteAllBytes(Path.Combine("files", entry.Key), fileBytes);
-                } catch (UnauthorizedAccessException)
+                }
+                catch (UnauthorizedAccessException)
                 {
                     Debug.WriteLine("Skipped file " + entry.Key);
-                } catch (Exception e) { Debug.WriteLine(Path.Combine("files", entry.Key) + "\t" + e.Message); }
+                }
+                catch (Exception e) { Debug.WriteLine(Path.Combine("files", entry.Key) + "\t" + e.Message); }
             }
 
             cb(fileNames);
@@ -94,7 +93,7 @@ namespace FSync
 
         private static byte[] sumByteArrays(List<byte[]> bs)
         {
-           using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 foreach (byte[] chunk in bs)
                 {

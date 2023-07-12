@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -60,7 +57,12 @@ namespace FSync
 
         private void addUsernameToFolders() => this.tree[GlobalConfigurationCategories.USERCONFIGFOLDERS].Add(Environment.UserName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Globals.FOLDERSNAME));
 
-        private void save()
+        public void setConfigFolder(string newFolder)
+        {
+            this.tree[GlobalConfigurationCategories.USERCONFIGFOLDERS][string.Format("{0}", Environment.UserName)] = newFolder;
+        }
+        
+        public void save()
         {
             XDocument globalConfiguration = new XDocument(new XElement("root"));
 
