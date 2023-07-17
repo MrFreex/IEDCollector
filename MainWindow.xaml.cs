@@ -124,7 +124,7 @@ namespace IEDCollector
             {
                 if (Globals.currentProfile != null)
                 {
-                    currentProfileName.Text = value ? Globals.currentProfile.Name.TrimEnd('*') : Globals.currentProfile.Name + "*";
+                    //currentProfileName.Text = value ? Globals.currentProfile.Name.TrimEnd('*') : Globals.currentProfile.Name + "*";
                 }
                 profileSaved = value;
             }
@@ -263,6 +263,20 @@ namespace IEDCollector
             Globals.config = new UserConfig(ConfigFolder.Path, (FSyncConfiguration config, FSyncPreferences pref) =>
             {
                 resumePollingStartup.IsChecked = config.resumePollingOnStartup;
+                string[] profiles = Directory.GetFiles(ConfigFolder.extend(ConfigFolder.PROFILES), String.Format("*{0}", Profile.PROFILEEXTENSION));
+                profileSelector.Items.Clear();
+                foreach(string file in profiles)
+                {
+                    string profileName = Path.GetFileNameWithoutExtension(file);
+                    ComboBoxItem profile = new ComboBoxItem()
+                    {
+                        Content = profileName,
+                        Tag = new Profile(profileName)
+                    };
+
+                    profileSelector.Items.Add(profile);
+                }
+                profileSelector.IsEnabled = true;
             });
             /*
             new Thread(() =>
@@ -292,7 +306,7 @@ namespace IEDCollector
 
                 if (Globals.currentProfile == null)
                 {
-                    this.currentProfileName.Text = "No profile";
+                    //this.currentProfileName.Text = "No profile";
                     //iedName.Visibility = Visibility.Hidden;
                     connectIedInConf.Visibility = Visibility.Hidden;
                     saveIED.Visibility = Visibility.Hidden;
@@ -332,7 +346,7 @@ namespace IEDCollector
 
                 Globals.currentProfile.IedsChanged = new Profile.IedsChangedHandler(populateIedTree);
 
-                this.currentProfileName.Text = Globals.currentProfile.Name;
+                //this.currentProfileName.Text = Globals.currentProfile.Name;
                 if (renameOnly)
                 {
                     return;
@@ -954,7 +968,7 @@ namespace IEDCollector
             isIedSaved = false;
         }
 
-        private void iedFieldChanged(object sender, TextChangedEventArgs e)
+        private void iedFieldChanged(object sender, object e)
         {
             isIedSaved = false;
         }
@@ -1479,6 +1493,21 @@ namespace IEDCollector
         private void requestLicense(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void profileSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0) return;
+
+            ComboBoxItem profileCombo = (ComboBoxItem)e.AddedItems[0];
+            Profile selected = (Profile)profileCombo.Tag;
+
+            Globals.currentProfile = selected;
         }
     }
 }

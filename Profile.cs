@@ -28,6 +28,8 @@ namespace IEDCollector
         public string logsFolder;
         public Dictionary<string, bool> logEnabledFolders;
         public Dictionary<string, bool> logEnabledExtensions;
+        public bool includedInCollection = false;
+        public string protocol = "IEC61850";
 
         public IEDConfig()
         {
@@ -44,6 +46,7 @@ namespace IEDCollector
             this.logsFolder = toClone.logsFolder;
             this.logEnabledFolders = new Dictionary<string, bool>(toClone.logEnabledFolders);
             this.logEnabledExtensions = new Dictionary<string, bool>(toClone.logEnabledExtensions);
+            this.protocol = toClone.protocol;
         }
 
         public IEDConfig(string name, string ip, string username, string password, int port, string logsFolder, Dictionary<string, bool> logEnabledFolders, Dictionary<string, bool> logEnabledExtensions)
@@ -56,6 +59,7 @@ namespace IEDCollector
             this.logsFolder = logsFolder;
             this.logEnabledFolders = logEnabledFolders;
             this.logEnabledExtensions = logEnabledExtensions;
+
         }
 
         public override string ToString()
@@ -156,6 +160,8 @@ namespace IEDCollector
                 iEDConfig.logsFolder = XIed.Attribute("logsFolder").Value;
                 iEDConfig.logEnabledFolders = decodeDict(XIed.Attribute("logEnabledFolders").Value);
                 iEDConfig.logEnabledExtensions = decodeDict(XIed.Attribute("logEnabledExtensions").Value);
+                iEDConfig.includedInCollection = bool.Parse(XIed.Attribute("includedInCollection") != null ? XIed.Attribute("includedInCollection").Value : "true");
+                iEDConfig.protocol = XIed.Attribute("protocol") != null ? XIed.Attribute("protocol").Value : "IEC61850";
 
                 this.ieds.Add(iEDConfig);
             }
@@ -192,6 +198,8 @@ namespace IEDCollector
                 XIed.Add(new XAttribute("logsFolder", iEDConfig.logsFolder));
                 XIed.Add(new XAttribute("logEnabledFolders", encodeDict(iEDConfig.logEnabledFolders)));
                 XIed.Add(new XAttribute("logEnabledExtensions", encodeDict(iEDConfig.logEnabledExtensions)));
+                XIed.Add(new XAttribute("includedInCollection", iEDConfig.includedInCollection.ToString()));
+                XIed.Add(new XAttribute("protocol", iEDConfig.protocol));
 
                 XConfig.Root.Add(XIed);
             }

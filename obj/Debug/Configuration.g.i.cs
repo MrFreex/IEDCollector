@@ -9,11 +9,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using AvalonDock;
-using AvalonDock.Controls;
-using AvalonDock.Converters;
-using AvalonDock.Layout;
-using AvalonDock.Themes;
 using IEDCollector;
 using System;
 using System.Diagnostics;

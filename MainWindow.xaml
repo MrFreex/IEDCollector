@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        
         mc:Ignorable="d"
         Title="IED Collector" Height="500" Width="800" ResizeMode="CanResizeWithGrip" Closing="handleClosing" SizeToContent="Manual">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -28,7 +29,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="150" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
             <TabControl MinHeight="300" x:Name="tabControl" DockPanel.Dock="Top" Grid.Row="0" SelectionChanged="tabChangeHandler">
                 <TabItem x:Name="viewerModeTab" Header="Viewer mode">
@@ -82,126 +83,233 @@
                     
 
                 </TabItem>
-                <TabItem x:Name="configurationModeTab" Header="Configuration mode">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Top" Height="283">
-                                <TextBlock TextAlignment="Center" ToolTip="Profile Name" x:Name="currentProfileName" Text="No Profile" Width="122" />
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Center">
+                <TabItem VerticalAlignment="Stretch" x:Name="configurationModeTab" Header="Configuration mode">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <GroupBox HorizontalAlignment="Stretch" Margin="5" Header="Profile" Grid.Row="0">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox SelectionChanged="profileSelector_SelectionChanged" Grid.Row="0" Grid.Column="0" x:Name="profileSelector" IsEnabled="False">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem IsSelected="True" Content="No profile">
+
+                                        </ComboBoxItem>
+                                    </ComboBox.Items>
+                                </ComboBox>
+
+                                <Grid HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="300" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center">Root Folder</Label>
+                                    <TextBox Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Height="25" MinWidth="140" x:Name="rootFolderInput" />
+                                    <Button Grid.Column="2" VerticalAlignment="Center" Padding="5,0,5,0" Height="25" Content="Browse"/>
+                                </Grid>
+                                <Grid HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="300" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center">Polling Interval</Label>
+                                    <xctk:IntegerUpDown Minimum="0" Text="10" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Height="25" MinWidth="140" x:Name="pollingInterval" />
+                                </Grid>
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,5,0,0" Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type Button}">
-                                            <Setter Property="Margin" Value="5,0,5,0"/>
+                                            <Setter Property="Margin" Value="0,0,10,0" />
+                                            <Setter Property="Padding" Value="2" />
+
+                                        </Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Setter Property="Width" Value="22" />
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button x:Name="renameProfileButton" ToolTip="Rename Profile" Click="renameProfile">
-                                        <Image Width="20" Source="Icons/pencil-fill.png"/>
+                                    <Button x:Name="newProfileButton" ToolTip="New profile">
+                                        <Image Source="Icons/database-fill-add.png" />
                                     </Button>
-                                    <Button x:Name="deleteProfileButton" ToolTip="Delete Profile" Click="deleteProfile">
-                                        <Image Width="20" Source="Icons/trash-fill.png"/>
+                                    <Button x:Name="saveProfileButton" ToolTip="Save profile">
+                                        <Image Source="Icons/database-fill-check.png" />
                                     </Button>
-                                    <Button x:Name="newProfileButton" ToolTip="New Profile" Click="createProfile">
-                                        <Image Width="20" Source="Icons/file-plus-fill.png"/>
+                                    <Button x:Name="loadProfileButton" ToolTip="Import profile">
+                                        <Image Source="Icons/database-fill-up.png" />
                                     </Button>
-                                    <Button x:Name="saveProfileButton" ToolTip="Save profile" Click="saveIeds">
-                                        <Image Width="20" Source="Icons/save-fill.png"/>
+                                    <Button x:Name="exportProfileButton" ToolTip="Export profile">
+                                        <Image Source="Icons/database-fill-down.png" />
                                     </Button>
-                                    <Button x:Name="loadProfileButton" ToolTip="Load profile" Click="loadProfile">
-                                        <Image Width="20" Source="Icons/folder-fill.png"/>
+                                    <Button x:Name="renameProfileButton" ToolTip="Rename profile">
+                                        <Image Source="Icons/database-fill-gear.png" />
+                                    </Button>
+                                    <Button x:Name="deleteProfileButton" ToolTip="Delete profile">
+                                        <Image Source="Icons/database-fill-x.png" />
                                     </Button>
                                 </StackPanel>
-                                <Separator Height="5" Width="148"/>
-                                <StackPanel Margin="0,5,0,5" Orientation="Horizontal" HorizontalAlignment="Center">
+                            </Grid>
+
+                        </GroupBox>
+                        <GroupBox HorizontalAlignment="Stretch" Header="Connections" Grid.Row="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <ListBox Grid.Row="0" x:Name="iedSelector" SelectionChanged="iedSelector_SelectionChanged">
+                                    <ListBox.Background>
+                                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
+                                    </ListBox.Background>
+                                </ListBox>
+                                <Button Grid.Row="1" HorizontalAlignment="Stretch" ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="0,5,0,5" IsEnabled="False" Click="fetchIedData">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image VerticalAlignment="Center" Source="Icons/arrow-repeat.png" Width="20" />
+                                            <TextBlock x:Name="fetchDataText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Fetch data</TextBlock>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,5,0,0" Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type Button}">
                                             <Setter Property="Margin" Value="0,0,10,0"/>
                                         </Style>
 
                                     </StackPanel.Resources>
-                                    <Button x:Name="newIedBtn" ToolTip="New IED" Click="addIed">
+
+                                    <Button x:Name="newIedBtn" ToolTip="New connection" Click="addIed">
                                         <Image Width="20" Source="Icons/plus-lg.png"/>
                                     </Button>
-                                    <Button x:Name="cloneIedBtn" ToolTip="Clone selected IED" Click="cloneIed">
+                                    <Button x:Name="cloneIedBtn" ToolTip="Clone selected connection" Click="cloneIed">
                                         <Image Width="20" Source="Icons/clipboard-fill.png"/>
                                     </Button>
-                                    <Button x:Name="deleteIedBtn" ToolTip="Delete IED" Click="deleteIed">
+                                    <Button x:Name="deleteIedBtn" ToolTip="Delete selected connection" Click="deleteIed">
                                         <Image Width="20" Source="Icons/dash.png"/>
                                     </Button>
-                                </StackPanel>
-                                <ListBox x:Name="iedSelector" Width="146" Height="185" RenderTransformOrigin="0.5,0.505" SelectionChanged="iedSelector_SelectionChanged">
-                                    <ListBox.Background>
-                                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
-                                    </ListBox.Background>
-                                </ListBox>
-                            </StackPanel>
-                            <StackPanel Width="646">
-                                <StackPanel Orientation="Horizontal">
-                                    <Button ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="10" IsEnabled="False" Click="fetchIedData">
-                                        <Button.Content>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image VerticalAlignment="Center" Source="Icons/arrow-repeat.png" Width="20" />
-                                                <TextBlock x:Name="fetchDataText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Fetch data</TextBlock>
-                                            </StackPanel>
-                                        </Button.Content>
-                                    </Button>
-                                    <Button ToolTip="Save the IED data to the profile" x:Name="saveIED" Margin="10" IsEnabled="False" Click="saveIed">
-                                        <Button.Content>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image VerticalAlignment="Center" Source="Icons/save-fill.png" Width="20" />
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Save IED</TextBlock>
-                                            </StackPanel>
-                                        </Button.Content>
+                                    <Button ToolTip="Save the IED data to the profile" x:Name="saveIED" IsEnabled="False" Click="saveIed">
+                                        <Image VerticalAlignment="Center" Source="Icons/save-fill.png" Width="20" />
                                     </Button>
                                 </StackPanel>
-                                <!-- Options Columns -->
-                                <StackPanel x:Name="iedSettings" Margin="10,0,10,10" Orientation="Horizontal">
-                                    <StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>IED Name</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedNameInput" TextChanged="updateNameLabel"  />
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>IED IP</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>IED Username (Leave empty for default)</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedUsernameInput" TextChanged="iedFieldChanged" />
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>IED Password (Leave empty for default)</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPasswordInput" TextChanged="iedFieldChanged"/>
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>IED Port</TextBlock>
-                                            <TextBox Margin="0,5,0,5" Width="250" x:Name="iedPortInput" TextChanged="iedFieldChanged" LostFocus="checkPortInt" />
-                                        </StackPanel>
+
+                                <Grid x:Name="iedSettings" Grid.Column="2" Grid.Row="0" Grid.RowSpan="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="1" Grid.Column="0">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="{x:Type Label}">
+                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBox}">
+                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                            </Style>
+                                            <Style TargetType="{x:Type ComboBox}">
+                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                            </Style>
+                                            <Style TargetType="{x:Type ListBox}">
+                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                            </Style>
+
+                                        </StackPanel.Resources>
+                                        <Label HorizontalAlignment="Stretch">Connection Name</Label>
+                                        <TextBox HorizontalAlignment="Stretch" x:Name="iedNameInput" TextChanged="updateNameLabel"  />
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="10" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">Protocol</Label>
+                                            <ComboBox Grid.Row="1" Grid.Column="0">
+                                                <ComboBox.Items>
+                                                    <ComboBoxItem IsSelected="True" Content="IEC61850" />
+                                                    <ComboBoxItem Content="FTP" IsEnabled="False" />
+                                                    <ComboBoxItem Content="SFTP" IsEnabled="False" />
+                                                    <ComboBoxItem Content="Direct" IsEnabled="False" />
+                                                </ComboBox.Items>
+                                            </ComboBox>
+                                            <Label Grid.Row="0" Grid.Column="2" >IP Address</Label>
+                                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                            <Label Grid.Row="2" Grid.Column="0">Port</Label>
+                                            <xctk:IntegerUpDown Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="65353" x:Name="iedPortInput" ValueChanged="iedFieldChanged" />
+                                            <Label Grid.Row="2" Grid.Column="2">Encryption</Label>
+                                            <ComboBox Grid.Row="3" Grid.Column="2">
+                                                <ComboBox.Items>
+                                                    <ComboBoxItem IsSelected="True" Content="No encryption" />
+                                                </ComboBox.Items>
+                                            </ComboBox>
+                                            <Label Grid.Row="4" Grid.Column="0" >Username</Label>
+                                            <TextBox Grid.Row="5" Grid.Column="0" x:Name="iedUsernameInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                            <Label Grid.Row="4" Grid.Column="2" >Password</Label>
+                                            <TextBox Grid.Row="5" Grid.Column="2" x:Name="iedPasswordInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                        </Grid>
+
+
                                     </StackPanel>
-                                    <StackPanel Margin="20,0,0,0">
+                                    <StackPanel Grid.Row="1" Grid.Column="2">
+                                        <Label>Subfolder name</Label>
+                                        <TextBox x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" />
+                                        <GroupBox Header="Source filter">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*" />
+                                                    <ColumnDefinition Width="5" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
 
-                                        <StackPanel>
-                                            <TextBlock>Logs Folder</TextBlock>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="0,5,5,5" Width="200" x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" />
-                                                <Button Width="50" Content="Browse" x:Name="iedLogFolderBrowse" Click="iedLogFolderBrowse_Click" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock>Included logs folders</TextBlock>
-                                            <ListBox Margin="0,5,0,0" x:Name="iedLogFoldersIncludedInput" Height="63" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-                                        </StackPanel>
-                                        <StackPanel Margin="0,5,0,0">
-                                            <TextBlock>Included logs extensions</TextBlock>
-                                            <ListBox Margin="0,5,0,0" x:Name="iedLogExtensionsIncludedInput" Height="83" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-                                        </StackPanel>
+                                                <Label Grid.Row="0" Grid.Column="0">Folders</Label>
+                                                <ListBox Grid.Row="1" Grid.Column="0" x:Name="iedLogFoldersIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                                <Label Grid.Row="0" Grid.Column="2">Extensions</Label>
+                                                <ListBox Grid.Row="1" Grid.Column="2" x:Name="iedLogExtensionsIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                            </Grid>
+                                        </GroupBox>
+
+
                                     </StackPanel>
-
-                                </StackPanel>
-                            </StackPanel>
-
-                        </StackPanel>
-                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
                 </TabItem>
-
             </TabControl>
             <GridSplitter Background="Gray" Margin="0,5,0,5" Grid.Row="1"
                                   Height="5"
