@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Windows;
 
-namespace FSync
+namespace IEDCollector
 {
     /// <summary>
     /// Interaction logic for Configuration.xaml
@@ -28,7 +28,9 @@ namespace FSync
                 {
                     Directory.CreateDirectory(folderBrowserDialog.SelectedPath);
                     dataLocation.Text = folderBrowserDialog.SelectedPath;
-                } catch {
+                }
+                catch
+                {
                     MessageBox.Show("The folder doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -43,7 +45,8 @@ namespace FSync
             try
             {
                 int.Parse(cyclePeriod.Text);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 MessageBox.Show("The cycle period must be a number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -88,7 +91,7 @@ namespace FSync
                     return;
                 }
 
-                
+
             }
 
             // TODO : profile folder
@@ -109,7 +112,8 @@ namespace FSync
             {
                 logFilesKept.IsEnabled = false;
                 logFilesKept.Text = "";
-            } else
+            }
+            else
             {
                 logFilesKept.IsEnabled = true;
                 logFilesKept.Text = "20";

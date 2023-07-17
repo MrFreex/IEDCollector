@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace FSync
+namespace IEDCollector
 {
     /// <summary>
     /// Interaction logic for Window1.xaml

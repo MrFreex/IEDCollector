@@ -1,12 +1,10 @@
 ﻿using IEC61850.Client;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class ConnStateHandler : IDisposable
     {
@@ -149,10 +147,11 @@ namespace FSync
             foreach (string entry in dir)
             {
                 string folderPath = Path.GetDirectoryName(entry).Replace("\\", "/");
+                /*
                 Globals.logs.log("File: " + entry);
                 if (!folders.ContainsKey(folderPath))
                     Globals.logs.log(String.Format("[DEBUG] Adding folder '{0}'", folderPath));
-
+                */
                 folders[folderPath] = true;
             }
 
@@ -167,7 +166,7 @@ namespace FSync
         public Dictionary<EditableFileDirectoryEntry, bool> ReadFileTree(string root, bool a)
         {
             List<FileDirectoryEntry> files;
-            
+
 
 
             Globals.logs.log(String.Format("Reading file tree for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root));
@@ -211,7 +210,7 @@ namespace FSync
                 }
             }
 
-         
+
 
             return newTree;
         }
@@ -224,7 +223,7 @@ namespace FSync
         public List<string> ReadFileTree()
         {
             List<string> converted = new List<string>();
-            
+
             foreach (EditableFileDirectoryEntry entry in this.ReadFileTree(""))
             {
                 converted.Add(entry.GetFileName());
@@ -288,13 +287,13 @@ namespace FSync
             public List<byte[]> data = new List<byte[]>();
         }
 
-        public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, bool overwrite)
+        public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, FileProgressMonitor monitor, bool overwrite)
         {
             if (!overwrite && File.Exists(destination) && (ulong)File.GetLastWriteTime(destination).Ticks >= (path.GetLastModified())) return DownloadedFileState.SKIPPED_NEWER;
             if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
 
             bool filterPassed = false;
-            
+
             if (!this.config.logEnabledExtensions.TryGetValue(Path.GetExtension(path.GetFileName()), out filterPassed) || !filterPassed)
             {
                 return DownloadedFileState.SKIPPED_FILTER;
@@ -333,14 +332,25 @@ namespace FSync
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
                 FileData reference = new FileData() { path = path.GetFileName() };
+                double size = path.GetFileSize();
+
                 this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
                 {
                     reference.data.Add(data);
+                    if (size > 0)
+                    {
+                        monitor.Progress += (sizeof(byte) * data.Length) / size;
+                    }
+                    else
+                    {
+                        monitor.IsIndeterminate = true;
+                    }
+
                     return true;
                 }, null);
 
                 byte[] finalFileContent = sumByteArrays(reference.data);
-                
+
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
 
                 File.WriteAllBytes(destination, finalFileContent);

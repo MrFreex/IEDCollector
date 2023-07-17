@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class Logs
     {
@@ -38,10 +37,21 @@ namespace FSync
 
         public Logs(List<TextBox> outputs)
         {
+            ContextMenu actions = new ContextMenu();
+
+            MenuItem openLogFile = new MenuItem()
+            {
+                Header = "Open log file"
+            };
+
+            openLogFile.Click += (object sender, RoutedEventArgs e) => Process.Start(this.filePath);
+
+            actions.Items.Add(openLogFile);
 
             foreach (TextBox output in outputs)
             {
                 output.IsReadOnly = true;
+                output.ContextMenu = actions;
             }
 
             this.outputs = outputs;
@@ -130,7 +140,7 @@ namespace FSync
                     while (true)
                     {
                         int filesKept = ((Globals.config != null) ? Globals.config.config.logFilesKept : 20);
-                        
+
                         if (filesKept > 0)
                         {
                             string[] files = Directory.GetFiles(folderPath, "*.log");

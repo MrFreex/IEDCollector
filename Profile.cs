@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class IEDConfigDefaults
     {
@@ -224,6 +224,11 @@ namespace FSync
                     string[] splittedPair = pair.Split(':');
                     output.Add(splittedPair[0], bool.Parse(splittedPair[1]));
                 }
+            }
+            else if (encodedDict.Length > 0)
+            {
+                string[] splittedPair = encodedDict.Split(':');
+                output.Add(splittedPair[0], bool.Parse(splittedPair[1]));
             }
 
             return output;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace FSync
+namespace IEDCollector
 {
     static class GlobalConfigurationCategories
     {
@@ -61,7 +61,7 @@ namespace FSync
         {
             this.tree[GlobalConfigurationCategories.USERCONFIGFOLDERS][string.Format("{0}", Environment.UserName)] = newFolder;
         }
-        
+
         public void save()
         {
             XDocument globalConfiguration = new XDocument(new XElement("root"));
