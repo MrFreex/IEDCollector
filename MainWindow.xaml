@@ -29,7 +29,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="100" />
+                <RowDefinition Height="80" />
             </Grid.RowDefinitions>
             <TabControl MinHeight="300" x:Name="tabControl" DockPanel.Dock="Top" Grid.Row="0" SelectionChanged="tabChangeHandler">
                 <TabItem x:Name="viewerModeTab" Header="Viewer mode">
@@ -117,8 +117,8 @@
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" VerticalAlignment="Center">Root Folder</Label>
-                                    <TextBox Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Height="25" MinWidth="140" x:Name="rootFolderInput" />
-                                    <Button Grid.Column="2" VerticalAlignment="Center" Padding="5,0,5,0" Height="25" Content="Browse"/>
+                                    <TextBox Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Height="25" MinWidth="140" x:Name="rootFolderInput" TextChanged="profileFieldChanged" />
+                                    <Button Grid.Column="2" VerticalAlignment="Center" Padding="5,0,5,0" Height="25" Content="Browse" Click="BrowseProfileRootFolder"/>
                                 </Grid>
                                 <Grid HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top">
                                     <Grid.ColumnDefinitions>
@@ -126,8 +126,8 @@
                                         <ColumnDefinition Width="300" />
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" VerticalAlignment="Center">Polling Interval</Label>
-                                    <xctk:IntegerUpDown Minimum="0" Text="10" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Height="25" MinWidth="140" x:Name="pollingInterval" />
+                                    <Label Grid.Column="0" VerticalAlignment="Center">Polling Interval (1-60 min)</Label>
+                                    <xctk:IntegerUpDown Minimum="1" Maximum="60" Text="10" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Height="25" MinWidth="140" x:Name="pollingInterval" ValueChanged="profileFieldChanged" />
                                 </Grid>
                                 <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,5,0,0" Orientation="Horizontal">
                                     <StackPanel.Resources>
@@ -140,22 +140,22 @@
                                             <Setter Property="Width" Value="22" />
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button x:Name="newProfileButton" ToolTip="New profile">
+                                    <Button Click="createProfile" x:Name="newProfileButton" ToolTip="New profile">
                                         <Image Source="Icons/database-fill-add.png" />
                                     </Button>
-                                    <Button x:Name="saveProfileButton" ToolTip="Save profile">
+                                    <Button Click="saveIeds" x:Name="saveProfileButton" ToolTip="Save profile">
                                         <Image Source="Icons/database-fill-check.png" />
                                     </Button>
-                                    <Button x:Name="loadProfileButton" ToolTip="Import profile">
-                                        <Image Source="Icons/database-fill-up.png" />
-                                    </Button>
-                                    <Button x:Name="exportProfileButton" ToolTip="Export profile">
+                                    <Button Click="importProfile" x:Name="loadProfileButton" ToolTip="Import profile">
                                         <Image Source="Icons/database-fill-down.png" />
                                     </Button>
-                                    <Button x:Name="renameProfileButton" ToolTip="Rename profile">
+                                    <Button x:Name="exportProfileButton" ToolTip="Export profile" Click="exportProfile">
+                                        <Image Source="Icons/database-fill-up.png" />
+                                    </Button>
+                                    <Button Click="renameProfile" x:Name="renameProfileButton" ToolTip="Rename profile">
                                         <Image Source="Icons/database-fill-gear.png" />
                                     </Button>
-                                    <Button x:Name="deleteProfileButton" ToolTip="Delete profile">
+                                    <Button Click="deleteProfile" x:Name="deleteProfileButton" ToolTip="Delete profile">
                                         <Image Source="Icons/database-fill-x.png" />
                                     </Button>
                                 </StackPanel>
@@ -197,16 +197,16 @@
                                     </StackPanel.Resources>
 
                                     <Button x:Name="newIedBtn" ToolTip="New connection" Click="addIed">
-                                        <Image Width="20" Source="Icons/plus-lg.png"/>
+                                        <Image Width="20" Source="Icons/journal-plus.png"/>
                                     </Button>
                                     <Button x:Name="cloneIedBtn" ToolTip="Clone selected connection" Click="cloneIed">
-                                        <Image Width="20" Source="Icons/clipboard-fill.png"/>
+                                        <Image Width="20" Source="Icons/journals.png"/>
                                     </Button>
                                     <Button x:Name="deleteIedBtn" ToolTip="Delete selected connection" Click="deleteIed">
-                                        <Image Width="20" Source="Icons/dash.png"/>
+                                        <Image Width="20" Source="Icons/journal-minus.png"/>
                                     </Button>
                                     <Button ToolTip="Save the IED data to the profile" x:Name="saveIED" IsEnabled="False" Click="saveIed">
-                                        <Image VerticalAlignment="Center" Source="Icons/save-fill.png" Width="20" />
+                                        <Image VerticalAlignment="Center" Source="Icons/journal-check.png" Width="20" />
                                     </Button>
                                 </StackPanel>
 
@@ -238,7 +238,7 @@
 
                                         </StackPanel.Resources>
                                         <Label HorizontalAlignment="Stretch">Connection Name</Label>
-                                        <TextBox HorizontalAlignment="Stretch" x:Name="iedNameInput" TextChanged="updateNameLabel"  />
+                                        <TextBox HorizontalAlignment="Stretch" x:Name="iedNameInput" TextChanged="updateNameLabel" PreviewTextInput="GenericTextBox_PreviewTextInput"  />
 
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -264,7 +264,7 @@
                                                 </ComboBox.Items>
                                             </ComboBox>
                                             <Label Grid.Row="0" Grid.Column="2" >IP Address</Label>
-                                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" PreviewTextInput="ipFormatting" />
                                             <Label Grid.Row="2" Grid.Column="0">Port</Label>
                                             <xctk:IntegerUpDown Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="65353" x:Name="iedPortInput" ValueChanged="iedFieldChanged" />
                                             <Label Grid.Row="2" Grid.Column="2">Encryption</Label>
@@ -283,7 +283,7 @@
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="2">
                                         <Label>Subfolder name</Label>
-                                        <TextBox x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" />
+                                        <TextBox x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" PreviewTextInput="GenericTextBox_PreviewTextInput" />
                                         <GroupBox Header="Source filter">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -317,7 +317,7 @@
                                   VerticalAlignment="Stretch"
                                   ResizeBehavior="PreviousAndNext"
                                   ResizeDirection="Rows" />
-            <TextBox Grid.Row="2" DockPanel.Dock="Top" HorizontalScrollBarVisibility="Visible"  VerticalScrollBarVisibility="Visible" x:Name="Logs" MinHeight="140" TextChanged="scrollToBottom" />
+            <TextBox Grid.Row="2" DockPanel.Dock="Top" HorizontalScrollBarVisibility="Visible"  VerticalScrollBarVisibility="Visible" x:Name="Logs" MinHeight="80" TextChanged="scrollToBottom" />
 
         </Grid>
     </DockPanel>

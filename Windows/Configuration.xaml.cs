@@ -42,16 +42,6 @@ namespace IEDCollector
 
             FSyncConfiguration config = Globals.config.config;
 
-            try
-            {
-                int.Parse(cyclePeriod.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("The cycle period must be a number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             if (keepAllLogFiles.IsChecked != true)
             {
                 try
@@ -65,7 +55,6 @@ namespace IEDCollector
                 }
             }
 
-            config.cyclePeriod = int.Parse(cyclePeriod.Text);
             config.logFilesKept = (bool)keepAllLogFiles.IsChecked ? -1 : int.Parse(logFilesKept.Text);
             config.startWithWindows = (bool)startWithWindows.IsChecked;
 

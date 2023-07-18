@@ -29,10 +29,12 @@ namespace IEDCollector
 
         public static bool validateLicense(string license)
         {
+            license = decodeLicense(license);
             ComputerInfo info = new ComputerInfo();
+            if (license == null) return false;
             License parsedLicense = License.Load(license);
 
-            return parsedLicense.Validate().Signature(PUBLIC_KEY)
+            return !parsedLicense.Validate().Signature(PUBLIC_KEY)
             .And()
             .AssertThat(lic => // Check Device Identifier matches.
                        lic.AdditionalAttributes.Get("DeviceIdentifier") == info.CpuId,
@@ -51,20 +53,25 @@ namespace IEDCollector
                 if (licenseStorage == null) return SecurityValidationResult.UNSET;
 
                 string license = licenseStorage.GetValue("license").ToString();
-                string plainTextLicense = decodeLicense(license);
 
-                if (plainTextLicense == null)
-                {
-                    return SecurityValidationResult.INVALID;
-                }
-
-                return validateLicense(plainTextLicense) ? SecurityValidationResult.OK : SecurityValidationResult.INVALID;
+                return validateLicense(license) ? SecurityValidationResult.OK : SecurityValidationResult.INVALID;
             }
         }
 
         public static SecurityValidationResult setLicense(string key)
         {
-            return SecurityValidationResult.OK;
+            try
+            {
+                using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+                {
+                    licenseStorage.SetValue("license", key);
+                    return SecurityValidationResult.OK;
+                }
+            } catch (Exception e)
+            {
+                return SecurityValidationResult.INVALID;
+            }
+            
         }
     }
 }

@@ -118,6 +118,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -130,18 +131,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-    </Reference>
     <Reference Include="Xceed.Wpf.Toolkit, Version=4.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>packages\Extended.Wpf.Toolkit.4.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
@@ -151,39 +140,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="About.xaml.cs">
+    <Compile Include="Windows\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="ComputerInfo.cs" />
-    <Compile Include="Configuration.xaml.cs">
+    <Compile Include="Windows\Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileMetadata.xaml.cs">
+    <Compile Include="Windows\FileMetadata.xaml.cs">
       <DependentUpon>FileMetadata.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileProgressMonitor.cs" />
     <Compile Include="GlobalConfiguration.cs" />
     <Compile Include="IED.cs" />
     <Compile Include="ListBoxAsQueue.cs" />
-    <Compile Include="NewProfileDialog.xaml.cs">
+    <Compile Include="Windows\InsertLicense.xaml.cs">
+      <DependentUpon>InsertLicense.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LicenseRequest.xaml.cs">
+      <DependentUpon>LicenseRequest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\NewProfileDialog.xaml.cs">
       <DependentUpon>NewProfileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profile.cs" />
-    <Compile Include="Preferences.xaml.cs">
+    <Compile Include="Windows\Preferences.xaml.cs">
       <DependentUpon>Preferences.xaml</DependentUpon>
     </Compile>
     <Compile Include="Runner.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="UserConfig.cs" />
-    <Page Include="About.xaml">
+    <Page Include="Windows\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Configuration.xaml">
+    <Page Include="Windows\Configuration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FileMetadata.xaml">
+    <Page Include="Windows\FileMetadata.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\InsertLicense.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -202,7 +201,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NewProfileDialog.xaml">
+    <Page Include="Windows\LicenseRequest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\NewProfileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,7 +213,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Preferences.xaml">
+    <Page Include="Windows\Preferences.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -264,7 +267,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Embed\iec61850">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -297,12 +300,18 @@
     <Resource Include="Icons\database-fill-up.png" />
     <Resource Include="Icons\database-fill-x.png" />
     <Resource Include="Icons\database-fill-check.png" />
+    <Resource Include="Icons\journal-check.png" />
+    <Resource Include="Icons\journal-minus.png" />
+    <Resource Include="Icons\journal-plus.png" />
+    <Resource Include="Icons\journals.png" />
+    <Resource Include="Icons\hdd-network-fill-green.png" />
+    <Resource Include="Icons\hdd-network-fill-red.png" />
     <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy $(ProjectDir)iec61850.dll $(TargetDir) /Y
+xcopy $(ProjectDir)iec61850dotnet.dll $(TargetDir) /Y</PreBuildEvent>
   </PropertyGroup>
 </Project>

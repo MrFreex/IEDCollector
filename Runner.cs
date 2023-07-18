@@ -14,9 +14,17 @@ namespace IEDCollector
         POLLING
     }
 
+    internal enum ExecutionResult
+    {
+        SKIPPED,
+        SUCCESS,
+        PARTIAL,
+        FAILED
+    }
+
     internal class Runner
     {
-        public delegate void IedFinishedCallback(IED subject, bool status);
+        public delegate void IedFinishedCallback(IED subject, ExecutionResult status);
 
         private ProgressBar progress;
         private ListBox queue;
@@ -80,6 +88,8 @@ namespace IEDCollector
             {
                 if (!this.IsRunning) break;
 
+
+
                 ListBoxAsQueue realQueue = new ListBoxAsQueue(this.queue);
 
                 Application.Current.Dispatcher.Invoke(() =>
@@ -90,54 +100,27 @@ namespace IEDCollector
 
                 if (!this.IsRunning) break;
 
+                ExecutionResult success = ExecutionResult.SUCCESS;
+
                 using (IED ied = new IED(subject))
                 {
+
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         this.status.Text = "Transferring from " + ied.ToString();
                         Globals.logs.log("Transferring from " + ied.ToString());
                     });
-
-                    if (!this.IsRunning) break;
-
-                    bool success = true;
-
-                    if (ied.connect())
+                    if (subject.includedInCollection)
                     {
-                        if (!this.IsRunning) break;
 
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            realQueue.removeFirst();
-                        });
 
                         if (!this.IsRunning) break;
 
-                        List<EditableFileDirectoryEntry> tree;
-                        try
+
+
+                        if (ied.connect())
                         {
-
-                            tree = ied.ReadFileTree("");
-
-                            string[] tryAlternatives =
-                            { "/", "\\" };
-                            int i = 0;
-
-                            while (tree.Count == 0 && i < tryAlternatives.Length)
-                            {
-                                tree = ied.ReadFileTree(tryAlternatives[i]);
-                                i++;
-                            }
-
                             if (!this.IsRunning) break;
-                            /*
-                            foreach (EditableFileDirectoryEntry entry in tree)
-                            {
-                                Globals.logs.log("[DEBUG] Tree file: " + entry.fileName);
-                            }
-                            */
-
-                            double addProgress = (this.ProgressPerIed + 0.0) / (tree.Count + 0.0);
 
                             Application.Current.Dispatcher.Invoke(() =>
                             {
@@ -146,98 +129,139 @@ namespace IEDCollector
 
                             if (!this.IsRunning) break;
 
-                            Application.Current.Dispatcher.Invoke(() =>
+                            List<EditableFileDirectoryEntry> tree;
+                            try
                             {
+
+                                tree = ied.ReadFileTree("");
+
+                                string[] tryAlternatives =
+                                { "/", "\\" };
+                                int i = 0;
+
+                                while (tree.Count == 0 && i < tryAlternatives.Length)
+                                {
+                                    tree = ied.ReadFileTree(tryAlternatives[i]);
+                                    i++;
+                                }
+
+                                if (!this.IsRunning) break;
+                                /*
                                 foreach (EditableFileDirectoryEntry entry in tree)
                                 {
-                                    realQueue.addLast(new ListBoxItem() { Content = String.Format("[{1}] Download file '{0}'", entry.GetFileName(), ied.ToString()) });
+                                    Globals.logs.log("[DEBUG] Tree file: " + entry.fileName);
                                 }
-                            });
+                                */
 
-                            if (!this.IsRunning) break;
-
-                            foreach (EditableFileDirectoryEntry entry in tree)
-                            {
-                                if (!this.IsRunning) break;
-
-                                updateFileProgress(0.0);
-
-                                try
-                                {
-                                    string fixEntry = entry.fileName.Replace("/", "\\");
-
-                                    if (fixEntry.StartsWith("\\") || fixEntry.StartsWith("/"))
-                                    {
-                                        fixEntry = fixEntry.Substring(1);
-                                    }
-
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        this.fileName.Text = entry.fileName;
-                                    }, System.Windows.Threading.DispatcherPriority.Background);
-
-                                    DownloadedFileState state = ied.DownloadFile(entry, Path.Combine(ied.config.logsFolder, fixEntry), new FileProgressMonitor(this.updateFileProgress), false);
-
-                                    string log = String.Empty;
-
-                                    if (state == DownloadedFileState.SKIPPED_NEWER)
-                                    {
-                                        log = String.Format("[SKIP] [{1}] File '{0}' is newer or equal locally", entry.GetFileName(), ied.ToString());
-                                    }
-                                    else if (state == DownloadedFileState.SKIPPED_DIRECTORY)
-                                    {
-                                        log = String.Format("[SKIP] [{1}] File '{0}' is a directory", entry.GetFileName(), ied.ToString());
-                                    }
-                                    else if (state == DownloadedFileState.DOWNLOADED)
-                                    {
-                                        log = String.Format("[{1}] File '{0}' downloaded", entry.GetFileName(), ied.ToString());
-                                    }
-                                    else if (state == DownloadedFileState.SKIPPED_FILTER)
-                                    {
-                                        log = String.Format("[SKIP] [{1}] File '{0}' skipped due to filter (folder or file extension)", entry.GetFileName(), ied.ToString());
-                                    }
-
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        Globals.logs.log(log);
-                                    });
-                                }
-                                catch (Exception)
-                                {
-                                    success = false;
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        Globals.logs.log(String.Format("Failed to download file '{0}' from IED '{1}'", entry.GetFileName(), ied.ToString()));
-                                    });
-                                }
+                                double addProgress = (this.ProgressPerIed + 0.0) / (tree.Count + 0.0);
 
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
                                     realQueue.removeFirst();
-                                    this.progress.Value += addProgress;
                                 });
+
+                                if (!this.IsRunning) break;
+
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    foreach (EditableFileDirectoryEntry entry in tree)
+                                    {
+                                        realQueue.addLast(new ListBoxItem() { Content = String.Format("[{1}] Download file '{0}'", entry.GetFileName(), ied.ToString()) });
+                                    }
+                                });
+
+                                if (!this.IsRunning) break;
+
+                                foreach (EditableFileDirectoryEntry entry in tree)
+                                {
+                                    if (!this.IsRunning) break;
+
+                                    updateFileProgress(0.0);
+
+                                    try
+                                    {
+                                        string fixEntry = entry.fileName.Replace("/", "\\");
+
+                                        if (fixEntry.StartsWith("\\") || fixEntry.StartsWith("/"))
+                                        {
+                                            fixEntry = fixEntry.Substring(1);
+                                        }
+
+                                        Application.Current.Dispatcher.Invoke(() =>
+                                        {
+                                            this.fileName.Text = entry.fileName;
+                                        }, System.Windows.Threading.DispatcherPriority.Background);
+
+                                        DownloadedFileState state = ied.DownloadFile(entry, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder, fixEntry), new FileProgressMonitor(this.updateFileProgress), false);
+
+                                        string log = String.Empty;
+
+                                        if (state == DownloadedFileState.SKIPPED_NEWER)
+                                        {
+                                            log = String.Format("[SKIP] [{1}] File '{0}' is newer or equal locally", entry.GetFileName(), ied.ToString());
+                                        }
+                                        else if (state == DownloadedFileState.SKIPPED_DIRECTORY)
+                                        {
+                                            log = String.Format("[SKIP] [{1}] File '{0}' is a directory", entry.GetFileName(), ied.ToString());
+                                        }
+                                        else if (state == DownloadedFileState.DOWNLOADED)
+                                        {
+                                            log = String.Format("[{1}] File '{0}' downloaded", entry.GetFileName(), ied.ToString());
+                                        }
+                                        else if (state == DownloadedFileState.SKIPPED_FILTER)
+                                        {
+                                            log = String.Format("[SKIP] [{1}] File '{0}' skipped due to filter (folder or file extension)", entry.GetFileName(), ied.ToString());
+                                        }
+
+                                        Application.Current.Dispatcher.Invoke(() =>
+                                        {
+                                            Globals.logs.log(log);
+                                        });
+                                    }
+                                    catch (Exception)
+                                    {
+                                        success = ExecutionResult.PARTIAL;
+                                        Application.Current.Dispatcher.Invoke(() =>
+                                        {
+                                            Globals.logs.log(String.Format("Failed to download file '{0}' from IED '{1}'", entry.GetFileName(), ied.ToString()));
+                                        });
+                                    }
+
+                                    Application.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        realQueue.removeFirst();
+                                        this.progress.Value += addProgress;
+                                    });
+                                }
                             }
+                            catch (Exception)
+                            {
+                                success = ExecutionResult.FAILED;
+                                Application.Current.Dispatcher.Invoke(() => { Globals.logs.log("Failed to fetch directories from IED " + ied.ToString()); realQueue.removeFirst(); });
+                            }
+
+
                         }
-                        catch (Exception)
+                        else
                         {
-                            success = false;
-                            Application.Current.Dispatcher.Invoke(() => { Globals.logs.log("Failed to fetch directories from IED " + ied.ToString()); realQueue.removeFirst(); });
+                            success = ExecutionResult.FAILED;
+                            Globals.logs.log(String.Format("[WARNING] IED '{0}' is unreachable, skipping.", ied.ToString()));
                         }
-
-
                     }
                     else
                     {
-                        success = false;
-                        Globals.logs.log(String.Format("[WARNING] IED '{0}' is unreachable, skipping.", ied.ToString()));
+                        success = ExecutionResult.SKIPPED;
+                        Globals.logs.log("[SKIP] " + ied.ToString() + " because it is unchecked");
                     }
+
+
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Globals.logs.log("Finished processing IED " + ied.ToString());
                         this.queue.Items.Clear();
                         this.onSingleExecutionOver(ied, success);
-                    });
+                    }, System.Windows.Threading.DispatcherPriority.Background);
                 }
 
             }
@@ -294,7 +318,7 @@ namespace IEDCollector
             }
             else
             {
-                int cyclePeriod = Globals.config != null ? Globals.config.config.cyclePeriod : 1;
+                int cyclePeriod = Globals.currentProfile.Settings.PollingInterval;
                 this.worker = new Thread(() =>
                 {
                     while (this.IsRunning)

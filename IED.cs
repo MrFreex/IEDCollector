@@ -147,6 +147,7 @@ namespace IEDCollector
             foreach (string entry in dir)
             {
                 string folderPath = Path.GetDirectoryName(entry).Replace("\\", "/");
+
                 /*
                 Globals.logs.log("File: " + entry);
                 if (!folders.ContainsKey(folderPath))

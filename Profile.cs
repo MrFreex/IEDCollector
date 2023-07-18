@@ -28,7 +28,7 @@ namespace IEDCollector
         public string logsFolder;
         public Dictionary<string, bool> logEnabledFolders;
         public Dictionary<string, bool> logEnabledExtensions;
-        public bool includedInCollection = false;
+        public bool includedInCollection = true;
         public string protocol = "IEC61850";
 
         public IEDConfig()
@@ -68,6 +68,21 @@ namespace IEDCollector
         }
     }
 
+    internal class ProfileSettings
+    {
+        private string rootFolder;
+        public string RootFolder
+        {
+            get => this.rootFolder; set => this.rootFolder = value;
+        }
+
+        private int pollingInterval;
+        public int PollingInterval
+        {
+            get => this.pollingInterval; set => this.pollingInterval = value;
+        }
+    }
+
     internal class Profile
     {
         public const string PROFILEEXTENSION = ".iedcprofile";
@@ -82,6 +97,7 @@ namespace IEDCollector
         public string FilePath => Path.Combine(this.folderPath, this.profileName + PROFILEEXTENSION);
 
         private readonly List<IEDConfig> ieds = new List<IEDConfig>();
+        private readonly ProfileSettings settings;
 
         private readonly List<IedsChangedHandler> iedsChangedHandlers = new List<IedsChangedHandler>();
 
@@ -94,6 +110,13 @@ namespace IEDCollector
             }
         }
 
+        public ProfileSettings Settings
+        {
+            get
+            {
+                return this.settings;
+            }
+        }
 
         public List<IEDConfig> IEDs
         {
@@ -112,6 +135,14 @@ namespace IEDCollector
             }
 
             this.profileName = profileName;
+
+            
+
+            this.settings = new ProfileSettings()
+            {
+                PollingInterval = 10,
+                RootFolder = Path.Combine(ConfigFolder.extend(ConfigFolder.IEDLOGSROOT), this.Name)
+            };
 
             if (File.Exists(this.FilePath))
             {
@@ -148,7 +179,12 @@ namespace IEDCollector
                 throw new IOException("Error reading file");
             }
 
-            foreach (XElement XIed in profileXml.Root.Elements())
+            XElement XSettings = profileXml.Root.Element("settings");
+
+            this.settings.PollingInterval = int.Parse(XSettings.Attribute("pollingInterval").Value);
+            this.settings.RootFolder = (XSettings.Attribute("rootFolder").Value);
+
+            foreach (XElement XIed in profileXml.Root.Element("ieds").Elements())
             {
                 IEDConfig iEDConfig = new IEDConfig();
 
@@ -184,7 +220,19 @@ namespace IEDCollector
         public void save()
         {
             Globals.logs.log("Saving profile " + this.profileName);
-            XDocument XConfig = new XDocument(new XElement("ieds"));
+            XDocument XConfig = new XDocument(new XElement("profile", new XElement("settings"), new XElement("ieds")));
+
+            XElement XSettings = XConfig.Root.Element("settings");
+
+            if (!Directory.Exists(this.settings.RootFolder))
+            {
+                Directory.CreateDirectory(this.settings.RootFolder);
+            }
+
+            XSettings.Add(new XAttribute("rootFolder", this.settings.RootFolder));
+            XSettings.Add(new XAttribute("pollingInterval", this.settings.PollingInterval));
+
+            XElement XIeds = XConfig.Root.Element("ieds");
 
             foreach (IEDConfig iEDConfig in this.ieds)
             {
@@ -201,7 +249,7 @@ namespace IEDCollector
                 XIed.Add(new XAttribute("includedInCollection", iEDConfig.includedInCollection.ToString()));
                 XIed.Add(new XAttribute("protocol", iEDConfig.protocol));
 
-                XConfig.Root.Add(XIed);
+                XIeds.Add(XIed);
             }
 
             try

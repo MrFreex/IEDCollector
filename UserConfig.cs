@@ -12,12 +12,10 @@ namespace IEDCollector
     // Cycle period, log files kept (number or all [-1]), start with windows, data folder location?
     internal class FSyncConfiguration
     {
-        public int cyclePeriod;
         public int logFilesKept;
         public bool startWithWindows;
         public bool resumePollingOnStartup;
 
-        public const string CYCLEPERIOD = "cyclePeriod";
         public const string LOGFILESKEPT = "logFilesKept";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
@@ -57,7 +55,6 @@ namespace IEDCollector
         {
             FSyncConfiguration config = this.config != null ? this.config : new FSyncConfiguration()
             {
-                cyclePeriod = 1,
                 logFilesKept = 20,
                 startWithWindows = false,
                 resumePollingOnStartup = false
@@ -75,7 +72,7 @@ namespace IEDCollector
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.CYCLEPERIOD, config.cyclePeriod), new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
 
             try
             {
@@ -99,7 +96,6 @@ namespace IEDCollector
 
                 this.config = new FSyncConfiguration()
                 {
-                    cyclePeriod = int.Parse(configurationNode.Element(FSyncConfiguration.CYCLEPERIOD).Value),
                     logFilesKept = int.Parse(configurationNode.Element(FSyncConfiguration.LOGFILESKEPT).Value),
                     startWithWindows = bool.Parse(configurationNode.Element(FSyncConfiguration.STARTWITHWINDOWS).Value),
                     resumePollingOnStartup = bool.Parse(configurationNode.Element(FSyncConfiguration.RESUMEPOLLINGONSTARTUP).Value)

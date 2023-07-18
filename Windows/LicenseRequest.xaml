@@ -1,0 +1,23 @@
+﻿<Window x:Class="IEDCollector.Windows.LicenseRequest"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IEDCollector.Windows"
+        mc:Ignorable="d"
+        Title="License Request" Height="171" Width="800" SizeToContent="WidthAndHeight">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0">Full Name: license owner's full name</Label>
+        <TextBox x:Name="fullName" Grid.Row="1" />
+        <Label Grid.Row="2">Location: address of the establishment the software will be used in</Label>
+        <TextBox x:Name="location" Grid.Row="3" />
+        <Button Margin="0,10,0,10" Click="Button_Click" Grid.Row="4" Content="Request" />
+    </Grid>
+</Window>
