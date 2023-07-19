@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class FilesDownloader
     {

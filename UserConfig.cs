@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class FSyncPreferences
     {
@@ -16,12 +12,10 @@ namespace FSync
     // Cycle period, log files kept (number or all [-1]), start with windows, data folder location?
     internal class FSyncConfiguration
     {
-        public int cyclePeriod;
         public int logFilesKept;
         public bool startWithWindows;
         public bool resumePollingOnStartup;
 
-        public const string CYCLEPERIOD = "cyclePeriod";
         public const string LOGFILESKEPT = "logFilesKept";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
@@ -48,7 +42,8 @@ namespace FSync
             if (File.Exists(this.filePath))
             {
                 load();
-            } else
+            }
+            else
             {
                 save();
             }
@@ -60,7 +55,6 @@ namespace FSync
         {
             FSyncConfiguration config = this.config != null ? this.config : new FSyncConfiguration()
             {
-                cyclePeriod = 1,
                 logFilesKept = 20,
                 startWithWindows = false,
                 resumePollingOnStartup = false
@@ -78,12 +72,13 @@ namespace FSync
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.CYCLEPERIOD, config.cyclePeriod), new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
-        
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
+
             try
             {
                 Xconfig.Save(this.filePath);
-            } catch { }
+            }
+            catch { }
         }
 
         public void load()
@@ -101,12 +96,12 @@ namespace FSync
 
                 this.config = new FSyncConfiguration()
                 {
-                    cyclePeriod = int.Parse(configurationNode.Element(FSyncConfiguration.CYCLEPERIOD).Value),
                     logFilesKept = int.Parse(configurationNode.Element(FSyncConfiguration.LOGFILESKEPT).Value),
                     startWithWindows = bool.Parse(configurationNode.Element(FSyncConfiguration.STARTWITHWINDOWS).Value),
                     resumePollingOnStartup = bool.Parse(configurationNode.Element(FSyncConfiguration.RESUMEPOLLINGONSTARTUP).Value)
                 };
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 File.Copy(this.filePath, this.filePath + ".bak", true);
                 save();

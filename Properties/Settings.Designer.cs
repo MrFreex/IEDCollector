@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FSync.Properties {
+namespace IEDCollector.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

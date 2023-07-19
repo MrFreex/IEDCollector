@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace FSync
+namespace IEDCollector
 {
     internal class ListBoxAsQueue
     {
@@ -21,7 +16,8 @@ namespace FSync
             return item;
         }
 
-        public ListBoxItem removeFirst() {
+        public ListBoxItem removeFirst()
+        {
             if (listBox.Items.Count == 0)
             {
                 return null;

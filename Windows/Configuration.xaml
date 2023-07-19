@@ -1,0 +1,43 @@
+﻿<Window x:Class="IEDCollector.Configuration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IEDCollector"
+        mc:Ignorable="d"
+        Title="Configuration" Height="260" Width="543">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="10,10,10,10">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center">Logs files kept</TextBlock>
+                <TextBox x:Name="logFilesKept" VerticalAlignment="Center" Margin="30,0,5,0" Width="30" />
+                <TextBlock VerticalAlignment="Center">files</TextBlock>
+                <CheckBox x:Name="keepAllLogFiles" Margin="10,5,5,5" Content="Keep all files" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="keepAllFiles_Checked" Unchecked="keepAllFiles_Checked"/>
+            </StackPanel>
+            <CheckBox x:Name="startWithWindows" Content="Start with windows" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Software data location</TextBlock>
+                <TextBox x:Name="dataLocation" Margin="10,0,10,0" Width="278" />
+                <Button Click="browseDataLocation" Content="Browse" Width="65" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="5" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Click="save" Content="Save" Height="27" Width="45" />
+            <Button Click="cancel" Content="Cancel" HorizontalAlignment="Right" Width="45" Height="27" />
+        </StackPanel>
+    </DockPanel>
+
+</Window>

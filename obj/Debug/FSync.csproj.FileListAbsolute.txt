@@ -54,3 +54,5 @@ C:\Users\FL\Desktop\Source\Fsync\bin\Debug\System.Memory.dll
 C:\Users\FL\Desktop\Source\Fsync\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\FL\Desktop\Source\Fsync\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\FL\Desktop\Source\Fsync\bin\Debug\System.Buffers.dll
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\FileMetadata.g.cs
+C:\Users\FL\Desktop\Source\Fsync\obj\Debug\FileMetadata.baml
