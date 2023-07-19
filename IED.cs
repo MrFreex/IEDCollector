@@ -1,6 +1,7 @@
 ﻿using IEC61850.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -25,6 +26,7 @@ namespace IEDCollector
     {
         DOWNLOADED, SKIPPED_DIRECTORY, SKIPPED_FILTER, SKIPPED_NEWER
     }
+
 
     internal class EditableFileDirectoryEntry
     {
@@ -54,6 +56,32 @@ namespace IEDCollector
         public ulong GetLastModified()
         {
             return lastModified;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is EditableFileDirectoryEntry)
+            {
+                EditableFileDirectoryEntry other = (EditableFileDirectoryEntry)obj;
+                return other.GetFileName().Equals(this.GetFileName());
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    internal class FileDirectoryEntryComparer : IEqualityComparer<EditableFileDirectoryEntry>
+    {
+        public bool Equals(EditableFileDirectoryEntry x, EditableFileDirectoryEntry y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(EditableFileDirectoryEntry obj)
+        {
+            return obj.GetFileName().GetHashCode();
         }
     }
 
@@ -104,7 +132,7 @@ namespace IEDCollector
             if (this.connection == null) throw new InvalidOperationException("Not connected");
             List<string> devices;
 
-            Globals.logs.log(String.Format("Performing name cross-check for '{0}'...", this.ToString()));
+            Globals.logs.log(String.Format("Performing name cross-check for '{0}'...", this.ToString()), LogLevel.Detailed);
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
@@ -121,7 +149,7 @@ namespace IEDCollector
                 }
             }
 
-            Globals.logs.log(String.Format("Cross check ok for '{0}'", this.ToString()));
+            Globals.logs.log(String.Format("Cross check ok for '{0}'", this.ToString()), LogLevel.Detailed);
             return true;
         }
 
@@ -170,7 +198,7 @@ namespace IEDCollector
 
 
 
-            Globals.logs.log(String.Format("Reading file tree for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root));
+            Globals.logs.log(String.Format("Reading file tree for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root), LogLevel.Detailed);
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
@@ -180,13 +208,13 @@ namespace IEDCollector
                 }
                 catch (IedConnectionException e)
                 {
-                    //Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root));
+                    Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root), LogLevel.Debug);
                     files = new List<FileDirectoryEntry>();
                     //throw;
                 }
             }
 
-            Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>();
+            Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>(new FileDirectoryEntryComparer());
 
             foreach (FileDirectoryEntry file in files)
             {
@@ -196,7 +224,7 @@ namespace IEDCollector
                 completeTree[efd] = Path.HasExtension(file.GetFileName());
             }
 
-            Dictionary<EditableFileDirectoryEntry, bool> newTree = new Dictionary<EditableFileDirectoryEntry, bool>(completeTree);
+            Dictionary<EditableFileDirectoryEntry, bool> newTree = new Dictionary<EditableFileDirectoryEntry, bool>(completeTree, new FileDirectoryEntryComparer());
 
             foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in completeTree)
             {
@@ -268,7 +296,7 @@ namespace IEDCollector
         {
             return String.Format("[{0}] {1}", this.config.name, this.config.ip);
         }
-
+        /*
         private static byte[] sumByteArrays(List<byte[]> bs)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -281,7 +309,7 @@ namespace IEDCollector
                 return ms.ToArray();
             }
         }
-
+        */
         internal class FileData
         {
             public string path;
@@ -332,11 +360,13 @@ namespace IEDCollector
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
-                FileData reference = new FileData() { path = path.GetFileName() };
+                //FileData reference = new FileData() { path = path.GetFileName() };
                 double size = path.GetFileSize();
 
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
                 {
+                    
                     this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
                     {
                         //reference.data.Add(data);
@@ -355,11 +385,11 @@ namespace IEDCollector
 
                     //byte[] finalFileContent = sumByteArrays(reference.data);
 
-                    Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                    
                 }
-                
 
-               
+
+
 
                 //File.WriteAllBytes(destination, finalFileContent);
             }

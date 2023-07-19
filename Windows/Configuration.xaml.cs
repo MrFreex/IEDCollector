@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace IEDCollector
 {
@@ -12,7 +13,29 @@ namespace IEDCollector
     {
         public Configuration()
         {
+
             InitializeComponent();
+
+            // Fill combobox
+
+            logLevels.Items.Add(new ComboBoxItem()
+            {
+                Content = "Basic",
+                Tag = LogLevel.Basic,
+                IsSelected = Globals.config.config.logLevel == LogLevel.Basic
+            });
+            logLevels.Items.Add(new ComboBoxItem()
+            {
+                Content = "Detailed",
+                Tag = LogLevel.Detailed,
+                IsSelected = Globals.config.config.logLevel == LogLevel.Detailed
+            });
+            logLevels.Items.Add(new ComboBoxItem()
+            {
+                Content = "Debug",
+                Tag = LogLevel.Debug,
+                IsSelected = Globals.config.config.logLevel == LogLevel.Debug
+            });
         }
 
         private void browseDataLocation(object sender, RoutedEventArgs e)
@@ -58,6 +81,8 @@ namespace IEDCollector
             config.logFilesKept = (bool)keepAllLogFiles.IsChecked ? -1 : int.Parse(logFilesKept.Text);
             config.startWithWindows = (bool)startWithWindows.IsChecked;
 
+            config.logLevel = (LogLevel)((ComboBoxItem)logLevels.SelectedItem).Tag;
+
             if (dataLocation.Text != ConfigFolder.Path)
             {
                 if (MessageBox.Show("Changing the configuration folder will reset the application. Are you sure you want to continue? The application will restart to apply the configuration.", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
@@ -86,7 +111,7 @@ namespace IEDCollector
             // TODO : profile folder
 
             Globals.config.save();
-
+            Globals.logs.updateLogLevelSelectors();
             this.Close();
         }
 

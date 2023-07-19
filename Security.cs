@@ -67,11 +67,12 @@ namespace IEDCollector
                     licenseStorage.SetValue("license", key);
                     return SecurityValidationResult.OK;
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return SecurityValidationResult.INVALID;
             }
-            
+
         }
     }
 }

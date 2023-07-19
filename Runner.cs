@@ -146,12 +146,12 @@ namespace IEDCollector
                                 }
 
                                 if (!this.IsRunning) break;
-                                /*
+                                
                                 foreach (EditableFileDirectoryEntry entry in tree)
                                 {
-                                    Globals.logs.log("[DEBUG] Tree file: " + entry.fileName);
+                                    Globals.logs.log("Found Tree file: " + entry.fileName, LogLevel.Debug);
                                 }
-                                */
+                                
 
                                 double addProgress = (this.ProgressPerIed + 0.0) / (tree.Count + 0.0);
 
@@ -215,14 +215,15 @@ namespace IEDCollector
 
                                         Application.Current.Dispatcher.Invoke(() =>
                                         {
-                                            Globals.logs.log(log);
+                                            Globals.logs.log(log, LogLevel.Detailed);
                                         });
                                     }
-                                    catch (Exception)
+                                    catch (Exception e)
                                     {
                                         success = ExecutionResult.PARTIAL;
                                         Application.Current.Dispatcher.Invoke(() =>
                                         {
+                                            Globals.logs.log(e.ToString(), LogLevel.Debug);
                                             Globals.logs.log(String.Format("Failed to download file '{0}' from IED '{1}'", entry.GetFileName(), ied.ToString()));
                                         });
                                     }
@@ -251,7 +252,7 @@ namespace IEDCollector
                     else
                     {
                         success = ExecutionResult.SKIPPED;
-                        Globals.logs.log("[SKIP] " + ied.ToString() + " because it is unchecked");
+                        Globals.logs.log("[SKIP] " + ied.ToString() + " because it is unchecked", LogLevel.Detailed);
                     }
 
 

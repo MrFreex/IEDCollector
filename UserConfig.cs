@@ -13,10 +13,12 @@ namespace IEDCollector
     internal class FSyncConfiguration
     {
         public int logFilesKept;
+        public LogLevel logLevel;
         public bool startWithWindows;
         public bool resumePollingOnStartup;
 
         public const string LOGFILESKEPT = "logFilesKept";
+        public const string LOGLEVEL = "logLevel";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
     }
@@ -39,14 +41,13 @@ namespace IEDCollector
             this.filePath = Path.Combine(folderPath, CONFIGFILENAME);
             this.onLoadCallback = callback;
 
-            if (File.Exists(this.filePath))
+            if (!File.Exists(this.filePath))
             {
-                load();
-            }
-            else
-            {
+                
                 save();
             }
+
+            load();
 
             this.onLoadCallback(this.config, this.preferences);
         }
@@ -57,7 +58,8 @@ namespace IEDCollector
             {
                 logFilesKept = 20,
                 startWithWindows = false,
-                resumePollingOnStartup = false
+                resumePollingOnStartup = false,
+                logLevel = LogLevel.Basic
             };
 
             using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
@@ -72,11 +74,12 @@ namespace IEDCollector
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
 
             try
             {
                 Xconfig.Save(this.filePath);
+                
             }
             catch { }
         }
@@ -97,6 +100,7 @@ namespace IEDCollector
                 this.config = new FSyncConfiguration()
                 {
                     logFilesKept = int.Parse(configurationNode.Element(FSyncConfiguration.LOGFILESKEPT).Value),
+                    logLevel = (LogLevel)int.Parse(configurationNode.Element(FSyncConfiguration.LOGLEVEL).Value),
                     startWithWindows = bool.Parse(configurationNode.Element(FSyncConfiguration.STARTWITHWINDOWS).Value),
                     resumePollingOnStartup = bool.Parse(configurationNode.Element(FSyncConfiguration.RESUMEPOLLINGONSTARTUP).Value)
                 };
@@ -105,7 +109,10 @@ namespace IEDCollector
             {
                 File.Copy(this.filePath, this.filePath + ".bak", true);
                 save();
+                load();
             }
+
+            
         }
     }
 }

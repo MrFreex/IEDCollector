@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -242,7 +241,7 @@ namespace IEDCollector
                     }
                 };
 
-                open.Click += (object sender, RoutedEventArgs e) => Process.Start(Path.Combine(Globals.currentProfile.Settings.RootFolder,ied.logsFolder));
+                open.Click += (object sender, RoutedEventArgs e) => Process.Start(Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
 
                 actions.Items.Add(open);
 
@@ -316,7 +315,8 @@ namespace IEDCollector
                 if (Security.validateLicense(license))
                 {
                     Security.setLicense(license);
-                } else
+                }
+                else
                 {
                     Application.Current.Shutdown();
                 }
@@ -347,6 +347,7 @@ namespace IEDCollector
                 buildProfileSelector();
 
             });
+            Globals.logs.updateLogLevelSelectors();
             /*
             new Thread(() =>
             {
@@ -388,7 +389,7 @@ namespace IEDCollector
                     saveProfileButton.IsEnabled = false;
                     deleteProfileButton.IsEnabled = false;
                     exportProfileButton.IsEnabled = false;
-                    
+
 
                     rootFolderInput.IsEnabled = false;
                     rootFolderInput.Text = "";
@@ -439,7 +440,7 @@ namespace IEDCollector
 
                 Globals.currentProfile.IedsChanged = new Profile.IedsChangedHandler(populateIedTree);
 
-                
+
 
                 //this.currentProfileName.Text = Globals.currentProfile.Name;
                 if (renameOnly)
@@ -1097,7 +1098,7 @@ namespace IEDCollector
         private void updateNameLabel(object sender, TextChangedEventArgs e)
         {
             //iedFieldChanged(sender, e);
-            
+
             if (iedLogFolderInput.Text.Equals(String.Empty) || iedLogFolderInput.Text.Equals(previousConnectionName))
             {
                 iedLogFolderInput.Text = iedNameInput.Text;
@@ -1128,7 +1129,7 @@ namespace IEDCollector
                 if (Globals.currentProfile.delete())
                 {
                     profileSelector.Items.Remove(profileSelector.SelectedItem);
-                    
+
                 }
             }
 
@@ -1815,7 +1816,7 @@ namespace IEDCollector
 
             bool? res = dialog.ShowDialog();
 
-            if (res !=null && (bool)res)
+            if (res != null && (bool)res)
             {
                 File.Copy(Globals.currentProfile.FilePath, dialog.FileName, true);
                 MessageBox.Show("Profile exported successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1840,12 +1841,13 @@ namespace IEDCollector
                 if (!isProfileSaved)
                 {
                     MessageBoxResult r = MessageBox.Show("Current profile unsaved. Save changes?", "Save changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                    
+
                     if (r.Equals(MessageBoxResult.Yes))
                     {
                         saveIed(null, null);
                         saveIeds(null, null);
-                    } else if (r.Equals(MessageBoxResult.Cancel))
+                    }
+                    else if (r.Equals(MessageBoxResult.Cancel))
                     {
                         return;
                     }
@@ -1865,7 +1867,8 @@ namespace IEDCollector
                     profileSelector.Items.Add(item);
 
                     profileSelector.SelectedItem = item;
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                     MessageBox.Show("The profile already exists, rename it before proceeding.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

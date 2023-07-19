@@ -136,7 +136,7 @@ namespace IEDCollector
 
             this.profileName = profileName;
 
-            
+
 
             this.settings = new ProfileSettings()
             {

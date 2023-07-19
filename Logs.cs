@@ -8,9 +8,24 @@ using System.Windows.Controls;
 
 namespace IEDCollector
 {
+    internal enum LogLevel
+    {
+        Basic,
+        Detailed,
+        Debug
+    }
     internal class Logs
     {
+        private static Dictionary<LogLevel, string> levelsTexts = new Dictionary<LogLevel, string>()
+        {
+            { LogLevel.Basic, "BASIC" },
+            { LogLevel.Detailed, "DETAILED" },
+            { LogLevel.Debug, "DEBUG" },
+        };
+
         private Thread countChecker = null;
+
+        public LogLevel logLevel => Globals.config != null ? Globals.config.config.logLevel : LogLevel.Debug;
 
         private string twoChars(int component)
         {
@@ -34,6 +49,39 @@ namespace IEDCollector
         }
         private string folderPath = null;
         public readonly List<TextBox> outputs;
+        public readonly ContextMenu context;
+
+        public void setLogLevel(object sender, RoutedEventArgs e)
+        {
+            
+            RadioButton senderCast = (RadioButton)sender;
+            if (senderCast.Tag == null) return;
+
+            LogLevel logLevel = (LogLevel)senderCast.Tag;
+
+            if (Globals.config.config.logLevel != logLevel)
+            {
+                Globals.config.config.logLevel = logLevel;
+                Globals.config.save();
+            }
+
+        }
+
+        public void updateLogLevelSelectors()
+        {
+            MenuItem levelSelector = (MenuItem)this.context.Items[this.context.Items.Count - 1];
+
+            foreach (MenuItem sel in levelSelector.Items)
+            {
+                RadioButton r = (RadioButton)sel.Icon;
+                LogLevel rep = (LogLevel)r.Tag;
+                if (rep == Globals.config.config.logLevel)
+                {
+                    r.IsChecked = true;
+                    break;
+                }
+            }
+        }
 
         public Logs(List<TextBox> outputs)
         {
@@ -44,9 +92,30 @@ namespace IEDCollector
                 Header = "Open log file"
             };
 
+
+
+            MenuItem logLevels = new MenuItem()
+            {
+                Header = "Logging level",
+                Items =
+                {
+                    new MenuItem() { Header = "Basic", Icon =  new RadioButton() {IsChecked = true, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Basic }},
+                    new MenuItem() { Header = "Detailed", Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Detailed }},
+                    new MenuItem() { Header = "Debug", Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Debug }},
+                }
+            };
+
+            foreach (MenuItem item in logLevels.Items)
+            {
+                ((RadioButton)item.Icon).Checked += setLogLevel;
+            }
+
             openLogFile.Click += (object sender, RoutedEventArgs e) => Process.Start(this.filePath);
 
             actions.Items.Add(openLogFile);
+            actions.Items.Add(logLevels);
+
+            this.context = actions;
 
             foreach (TextBox output in outputs)
             {
@@ -57,11 +126,15 @@ namespace IEDCollector
             this.outputs = outputs;
         }
 
-        public void log(List<string> lines)
+        /*
+
+        public void log(List<string> lines) => log(lines, LogLevel.Basic);
+
+        public void log(List<string> lines, LogLevel level)
         {
             for (int i = 0; i < lines.Count; i++)
             {
-                lines[i] = string.Format("[{0}] {1} \n", DateTime.Now.ToString(), lines[i]);
+                lines[i] = genLogMessage(lines[i], level);
             }
 
             string joinedText = string.Join("\n", lines);
@@ -97,9 +170,19 @@ namespace IEDCollector
             }
         }
 
-        public void log(string message)
+        */
+
+        public string genLogMessage(string message, LogLevel level) => string.Format("|{2}| [{0}] {1} \n", DateTime.Now.ToString(), message, levelsTexts[level]);
+
+        public void log(string message) => log(message, LogLevel.Basic);
+
+        public void log(string message, LogLevel level)
         {
-            string finalMsg = string.Format("[{0}] {1} \n", DateTime.Now.ToString(), message);
+            Debug.WriteLine(String.Format("[LOG] {0}", message));
+
+            if (level > this.logLevel) return;
+
+            string finalMsg = genLogMessage(message, level);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
