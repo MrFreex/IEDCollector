@@ -21,8 +21,8 @@ namespace IEDCollector.Windows
 
         public LicenseRequest()
         {
-            this.DialogResult = false;
             InitializeComponent();
+            //this.DialogResult = false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

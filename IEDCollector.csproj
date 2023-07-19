@@ -306,6 +306,9 @@
     <Resource Include="Icons\journals.png" />
     <Resource Include="Icons\hdd-network-fill-green.png" />
     <Resource Include="Icons\hdd-network-fill-red.png" />
+    <EmbeddedResource Include="Embed\iec61850.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup />

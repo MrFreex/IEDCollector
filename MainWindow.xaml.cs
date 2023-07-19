@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -323,6 +325,26 @@ namespace IEDCollector
             }
         }
 
+        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            Globals.logs.log(String.Format("Loading assembly {0}", args.Name));
+            return EmbeddedAssembly.Get(args.Name);
+        }
+
+        [DllImport("kernel32", SetLastError = true)]
+        private static extern bool FreeLibrary(IntPtr hModule);
+
+        public static void UnloadImportedDll(string DllPath)
+        {
+            foreach (System.Diagnostics.ProcessModule mod in System.Diagnostics.Process.GetCurrentProcess().Modules)
+            {
+                if (mod.FileName.ToUpper() == DllPath.ToUpper())
+                {
+                    FreeLibrary(mod.BaseAddress);
+                }
+            }
+        }
+
         public MainWindow()
         {
             verifyLicense();
@@ -348,6 +370,11 @@ namespace IEDCollector
 
             });
             Globals.logs.updateLogLevelSelectors();
+
+            EmbeddedAssembly.Load("IEDCollector.Embed.iec61850.dll", "iec61850.dll");
+
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+
             /*
             new Thread(() =>
             {

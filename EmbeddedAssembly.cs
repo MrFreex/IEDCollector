@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IEDCollector;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -40,7 +41,7 @@ public class EmbeddedAssembly
             try
             {
                 asm = Assembly.Load(ba);
-                Debug.WriteLine("Loading\t" + asm.FullName);
+                Globals.logs.log("Loading\t" + asm.FullName, LogLevel.Debug);
                 // Add the assembly/dll into dictionary
                 dic.Add(asm.FullName, asm);
                 return;
