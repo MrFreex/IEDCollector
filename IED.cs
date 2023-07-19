@@ -335,26 +335,33 @@ namespace IEDCollector
                 FileData reference = new FileData() { path = path.GetFileName() };
                 double size = path.GetFileSize();
 
-                this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
+                using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
                 {
-                    reference.data.Add(data);
-                    if (size > 0)
+                    this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
                     {
-                        monitor.Progress += (sizeof(byte) * data.Length) / size;
-                    }
-                    else
-                    {
-                        monitor.IsIndeterminate = true;
-                    }
+                        //reference.data.Add(data);
+                        writer.Write(data, 0, data.Length);
+                        if (size > 0)
+                        {
+                            monitor.Progress += (sizeof(byte) * data.Length) / size;
+                        }
+                        else
+                        {
+                            monitor.IsIndeterminate = true;
+                        }
 
-                    return true;
-                }, null);
+                        return true;
+                    }, null);
 
-                byte[] finalFileContent = sumByteArrays(reference.data);
+                    //byte[] finalFileContent = sumByteArrays(reference.data);
 
-                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                    Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                }
+                
 
-                File.WriteAllBytes(destination, finalFileContent);
+               
+
+                //File.WriteAllBytes(destination, finalFileContent);
             }
 
             return DownloadedFileState.DOWNLOADED;
