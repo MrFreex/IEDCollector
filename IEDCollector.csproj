@@ -76,7 +76,7 @@
     </Reference>
     <Reference Include="Ookii.Dialogs.Wpf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\GitHub\ookii-dialogs-wpf\src\Ookii.Dialogs.Wpf\bin\Debug\net462\Ookii.Dialogs.Wpf.dll</HintPath>
+      <HintPath>References\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Standard.Licensing, Version=1.1.5.0, Culture=neutral, PublicKeyToken=9f81b18f6db6aea5, processorArchitecture=MSIL">
       <HintPath>packages\Standard.Licensing.1.1.5\lib\net45\Standard.Licensing.dll</HintPath>
@@ -271,6 +271,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="References\Ookii.Dialogs.Wpf.dll" />
+    <Content Include="References\Ookii.Dialogs.Wpf.pdb" />
     <Resource Include="Play.png" />
     <Resource Include="Icons\arrow-repeat.png" />
     <Resource Include="Icons\dash.png" />
