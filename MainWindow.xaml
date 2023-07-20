@@ -21,9 +21,7 @@
                 <MenuItem Visibility="Hidden" x:Name="menuOpenPreferences" Header="Preferences" Click="openPreferences"/>
             </MenuItem>
             <MenuItem Header="About" Click="openAbout"/>
-            <MenuItem Header="License">
-                <MenuItem Header="Request License" Click="requestLicense" />
-            </MenuItem>
+            <MenuItem Header="License" Click="openLicenseWindow"/>
         </Menu>
         <Grid DockPanel.Dock="Top">
             <Grid.RowDefinitions>
@@ -258,25 +256,25 @@
                                             <ComboBox Grid.Row="1" Grid.Column="0">
                                                 <ComboBox.Items>
                                                     <ComboBoxItem IsSelected="True" Content="IEC61850" />
-                                                    <ComboBoxItem Content="FTP" IsEnabled="False" />
-                                                    <ComboBoxItem Content="SFTP" IsEnabled="False" />
-                                                    <ComboBoxItem Content="Direct" IsEnabled="False" />
+                                                    <ComboBoxItem Visibility="Hidden" Content="FTP" IsEnabled="False" />
+                                                    <ComboBoxItem Visibility="Hidden" Content="SFTP" IsEnabled="False" />
+                                                    <ComboBoxItem Visibility="Hidden" Content="Direct" IsEnabled="False" />
                                                 </ComboBox.Items>
                                             </ComboBox>
                                             <Label Grid.Row="0" Grid.Column="2" >IP Address</Label>
                                             <TextBox Grid.Row="1" Grid.Column="2" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" PreviewTextInput="ipFormatting" />
                                             <Label Grid.Row="2" Grid.Column="0">Port</Label>
                                             <xctk:IntegerUpDown Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="65353" x:Name="iedPortInput" ValueChanged="iedFieldChanged" />
-                                            <Label Grid.Row="2" Grid.Column="2">Encryption</Label>
-                                            <ComboBox Grid.Row="3" Grid.Column="2">
+                                            <Label Grid.Row="2" Visibility="Hidden" Grid.Column="2">Encryption</Label>
+                                            <ComboBox Visibility="Hidden" Grid.Row="3" Grid.Column="2">
                                                 <ComboBox.Items>
                                                     <ComboBoxItem IsSelected="True" Content="No encryption" />
                                                 </ComboBox.Items>
                                             </ComboBox>
-                                            <Label Grid.Row="4" Grid.Column="0" >Username</Label>
-                                            <TextBox Grid.Row="5" Grid.Column="0" x:Name="iedUsernameInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
-                                            <Label Grid.Row="4" Grid.Column="2" >Password</Label>
-                                            <TextBox Grid.Row="5" Grid.Column="2" x:Name="iedPasswordInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="0" >Username</Label>
+                                            <TextBox Visibility="Hidden" Grid.Row="5" Grid.Column="0" x:Name="iedUsernameInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
+                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="2" >Password</Label>
+                                            <TextBox Visibility="Hidden" Grid.Row="5" Grid.Column="2" x:Name="iedPasswordInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
                                         </Grid>
 
 

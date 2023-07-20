@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using NotifyIcon = System.Windows.Forms.NotifyIcon;
 
 namespace IEDCollector
 {
@@ -313,7 +314,7 @@ namespace IEDCollector
 
                 askForLicense.ShowDialog();
 
-                string license = askForLicense.licenseBox.Text;
+                string license = askForLicense.licenseBox.Password;
                 if (Security.validateLicense(license))
                 {
                     Security.setLicense(license);
@@ -327,7 +328,7 @@ namespace IEDCollector
 
         static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            Globals.logs.log(String.Format("Loading assembly {0}", args.Name));
+            Globals.logs.log(String.Format("Loading assembly {0}", args.Name), LogLevel.Debug);
             return EmbeddedAssembly.Get(args.Name);
         }
 
@@ -345,6 +346,7 @@ namespace IEDCollector
             }
         }
 
+
         public MainWindow()
         {
             verifyLicense();
@@ -354,6 +356,39 @@ namespace IEDCollector
             {
                 this.Logs
             });
+
+            // Tray Icon setup
+
+            NotifyIcon icon = new NotifyIcon();
+            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/Icons/IEDCollector.ico")).Stream;
+            icon.Icon = new System.Drawing.Icon(iconStream);
+            icon.Visible = true;
+
+            icon.Click += (object sender, EventArgs e) =>
+            {
+                this.Show();
+            };
+
+            System.Windows.Forms.MenuItem btn = new System.Windows.Forms.MenuItem()
+            {
+                Text = "Close"
+            };
+
+            btn.Click += (object sender, EventArgs e) =>
+            {
+                //handleClosing(null, null);
+                //Debug.WriteLine("Close " + sender.ToString());
+                closeFromTray = true;
+                this.Close();
+            };
+
+            icon.ContextMenu = new System.Windows.Forms.ContextMenu()
+            {
+                MenuItems =
+                {
+                    btn
+                }
+            };
 
             //this.Hide();
 
@@ -1162,57 +1197,69 @@ namespace IEDCollector
 
         }
 
+        private bool closeFromTray = false;
+
         private void handleClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Globals.currentProcess != null && Globals.currentProcess.IsRunning)
+            
+            //Debug.WriteLine(e == null);
+            if (closeFromTray) // Right click on tray icon -> exit
             {
+                if (Globals.currentProcess != null && Globals.currentProcess.IsRunning)
+                {
 
 
-                if (Globals.currentProcess.IsIdling)
-                {
-                    Globals.currentProcess.Abort();
-                }
-                else
-                {
-                    Globals.logs.log("Waiting for current process to idle before closing");
-                    new Thread(() =>
+                    if (Globals.currentProcess.IsIdling)
                     {
-                        Globals.currentProcess.Dispose();
-
-                        while (Globals.currentProcess.Worker.IsAlive)
-                        {
-                            Thread.Sleep(10);
-                        }
-
                         Globals.currentProcess.Abort();
-                        Application.Current.Dispatcher.Invoke(() =>
+                    }
+                    else
+                    {
+                        Globals.logs.log("Waiting for current process to idle before closing");
+                        new Thread(() =>
                         {
-                            Globals.logs.log("Process idling, closing");
-                            Application.Current.Shutdown();
-                        });
-                    })
-                    { IsBackground = true }.Start();
+                            Globals.currentProcess.Dispose();
 
-                    e.Cancel = true;
-                    return;
+                            while (Globals.currentProcess.Worker.IsAlive)
+                            {
+                                Thread.Sleep(10);
+                            }
+
+                            Globals.currentProcess.Abort();
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                Globals.logs.log("Process idling, closing", LogLevel.Detailed);
+                                Application.Current.Shutdown();
+                            });
+                        })
+                        { IsBackground = true }.Start();
+
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    
                 }
 
-
-            }
-
-            if (!isProfileSaved || !isIedSaved)
+                if (!isProfileSaved || !isIedSaved)
+                {
+                    MessageBoxResult res = MessageBox.Show("Do you want to save changes?", "Save changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    if (res.Equals(MessageBoxResult.Yes))
+                    {
+                        saveIed(sender, null);
+                        saveIeds(sender, null);
+                    }
+                    else if (res.Equals(MessageBoxResult.Cancel))
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            } else
             {
-                MessageBoxResult res = MessageBox.Show("Do you want to save changes?", "Save changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                if (res.Equals(MessageBoxResult.Yes))
-                {
-                    saveIed(sender, null);
-                    saveIeds(sender, null);
-                }
-                else if (res.Equals(MessageBoxResult.Cancel))
-                {
-                    e.Cancel = true;
-                }
+                this.Hide();
+                e.Cancel = true;
             }
+            
         }
 
         private void fetchIedData(object sender, RoutedEventArgs e)
@@ -1711,16 +1758,6 @@ namespace IEDCollector
             }
         }
 
-        private void requestLicense(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void profileSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0 && e.RemovedItems.Count > 0) Globals.currentProfile = null;
@@ -1900,6 +1937,19 @@ namespace IEDCollector
                     MessageBox.Show("The profile already exists, rename it before proceeding.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void openLicenseWindow(object sender, RoutedEventArgs e)
+        {
+            InsertLicense window = new InsertLicense();
+
+            window.Description.Text = "License details";
+
+            window.ShowDialog();
+
+            if (Application.Current == null) return;
+
+            if (Security.validate() != SecurityValidationResult.OK) Application.Current.Shutdown();
         }
     }
 }

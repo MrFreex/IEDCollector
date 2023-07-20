@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IEDCollector.Windows"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="InsertLicense" MinHeight="200" MinWidth="400" ResizeMode="CanResize" SizeToContent="WidthAndHeight">
+        Title="License Management" MinHeight="200" MinWidth="400" ResizeMode="CanResize" SizeToContent="WidthAndHeight">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -15,16 +15,24 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+        <Grid HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" x:Name="Description" />
-            <Label Grid.Row="1">License Key</Label>
-            <TextBox Width="200" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Left" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" x:Name="Description" />
+            <Label Grid.Column="0" Grid.Row="1">License Key</Label>
+            <PasswordBox Grid.Column="0" Width="200" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Left" />
+            <Button Click="Copy_Click" Margin="5,0,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch">
+                Copy
+            </Button>
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -33,5 +41,6 @@
             </Hyperlink>
         </Label>
         <Button Click="Submit_Click" Grid.Column="1" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right">Submit</Button>
+        <Button x:Name="removeLicenseButton" Click="Remove_Click" Grid.Column="2" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right">Remove License</Button>
     </Grid>
 </Window>

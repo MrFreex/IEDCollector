@@ -12,7 +12,12 @@ namespace IEDCollector.Windows
         public InsertLicense()
         {
             InitializeComponent();
-
+            if (!Security.HasLicense)
+            {
+                removeLicenseButton.IsEnabled = false;
+            }
+            licenseBox.Password = Security.License;
+            
             //this.requestLink.NavigateUri = new Uri(generateEmailLink());
         }
 
@@ -27,13 +32,12 @@ namespace IEDCollector.Windows
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (this.DialogResult == null)
-                this.DialogResult = false;
+            
         }
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
-            string license = this.licenseBox.Text;
+            string license = this.licenseBox.Password;
             if (license.Equals(String.Empty))
             {
                 MessageBox.Show("Please insert a valid license.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -50,6 +54,24 @@ namespace IEDCollector.Windows
             {
                 MessageBox.Show("License not valid. Request a license if you have none.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult reallyRemove = MessageBox.Show("Do you really wish to remove the current license key?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        
+            if (reallyRemove.Equals(MessageBoxResult.Yes))
+            {
+                Security.removeLicense();
+                // Restart to prevent illegal usage
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
+        }
+
+        private void Copy_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(this.licenseBox.Password);
         }
     }
 }

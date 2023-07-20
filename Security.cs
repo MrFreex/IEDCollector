@@ -3,7 +3,10 @@ using Microsoft.Win32;
 using Standard.Licensing;
 using Standard.Licensing.Validation;
 using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
+using License = Standard.Licensing.License;
 
 namespace IEDCollector
 {
@@ -14,6 +17,9 @@ namespace IEDCollector
     internal class Security
     {
         private const string PUBLIC_KEY = @"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE0qOslzOs2EhWuty6J8L7Okh/hznY5PXgS/YJSqOiGGabx1yAiPn7SzZ3tZnfvRpc+MiqIWLAHT+p0le+IBCzPQ==";
+
+        public static bool HasLicense => validate().Equals(SecurityValidationResult.OK);
+        public static string License => getLicense() ?? String.Empty;
 
         private static string decodeLicense(string license)
         {
@@ -32,7 +38,15 @@ namespace IEDCollector
             license = decodeLicense(license);
             ComputerInfo info = new ComputerInfo();
             if (license == null) return false;
-            License parsedLicense = License.Load(license);
+            License parsedLicense;
+            try
+            {
+                parsedLicense = Standard.Licensing.License.Load(license);
+            } catch (Exception e)
+            {
+                return false;
+            }
+            
 
             return !parsedLicense.Validate().Signature(PUBLIC_KEY)
             .And()
@@ -46,16 +60,27 @@ namespace IEDCollector
                    .AssertValidLicense().Any();
         }
 
-        public static SecurityValidationResult validate()
+        private static string getLicense()
         {
             using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
             {
-                if (licenseStorage == null) return SecurityValidationResult.UNSET;
+                if (licenseStorage == null) return null;
 
-                string license = licenseStorage.GetValue("license").ToString();
+                object value = licenseStorage.GetValue("license");
 
-                return validateLicense(license) ? SecurityValidationResult.OK : SecurityValidationResult.INVALID;
+                if (value == null) return null;
+
+                string license = value.ToString();
+
+                return license;
             }
+        }
+
+        public static SecurityValidationResult validate()
+        {
+            string license = getLicense();
+            if (license == null) return SecurityValidationResult.UNSET;
+            return validateLicense(license) ? SecurityValidationResult.OK : SecurityValidationResult.INVALID;
         }
 
         public static SecurityValidationResult setLicense(string key)
@@ -73,6 +98,20 @@ namespace IEDCollector
                 return SecurityValidationResult.INVALID;
             }
 
+        }
+
+        public static void removeLicense()
+        {
+            try
+            {
+                using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+                {
+                    licenseStorage.DeleteValue("license");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

@@ -9,14 +9,16 @@
         Title="About" Height="250" Width="553">
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <Image Margin="10" Width="198" Source="Images/logo.png" Height="120" />
+            <Image Margin="10" Width="198" Source="../Images/logo.png" Height="120" />
             <StackPanel Width="315">
-                <TextBlock Margin="10" FontWeight="Bold">IED Collector version 0.0.1</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="Automatic IED log fetcher is a software designed, developed and published by Engiprot LDA. All rights reserved."/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+                <TextBlock Margin="10" FontWeight="Bold">IED Collector version 1.0.0</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="IEDCollector is a software designed, developed and published by Engiprot LDA. All rights reserved."/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
                 <TextBlock TextWrapping="Wrap" HorizontalAlignment="Right" Margin="10,0,10,0">
-                    <Run Text="Website: https://engiprot.pt" />
+                    <Run Text="Website:" />
+                    <Hyperlink>https://engiprot.pt</Hyperlink>
                     <LineBreak />
-                    <Run Text="Email: geral@engiprot.pt" />
+                    <Run Text="Email:" />
+                    <Hyperlink NavigateUri="mailto:geral@engiprot.pt">geral@engiprot.pt</Hyperlink>
                     <LineBreak />
                     <Run Text="Phone: +351 211 920 004" />
                 </TextBlock>
