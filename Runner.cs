@@ -227,7 +227,7 @@ namespace IEDCollector
                                         success = ExecutionResult.PARTIAL;
                                         Application.Current.Dispatcher.Invoke(() =>
                                         {
-                                            Globals.logs.log(e.ToString(), LogLevel.Debug);
+                                            Globals.logs.log(e.ToString(), LogLevel.Basic);
                                             Globals.logs.log(String.Format("Failed to download file '{0}' from IED '{1}'", entry.GetFileName(), ied.ToString()));
                                         });
                                     }

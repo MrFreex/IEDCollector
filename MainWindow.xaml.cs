@@ -99,7 +99,7 @@ namespace IEDCollector
 
     internal enum Language
     {
-        English, Portoguese, Italian, Spanish, French, German
+        English, Portuguese, Italian, Spanish, French, German
     }
 
 
@@ -134,7 +134,7 @@ namespace IEDCollector
         public static readonly Dictionary<Language, string> LanguageToCulture = new Dictionary<Language, string>()
         {
             { Language.English, "" },
-            { Language.Portoguese, "pt-PT" },
+            { Language.Portuguese, "pt-PT" },
             { Language.Italian, "it-IT" },
             { Language.Spanish, "es-ES" },
             { Language.French, "fr-FR" },
@@ -524,6 +524,7 @@ namespace IEDCollector
             }).Start();
             */
 
+            bool startingAfterPolling = false;
 
             Globals.profileChangeHandler = (bool renameOnly) =>
             {
@@ -636,10 +637,11 @@ namespace IEDCollector
                     iedSelector.IsEnabled = false;
                 }
 
-                if (!IsRunning && File.Exists(ConfigFolder.extend(".resumepolling")))
+                if (!IsRunning && !startingAfterPolling && File.Exists(ConfigFolder.extend(".resumepolling")))
                 {
                     if (Globals.config.config.resumePollingOnStartup)
                     {
+                        startingAfterPolling = true;
                         new Thread(() =>
                         {
                             Thread.Sleep(1000);
