@@ -340,7 +340,7 @@ namespace IEDCollector
                         });
                         this.Execution();
 
-                        string waitingString = String.Format("Waiting {0} minute{1}", cyclePeriod, cyclePeriod != 1 ? "s" : "");
+                        string waitingString = String.Format(cyclePeriod == 1 ? Properties.Resources.waiting_x_minute : Properties.Resources.waiting_x_minutes, cyclePeriod);
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             this.status.Text = waitingString;

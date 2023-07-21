@@ -331,4 +331,7 @@
     <PreBuildEvent>xcopy $(ProjectDir)iec61850.dll $(TargetDir) /Y
 xcopy $(ProjectDir)iec61850dotnet.dll $(TargetDir) /Y</PreBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>iscc "$(ProjectDir)\Inno\setupiedc1.iss"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

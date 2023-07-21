@@ -221,7 +221,7 @@ namespace IEDCollector
             {
                 CanExecute = !value;
                 menuOpenConfiguration.IsEnabled = !value;
-                //menuOpenPreferences.IsEnabled = !value;
+                menuOpenPreferences.IsEnabled = !value;
                 openLicenseButton.IsEnabled = !value;
                 stop.IsEnabled = value;
                 configurationModeTab.IsEnabled = !value;
@@ -1269,6 +1269,10 @@ namespace IEDCollector
         private void saveIeds(object sender, RoutedEventArgs e)
         {
             isProfileSaved = true;
+
+            Globals.currentProfile.Settings.RootFolder = rootFolderInput.Text;
+            Globals.currentProfile.Settings.PollingInterval = pollingInterval.Value == null ? 10 : (int)pollingInterval.Value;
+            
             Globals.currentProfile.save();
         }
 

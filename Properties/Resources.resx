@@ -571,6 +571,12 @@
   <data name="username" xml:space="preserve">
     <value>Username</value>
   </data>
+  <data name="waiting_x_minute" xml:space="preserve">
+    <value>Waiting {0} minute</value>
+  </data>
+  <data name="waiting_x_minutes" xml:space="preserve">
+    <value>Waiting {0} minutes</value>
+  </data>
   <data name="warning" xml:space="preserve">
     <value>Warning</value>
     <comment>Window title?</comment>
