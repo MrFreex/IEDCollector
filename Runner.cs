@@ -94,8 +94,8 @@ namespace IEDCollector
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    realQueue.addLast(new ListBoxItem() { Content = "Connect to IED" });
-                    realQueue.addLast(new ListBoxItem() { Content = "Fetch directories" });
+                    realQueue.addLast(new ListBoxItem() { Content = Properties.Resources.connect_to_ied });
+                    realQueue.addLast(new ListBoxItem() { Content = Properties.Resources.fetch_directories });
                 });
 
                 if (!this.IsRunning) break;
@@ -107,7 +107,8 @@ namespace IEDCollector
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        this.status.Text = "Transferring from " + ied.ToString();
+                       
+                        this.status.Text = String.Format(Properties.Resources.transferring_from_x, ied.ToString());
                         Globals.logs.log("Transferring from " + ied.ToString());
                     });
                     if (subject.includedInCollection)
@@ -211,11 +212,14 @@ namespace IEDCollector
                                         else if (state == DownloadedFileState.SKIPPED_FILTER)
                                         {
                                             log = String.Format("[SKIP] [{1}] File '{0}' skipped due to filter (folder or file extension)", entry.GetFileName(), ied.ToString());
+                                        } else if (state == DownloadedFileState.SKIPPED_FREEMODE)
+                                        {
+                                            log = String.Format("[FREEMODE] Would have downloaded file '{0}', but the software is in free mode.", entry.GetFileName());
                                         }
 
                                         Application.Current.Dispatcher.Invoke(() =>
                                         {
-                                            Globals.logs.log(log, LogLevel.Detailed);
+                                            Globals.logs.log(log, Globals.IsFreeMode ? LogLevel.Basic : LogLevel.Detailed);
                                         });
                                     }
                                     catch (Exception e)
@@ -251,6 +255,10 @@ namespace IEDCollector
                     }
                     else
                     {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            this.progress.Value += this.ProgressPerIed;
+                        }, System.Windows.Threading.DispatcherPriority.Background);
                         success = ExecutionResult.SKIPPED;
                         Globals.logs.log("[SKIP] " + ied.ToString() + " because it is unchecked", LogLevel.Detailed);
                     }
@@ -272,8 +280,8 @@ namespace IEDCollector
                 this.progress.IsIndeterminate = false;
                 this.progress.Value = 0;
                 this.queue.Items.Clear();
-                this.status.Text = "Idling";
-                this.fileName.Text = "No file being processed";
+                this.status.Text = Properties.Resources.idling;
+                this.fileName.Text = Properties.Resources.no_file_being_processed;
             });
 
             updateFileProgress(0.0);
@@ -356,7 +364,7 @@ namespace IEDCollector
 
                     Application.Current.Dispatcher.Invoke(() =>
                      {
-                         this.status.Text = "Idling";
+                         this.status.Text = Properties.Resources.idling;
                      });
 
                     Application.Current.Dispatcher.Invoke(this.threadOverCallback);

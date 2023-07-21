@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IEDCollector.Windows"
+        xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="License Management" MinHeight="200" MinWidth="400" ResizeMode="CanResize" SizeToContent="WidthAndHeight">
+        Title="{x:Static p:Resources.license_management}" Height="200" Width="500" ResizeMode="CanResize">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -14,6 +15,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
@@ -24,23 +26,22 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" x:Name="Description" />
-            <Label Grid.Column="0" Grid.Row="1">License Key</Label>
-            <PasswordBox Grid.Column="0" Width="200" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Left" />
-            <Button Click="Copy_Click" Margin="5,0,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch">
-                Copy
-            </Button>
+            <Label Grid.Column="0" Grid.Row="1" Content="{x:Static p:Resources.license_key}" />
+            <PasswordBox Grid.Column="0" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Stretch" />
+            <Button Click="Copy_Click" Margin="5,0,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.copy}" />
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Hyperlink Click="requestLink_Click" x:Name="requestLink">
-                Request License
+                <TextBlock Text="{x:Static p:Resources.request_license}" />
             </Hyperlink>
         </Label>
-        <Button Click="Submit_Click" Grid.Column="1" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right">Submit</Button>
-        <Button x:Name="removeLicenseButton" Click="Remove_Click" Grid.Column="2" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right">Remove License</Button>
+        <Button Click="Submit_Click" Grid.Column="1" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right" Content="{x:Static p:Resources.submit}" />
+        <Button x:Name="removeLicenseButton" Click="Remove_Click" Grid.Column="2" Margin="5" Padding="5" Grid.Row="1" HorizontalAlignment="Right" Content="{x:Static p:Resources.remove_license}" />
+        <Button x:Name="freeModeButton" Click="FreeMode_Click" Grid.Column="3" Grid.Row="1" Margin="5" Padding="5" HorizontalAlignment="Right" Content="{x:Static p:Resources.switch_free_mode}" />
     </Grid>
 </Window>

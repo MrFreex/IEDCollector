@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IEDCollector.Windows"
+        xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
-        Title="License Request" Height="171" Width="800" SizeToContent="WidthAndHeight">
+        Title="{x:Static p:Resources.license_request_window}" Height="171" Width="800" SizeToContent="WidthAndHeight">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -14,10 +15,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0">Full Name: license owner's full name</Label>
+        <Label Grid.Row="0" Content="{x:Static p:Resources.full_name}" />
         <TextBox x:Name="fullName" Grid.Row="1" />
-        <Label Grid.Row="2">Location: address of the establishment the software will be used in</Label>
+        <Label Grid.Row="2" Content="{x:Static p:Resources.location}" />
         <TextBox x:Name="location" Grid.Row="3" />
-        <Button Margin="0,10,0,10" Click="Button_Click" Grid.Row="4" Content="Request" />
+        <Button Margin="0,10,0,10" Click="Button_Click" Grid.Row="4" Content="{x:Static p:Resources.request}" />
     </Grid>
 </Window>

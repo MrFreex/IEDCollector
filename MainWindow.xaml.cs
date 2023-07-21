@@ -1,5 +1,6 @@
 ﻿using IEC61850.Client;
 using IEDCollector.Windows;
+using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,15 @@ namespace IEDCollector
         public static OnProfileChange profileChangeHandler = null;
         public static Runner currentProcess = null;
         public static UserConfig config = null;
+        private static bool? freeMode = null;
+
+        public static bool IsFreeMode { get { return freeMode ?? true; } set { 
+                if (freeMode == null) { 
+                    freeMode = value;
+                    
+                } 
+            } 
+        }
 
 
         public delegate void OnProfileChange(bool renameOnly);
@@ -85,6 +95,53 @@ namespace IEDCollector
         public FileData(string fileName) { this.fileName = fileName; }
 
         public string getFileName() { return fileName; }
+    }
+
+    internal enum Language
+    {
+        English, Portoguese, Italian, Spanish, French, German
+    }
+
+
+
+    internal class Lang
+    {
+        public static Language language { 
+            get {
+                using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+                {
+                    if (licenseStorage == null) return Language.English;
+
+                    object value = licenseStorage.GetValue(Lang.LANGUAGE);
+
+                    if (value == null) return Language.English;
+
+                    Language license = (Language)int.Parse(value.ToString());
+
+                    return license;
+                }
+            }
+        
+            set
+            {
+                using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+                {
+                    licenseStorage.SetValue(Lang.LANGUAGE, ((int)value).ToString());
+                }
+            }
+        }
+
+        public static readonly Dictionary<Language, string> LanguageToCulture = new Dictionary<Language, string>()
+        {
+            { Language.English, "" },
+            { Language.Portoguese, "pt-PT" },
+            { Language.Italian, "it-IT" },
+            { Language.Spanish, "es-ES" },
+            { Language.French, "fr-FR" },
+            { Language.German, "de-de" },
+        };
+
+        public const string LANGUAGE = "language";
     }
 
 
@@ -164,7 +221,8 @@ namespace IEDCollector
             {
                 CanExecute = !value;
                 menuOpenConfiguration.IsEnabled = !value;
-                menuOpenPreferences.IsEnabled = !value;
+                //menuOpenPreferences.IsEnabled = !value;
+                openLicenseButton.IsEnabled = !value;
                 stop.IsEnabled = value;
                 configurationModeTab.IsEnabled = !value;
                 isRunning = value;
@@ -235,7 +293,7 @@ namespace IEDCollector
 
                 MenuItem open = new MenuItem()
                 {
-                    Header = "Open",
+                    Header = Properties.Resources.open,
                     Icon = new Image()
                     {
                         Width = 16,
@@ -300,30 +358,53 @@ namespace IEDCollector
             profileSelector.IsEnabled = true;
         }
 
-        public void verifyLicense()
+        public bool verifyLicense()
         {
+            
             SecurityValidationResult res = Security.validate();
 
-            if (res == SecurityValidationResult.OK) return;
+            if (Security.IsFreeMode)
+            {
+                Globals.IsFreeMode = true;
+                return true;
+            }
 
-            if (res == SecurityValidationResult.UNSET)
+            Globals.IsFreeMode = false;
+
+            if (res == SecurityValidationResult.OK) return true;
+
+            if (res == SecurityValidationResult.UNSET || res == SecurityValidationResult.INVALID)
             {
                 InsertLicense askForLicense = new InsertLicense();
 
-                askForLicense.Description.Text = "No license found on the computer, please input yours.";
+                askForLicense.Description.Text = Properties.Resources.no_license_found_on_computer;
+
+                askForLicense.removeLicenseButton.IsEnabled = false;
 
                 askForLicense.ShowDialog();
 
                 string license = askForLicense.licenseBox.Password;
-                if (Security.validateLicense(license))
+                if (!Security.IsFreeMode)
                 {
-                    Security.setLicense(license);
-                }
-                else
+                    if (Security.validateLicense(license))
+                    {
+                        Security.setLicense(license);
+                        return true;
+                    }
+                    else
+                    {
+                        
+                        Application.Current.Shutdown();
+                        return false;
+                    }
+                } else
                 {
-                    Application.Current.Shutdown();
+                    Globals.IsFreeMode = true;
+                    return true;
                 }
             }
+
+            return false;
         }
 
         static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -346,12 +427,25 @@ namespace IEDCollector
             }
         }
 
+        
+
 
         public MainWindow()
         {
-            verifyLicense();
+            //initCulture();
+
+            if (!verifyLicense()) return;
 
             InitializeComponent();
+
+            Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) =>
+            {
+                closeFromTray = true;
+                handleClosing(sender, e);
+            };
+
+            this.Title = Globals.IsFreeMode ? this.Title + " - Free Mode" : this.Title;
+
             Globals.logs = new Logs(new List<TextBox>()
             {
                 this.Logs
@@ -371,13 +465,11 @@ namespace IEDCollector
 
             System.Windows.Forms.MenuItem btn = new System.Windows.Forms.MenuItem()
             {
-                Text = "Close"
+                Text = Properties.Resources.close
             };
 
             btn.Click += (object sender, EventArgs e) =>
             {
-                //handleClosing(null, null);
-                //Debug.WriteLine("Close " + sender.ToString());
                 closeFromTray = true;
                 this.Close();
             };
@@ -445,7 +537,7 @@ namespace IEDCollector
                     iedSelector.IsEnabled = false;
                     iedSelector.Items.Clear();
                     ListBoxItem add = new ListBoxItem();
-                    add.Content = "Load a profile to continue";
+                    add.Content = Properties.Resources.load_profile_to_continue;
 
                     renameProfileButton.IsEnabled = false;
                     saveProfileButton.IsEnabled = false;
@@ -539,7 +631,7 @@ namespace IEDCollector
                     cloneIedBtn.IsEnabled = false;
                     deleteIedBtn.IsEnabled = false;
                     ListBoxItem add = new ListBoxItem();
-                    add.Content = "No IEDs configured";
+                    add.Content = Properties.Resources.no_connections_configured;
                     iedSelector.Items.Add(add);
                     iedSelector.IsEnabled = false;
                 }
@@ -591,16 +683,16 @@ namespace IEDCollector
             if (iedTree.Items.Count == 0)
             {
                 var placeholder = new TreeViewItem();
-                placeholder.Header = "No IED Configured";
+                placeholder.Header = Properties.Resources.no_connections_configured;
                 iedTree.Items.Add(placeholder);
             }
 
 
             Progress.Value = 0;
-            ProgressLabel.Text = "Idling";
+            ProgressLabel.Text = Properties.Resources.idling;
 
             ListBoxItem toAdd = new ListBoxItem();
-            toAdd.Content = "No operation queued";
+            toAdd.Content = Properties.Resources.no_operation_queued;
             actionsbox.Items.Add(toAdd);
 
             // Load Configurations list
@@ -681,7 +773,7 @@ namespace IEDCollector
         private void iedLogFolderBrowse_Click(object sender, RoutedEventArgs e)
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
-            dialog.Description = "Select the folder where the logs will be saved";
+            dialog.Description = Properties.Resources.select_folder_where_logs_will_be_saved;
             dialog.InitialDirectory = this.iedLogFolderInput.Text;
             dialog.ShowNewFolderButton = true;
 
@@ -745,7 +837,7 @@ namespace IEDCollector
             isIedSaved = true;
 
             IEDConfig ied = new IEDConfig();
-            ied.name = "NewIED";
+            ied.name = Properties.Resources.new_ied;
             ied.port = 102;
             ied.ip = "127.0.0.1";
             ied.logsFolder = "";
@@ -767,7 +859,7 @@ namespace IEDCollector
                 return;
             }
 
-            MessageBoxResult res = MessageBox.Show("Are you sure you want to delete this IED?", "Delete IED", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult res = MessageBox.Show(Properties.Resources.messagebox_confirm_delete_connection, Properties.Resources.messagebox_confirm_delete_connection_title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (res.Equals(MessageBoxResult.Yes))
             {
@@ -786,7 +878,7 @@ namespace IEDCollector
                 else
                 {
                     ListBoxItem add = new ListBoxItem();
-                    add.Content = "No IEDs configured";
+                    add.Content = Properties.Resources.no_connections_configured;
                     iedSelector.Items.Add(add);
                     iedSelector.IsEnabled = false;
                 }
@@ -839,7 +931,7 @@ namespace IEDCollector
 
             if (!isIedSaved)
             {
-                MessageBoxResult messageBoxResult = MessageBox.Show("Do you want to save the current IED?", "Save IED", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                MessageBoxResult messageBoxResult = MessageBox.Show(Properties.Resources.messagebox_save_connection, Properties.Resources.messagebox_save_connection_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                 if (messageBoxResult.Equals(MessageBoxResult.Yes))
                 {
                     saveIed((IEDConfig)((ListBoxItem)e.RemovedItems[0]).Tag);
@@ -911,11 +1003,11 @@ namespace IEDCollector
             {
                 TaskDialog dialog = new TaskDialog();
 
-                dialog.WindowTitle = "Confirm profile creation";
-                dialog.Content = "Are you sure you want to create a new profile? All unsaved changes will be lost.";
-                dialog.MainInstruction = "Confirm profile creation";
+                dialog.WindowTitle = Properties.Resources.confirm_profile_creation_title;
+                dialog.Content = Properties.Resources.confirm_profile_creation;
+                dialog.MainInstruction = Properties.Resources.confirm_profile_creation_instruction;
                 dialog.MainIcon = TaskDialogIcon.Warning;
-                TaskDialogButton autoSave = new TaskDialogButton("Save");
+                TaskDialogButton autoSave = new TaskDialogButton(Properties.Resources.save);
                 autoSave.ButtonType = ButtonType.Custom;
                 dialog.Buttons.Add(autoSave);
                 dialog.Buttons.Add(new TaskDialogButton(Ookii.Dialogs.Wpf.ButtonType.Yes));
@@ -964,9 +1056,9 @@ namespace IEDCollector
             if (Globals.currentProfile == null) return;
 
             NewProfileDialog newProfileDialog = new NewProfileDialog();
-            newProfileDialog.Title = "Rename profile";
+            newProfileDialog.Title = Properties.Resources.rename_profile;
             newProfileDialog.ProfileName.Text = Globals.currentProfile.Name;
-            newProfileDialog.ok.Content = "Rename";
+            newProfileDialog.ok.Content = Properties.Resources.rename;
 
             Nullable<bool> result = newProfileDialog.ShowDialog();
 
@@ -1011,7 +1103,7 @@ namespace IEDCollector
 
             if (!checkPortInt())
             {
-                MessageBox.Show("Invalid port", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.messagebox_invalid_port, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1021,7 +1113,7 @@ namespace IEDCollector
             }
             catch
             {
-                MessageBox.Show("Invalid IP address", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.messagebox_invalid_ip, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1031,11 +1123,11 @@ namespace IEDCollector
             {
                 if (result == LogFolderValidationResult.NOTEXIST)
                 {
-                    MessageBox.Show("Invalid logs path. The directory path is invalid or doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_invalid_logs_path, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
-                    MessageBox.Show("The logs path is being used by another IED.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_logs_path_used, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 return;
@@ -1101,7 +1193,7 @@ namespace IEDCollector
 
             if (!checkPortInt())
             {
-                MessageBox.Show("Invalid port number", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Properties.Resources.messagebox_invalid_port, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Warning);
                 iedPortInput.Text = "102";
             }
         }
@@ -1114,7 +1206,7 @@ namespace IEDCollector
             }
             catch
             {
-                MessageBox.Show("Invalid IP address", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Properties.Resources.messagebox_invalid_ip, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Warning);
                 iedIpInput.Text = "127.0.0.1";
             }
 
@@ -1184,7 +1276,7 @@ namespace IEDCollector
         {
             if (Globals.currentProfile == null) return;
 
-            MessageBoxResult res = MessageBox.Show("Do you really want to delete this profile? The action cannot be undone.", "Delete profile", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult res = MessageBox.Show(Properties.Resources.messagebox_confirm_delete_profile, Properties.Resources.messagebox_confirm_delete_profile_title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (res.Equals(MessageBoxResult.Yes))
             {
@@ -1243,7 +1335,7 @@ namespace IEDCollector
 
                 if (!isProfileSaved || !isIedSaved)
                 {
-                    MessageBoxResult res = MessageBox.Show("Do you want to save changes?", "Save changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    MessageBoxResult res = MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if (res.Equals(MessageBoxResult.Yes))
                     {
                         saveIed(sender, null);
@@ -1256,6 +1348,7 @@ namespace IEDCollector
                 }
             } else
             {
+                Globals.logs.log("Minimizing to tray", LogLevel.Basic);
                 this.Hide();
                 e.Cancel = true;
             }
@@ -1268,12 +1361,12 @@ namespace IEDCollector
 
             if (selectedIed == null) return;
 
-            fetchDataText.Text = "Fetching data...";
+            fetchDataText.Text = Properties.Resources.fetching_data;
             ProgressDialog progress = new ProgressDialog();
 
             progress.ProgressBarStyle = ProgressBarStyle.MarqueeProgressBar;
-            progress.Text = "Connecting to IED...";
-            progress.WindowTitle = "Fetch IED data";
+            progress.Text = Properties.Resources.connecting_ied;
+            progress.WindowTitle = Properties.Resources.fetching_data_title;
             progress.ShowCancelButton = true;
             CancellationTokenSource source = new CancellationTokenSource();
             //progress.MinimizeBox = true;
@@ -1289,7 +1382,7 @@ namespace IEDCollector
                 {
                     if (!ied.connect())
                     {
-                        MessageBox.Show("Failed to connect to IED. Check the credentials and retry.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(Properties.Resources.messagebox_ied_connection_failed, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
                         success = false;
                         return;
@@ -1306,7 +1399,7 @@ namespace IEDCollector
                     {
                         if (!ied.CrossCheckName())
                         {
-                            MessageBoxResult askIfContinue = MessageBox.Show("The configured name differs from the one found inside the IED. Continue anyway?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                            MessageBoxResult askIfContinue = MessageBox.Show(Properties.Resources.messagebox_crosscheck_differs, Properties.Resources.warning, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                             if (askIfContinue != MessageBoxResult.Yes)
                             {
@@ -1316,7 +1409,7 @@ namespace IEDCollector
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Error reading the device directory.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(Properties.Resources.messagebox_error_reading_device_dir, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
 
                     if (source.Token.IsCancellationRequested)
@@ -1368,7 +1461,7 @@ namespace IEDCollector
 
                         this.isIedSaved = false;
 
-                        fetchDataText.Text = "Fetch data";
+                        fetchDataText.Text = Properties.Resources.fetch_data;
 
                     }, System.Windows.Threading.DispatcherPriority.Render);
                 }
@@ -1376,8 +1469,8 @@ namespace IEDCollector
 
             progress.RunWorkerCompleted += (object sender2, RunWorkerCompletedEventArgs e2) =>
             {
-                fetchDataText.Text = "Fetch data";
-                if (success && MessageBox.Show("Operation successful, save the IED?", "Success", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                fetchDataText.Text = Properties.Resources.fetch_data;
+                if (success && MessageBox.Show(Properties.Resources.messagebox_success_save_connection, Properties.Resources.success, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     saveIed(sender, null);
                 }
@@ -1416,7 +1509,7 @@ namespace IEDCollector
 
                     MenuItem open = new MenuItem()
                     {
-                        Header = "Open",
+                        Header = Properties.Resources.open,
                         Icon = new Image()
                         {
                             Width = 16,
@@ -1472,7 +1565,7 @@ namespace IEDCollector
 
                 MenuItem open = new MenuItem()
                 {
-                    Header = "Open",
+                    Header = Properties.Resources.open,
                     Icon = new Image()
                     {
                         Width = 16,
@@ -1481,13 +1574,21 @@ namespace IEDCollector
                     }
                 };
 
-                open.Click += (object sender, RoutedEventArgs e) => Process.Start(file);
+                open.Click += (object sender, RoutedEventArgs e) =>
+                {
+                    if (Globals.IsFreeMode)
+                    {
+                        MessageBox.Show(Properties.Resources.messagebox_buy_full_version, Properties.Resources.messagebox_buy_full_version_title, MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    Process.Start(file);
+                };
 
                 actions.Items.Add(open);
 
                 MenuItem properties = new MenuItem()
                 {
-                    Header = "Properties",
+                    Header = Properties.Resources.properties,
                     Icon = new Image()
                     {
                         Width = 16,
@@ -1498,7 +1599,12 @@ namespace IEDCollector
 
                 properties.Click += (object sender, RoutedEventArgs e) =>
                 {
-                    openFileMetadata(ied, file.Replace(ied.logsFolder, ""));
+                    if (Globals.IsFreeMode)
+                    {
+                        MessageBox.Show(Properties.Resources.messagebox_buy_full_version, Properties.Resources.messagebox_buy_full_version_title, MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    openFileMetadata(ied, file);
                 };
 
                 actions.Items.Add(properties);
@@ -1509,6 +1615,10 @@ namespace IEDCollector
 
                 iedItem.Items.Add(directoryItem);
 
+                if (Globals.IsFreeMode)
+                {
+                    File.Delete(file);
+                }
             }
         }
 
@@ -1516,14 +1626,17 @@ namespace IEDCollector
         {
             IED ied = new IED(iedConf);
 
-            string fileNoSlashes = file.TrimStart('\\');
+
+            string remoteFile = file.Replace(Path.Combine(Globals.currentProfile.Settings.RootFolder, iedConf.logsFolder), "");
+            string fileNoSlashes = remoteFile.TrimStart('\\');
 
             new Thread(() =>
             {
                 EditableFileDirectoryEntry fileEntry = null;
                 if (ied.connect())
                 {
-                    Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree(Path.GetDirectoryName(file).TrimStart('\\'), true);
+                    //Globals.logs.log("Reading " + Path.GetDirectoryName(file)/*.TrimStart('\\')*/, LogLevel.Debug);
+                    Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true);
                     foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in remoteReducedTree)
                     {
                         Debug.WriteLine(String.Format("{0} {1} {2}", fileNoSlashes, entry.Key.fileName, file));
@@ -1542,7 +1655,7 @@ namespace IEDCollector
                             //metadataWindow.Show();
                             FileMetadata windows = new FileMetadata();
 
-                            file = Path.Combine(iedConf.logsFolder, fileNoSlashes);
+                            //file = Path.Combine(iedConf.logsFolder, fileNoSlashes);
                             FileInfo fileInfo = new FileInfo(file);
 
 
@@ -1562,12 +1675,12 @@ namespace IEDCollector
                     }
                     else
                     {
-                        MessageBox.Show("File not found on the IED", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(Properties.Resources.messagebox_file_not_found, Properties.Resources.warning, MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Could not connect to the IED", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_ied_connection_failed, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             }).Start();
@@ -1714,7 +1827,7 @@ namespace IEDCollector
                 {
                     if (Globals.currentProcess.Worker.IsAlive)
                     {
-                        if (MessageBox.Show("Forcefully terminate the process?", "Abort process", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                        if (MessageBox.Show(Properties.Resources.messagebox_confirm_forced_termination, Properties.Resources.messagebox_confirm_forced_termination_title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                         {
                             Globals.logs.log("Stopping execution FORCEFULLY (User)");
                             Globals.currentProcess.Worker.Abort();
@@ -1722,7 +1835,7 @@ namespace IEDCollector
                             Progress.Value = 0;
                             actionsbox.Items.Clear();
                             this.IsRunning = false;
-                            ProgressLabel.Text = "Idling";
+                            ProgressLabel.Text = Properties.Resources.idling;
                         }
                     }
                 }
@@ -1735,14 +1848,14 @@ namespace IEDCollector
 
             if (e.RemovedItems[0].Equals(viewerModeTab) && IsRunning)
             {
-                MessageBox.Show("You cannot configure the software while it's running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.messagebox_cannot_configure_while_running, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 tabControl.SelectedIndex = 0;
                 return;
             }
 
             if ((iedSaved && profileSaved) || !e.RemovedItems[0].Equals(configurationModeTab)) return;
 
-            if (MessageBox.Show("Save changes?", "Save changes", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 saveIed(sender, null);
                 saveIeds(sender, null);
@@ -1767,8 +1880,8 @@ namespace IEDCollector
             {
                 TaskDialog askToSave = new TaskDialog();
                 askToSave.MainIcon = TaskDialogIcon.Warning;
-                askToSave.WindowTitle = "Save changes";
-                askToSave.MainInstruction = "Would you like to save the changes you made?";
+                askToSave.WindowTitle = Properties.Resources.messagebox_save_changes_title;
+                askToSave.MainInstruction = Properties.Resources.messagebox_save_changes;
                 askToSave.Buttons.Add(new TaskDialogButton(ButtonType.Yes));
                 askToSave.Buttons.Add(new TaskDialogButton(ButtonType.No));
                 askToSave.Buttons.Add(new TaskDialogButton(ButtonType.Cancel));
@@ -1841,7 +1954,7 @@ namespace IEDCollector
             dialog.InitialDirectory = ConfigFolder.extend(ConfigFolder.IEDLOGSROOT);
             dialog.ShowNewFolderButton = true;
             dialog.Multiselect = false;
-            dialog.Description = "Select the local root folder";
+            dialog.Description = Properties.Resources.select_local_root_folder;
 
             bool? result = dialog.ShowDialog();
 
@@ -1855,7 +1968,7 @@ namespace IEDCollector
 
                         if (profile != Globals.currentProfile && profile.Settings.RootFolder.Equals(dialog.SelectedPath))
                         {
-                            MessageBox.Show("This root folder is already in use by another profile", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(Properties.Resources.messagebox_root_folder_in_use, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
                     }
@@ -1883,7 +1996,7 @@ namespace IEDCollector
             if (res != null && (bool)res)
             {
                 File.Copy(Globals.currentProfile.FilePath, dialog.FileName, true);
-                MessageBox.Show("Profile exported successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Properties.Resources.messagebox_profile_exported_successfully, Properties.Resources.success, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -1904,7 +2017,7 @@ namespace IEDCollector
             {
                 if (!isProfileSaved)
                 {
-                    MessageBoxResult r = MessageBox.Show("Current profile unsaved. Save changes?", "Save changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    MessageBoxResult r = MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 
                     if (r.Equals(MessageBoxResult.Yes))
                     {
@@ -1934,22 +2047,30 @@ namespace IEDCollector
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("The profile already exists, rename it before proceeding.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_profile_already_exists, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
         private void openLicenseWindow(object sender, RoutedEventArgs e)
         {
+            bool freeMode = Security.IsFreeMode;
             InsertLicense window = new InsertLicense();
 
-            window.Description.Text = "License details";
+            window.Description.Text = Properties.Resources.license_details;
+
+            window.freeModeButton.IsEnabled = false;
 
             window.ShowDialog();
 
             if (Application.Current == null) return;
 
-            if (Security.validate() != SecurityValidationResult.OK) Application.Current.Shutdown();
+            if (!Security.IsFreeMode && Security.validate() != SecurityValidationResult.OK) Application.Current.Shutdown();
+            if (freeMode && !Security.IsFreeMode)
+            {
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
         }
     }
 }

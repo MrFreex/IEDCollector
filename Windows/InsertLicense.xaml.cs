@@ -26,7 +26,7 @@ namespace IEDCollector.Windows
             bool? result = new LicenseRequest().ShowDialog();
             if (result != null && result == true)
             {
-                MessageBox.Show("Thank you for requesting a license. You will hear from us as soon as possible.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Properties.Resources.messagebox_thanks_for_requesting_license, "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -40,25 +40,27 @@ namespace IEDCollector.Windows
             string license = this.licenseBox.Password;
             if (license.Equals(String.Empty))
             {
-                MessageBox.Show("Please insert a valid license.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.messagebox_insert_valid_license, "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (Security.validateLicense(license))
             {
                 //MessageBox.Show("License successfully validated.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Information);
+                Security.setLicense(license);
+                Security.setFreeMode(false);
                 this.DialogResult = true;
                 this.Close();
             }
             else
             {
-                MessageBox.Show("License not valid. Request a license if you have none.", "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.messagebox_license_invalid, "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult reallyRemove = MessageBox.Show("Do you really wish to remove the current license key?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult reallyRemove = MessageBox.Show(Properties.Resources.messagebox_remove_license_confirmation, Properties.Resources.confirm, MessageBoxButton.YesNo, MessageBoxImage.Warning);
         
             if (reallyRemove.Equals(MessageBoxResult.Yes))
             {
@@ -72,6 +74,15 @@ namespace IEDCollector.Windows
         private void Copy_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(this.licenseBox.Password);
+        }
+
+        private void FreeMode_Click(object sender, RoutedEventArgs e)
+        {
+            Security.setFreeMode(true);
+            this.DialogResult = true;
+            //this.Close();
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
         }
     }
 }

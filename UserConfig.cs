@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
 namespace IEDCollector
 {
-    internal class FSyncPreferences
-    {
-
-    }
+    
 
     // Cycle period, log files kept (number or all [-1]), start with windows, data folder location?
     internal class FSyncConfiguration
@@ -21,6 +19,11 @@ namespace IEDCollector
         public const string LOGLEVEL = "logLevel";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
+    }
+
+    internal class FSyncPreferences
+    {
+
     }
 
     internal class UserConfig
@@ -61,7 +64,12 @@ namespace IEDCollector
                 resumePollingOnStartup = false,
                 logLevel = LogLevel.Basic
             };
-
+            /*
+            FSyncPreferences preferences = this.preferences != null ? this.preferences : new FSyncPreferences()
+            {
+                language = Language.English
+            };
+            */
             using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
             {
                 if (config.startWithWindows)
@@ -74,7 +82,7 @@ namespace IEDCollector
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences")));
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences"/*, new XElement(FSyncPreferences.LANGUAGE, (int)preferences.language)*/)));
 
             try
             {
@@ -96,6 +104,7 @@ namespace IEDCollector
                 XDocument Xconfig = XDocument.Load(this.filePath);
 
                 XElement configurationNode = Xconfig.Root.Element("configuration");
+                XElement preferencesNode = Xconfig.Root.Element("preferences");
 
                 this.config = new FSyncConfiguration()
                 {
@@ -104,6 +113,12 @@ namespace IEDCollector
                     startWithWindows = bool.Parse(configurationNode.Element(FSyncConfiguration.STARTWITHWINDOWS).Value),
                     resumePollingOnStartup = bool.Parse(configurationNode.Element(FSyncConfiguration.RESUMEPOLLINGONSTARTUP).Value)
                 };
+                /*
+                this.preferences = new FSyncPreferences()
+                {
+                    language = (Language)(int.Parse(preferencesNode.Element(FSyncPreferences.LANGUAGE).Value))
+                };
+                */
             }
             catch (Exception)
             {

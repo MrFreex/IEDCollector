@@ -24,7 +24,7 @@ namespace IEDCollector
 
     public enum DownloadedFileState
     {
-        DOWNLOADED, SKIPPED_DIRECTORY, SKIPPED_FILTER, SKIPPED_NEWER
+        DOWNLOADED, SKIPPED_DIRECTORY, SKIPPED_FILTER, SKIPPED_NEWER, SKIPPED_FREEMODE
     }
 
 
@@ -358,12 +358,20 @@ namespace IEDCollector
                 return DownloadedFileState.SKIPPED_FILTER;
             }
 
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
+
+            if (Globals.IsFreeMode)
+            {
+                File.WriteAllText(destination, "FREE MODE!");
+                return DownloadedFileState.SKIPPED_FREEMODE;
+            }
+
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
                 //FileData reference = new FileData() { path = path.GetFileName() };
                 double size = path.GetFileSize();
 
-                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                
                 using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
                 {
                     

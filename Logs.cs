@@ -89,19 +89,19 @@ namespace IEDCollector
 
             MenuItem openLogFile = new MenuItem()
             {
-                Header = "Open log file"
+                Header = Properties.Resources.open_log_file
             };
 
 
 
             MenuItem logLevels = new MenuItem()
             {
-                Header = "Logging level",
+                Header = Properties.Resources.log_level,
                 Items =
                 {
-                    new MenuItem() { Header = "Basic", Icon =  new RadioButton() {IsChecked = true, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Basic }},
-                    new MenuItem() { Header = "Detailed", Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Detailed }},
-                    new MenuItem() { Header = "Debug", Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Debug }},
+                    new MenuItem() { Header = Properties.Resources.loglevel_basic, Icon =  new RadioButton() {IsChecked = true, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Basic }},
+                    new MenuItem() { Header = Properties.Resources.loglevel_detailed, Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Detailed }},
+                    new MenuItem() { Header = Properties.Resources.loglevel_debug, Icon =  new RadioButton() {IsChecked = false, HorizontalAlignment = HorizontalAlignment.Center, GroupName ="LogLevel", Tag = LogLevel.Debug }},
                 }
             };
 

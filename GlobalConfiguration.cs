@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Xml.Linq;
@@ -163,8 +164,8 @@ namespace IEDCollector
                 }
                 catch (IOException) { c++; ok = false; }
             } while (!ok);
-
-            MessageBox.Show("The config file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the '" + path + "' file, close the software and rename the file to '" + GLOBALCONFIGNAME + "'.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            
+            MessageBox.Show(String.Format(Properties.Resources.messagebox_global_config_not_readable, path, GLOBALCONFIGNAME), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
             save();
         }

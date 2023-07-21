@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        
+        xmlns:local="clr-namespace:IEDCollector"
+        xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
         Title="IED Collector" Height="500" Width="800" ResizeMode="CanResizeWithGrip" Closing="handleClosing" SizeToContent="Manual">
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -16,12 +17,12 @@
             <!-- <MenuItem Header="Save" /> -->
             <!-- </MenuItem> -->
 
-            <MenuItem Header="Options">
-                <MenuItem x:Name="menuOpenConfiguration" Header="Configuration" Click="openConfiguration"/>
-                <MenuItem Visibility="Hidden" x:Name="menuOpenPreferences" Header="Preferences" Click="openPreferences"/>
+            <MenuItem Header="{x:Static p:Resources.options}">
+                <MenuItem x:Name="menuOpenConfiguration" Header="{x:Static p:Resources.configuration}" Click="openConfiguration"/>
+                <MenuItem x:Name="menuOpenPreferences" Header="{x:Static p:Resources.preferences}" Click="openPreferences"/>
             </MenuItem>
-            <MenuItem Header="About" Click="openAbout"/>
-            <MenuItem Header="License" Click="openLicenseWindow"/>
+            <MenuItem Header="{x:Static p:Resources.about}" Click="openAbout"/>
+            <MenuItem x:Name="openLicenseButton" Header="{x:Static p:Resources.license}" Click="openLicenseWindow"/>
         </Menu>
         <Grid DockPanel.Dock="Top">
             <Grid.RowDefinitions>
@@ -30,7 +31,7 @@
                 <RowDefinition Height="80" />
             </Grid.RowDefinitions>
             <TabControl MinHeight="300" x:Name="tabControl" DockPanel.Dock="Top" Grid.Row="0" SelectionChanged="tabChangeHandler">
-                <TabItem x:Name="viewerModeTab" Header="Viewer mode">
+                <TabItem x:Name="viewerModeTab" Header="{x:Static p:Resources.monitor_tab}">
                     
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -58,36 +59,36 @@
                                             <Setter Property="Margin" Value="0,0,10,0"/>
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button IsEnabled="False" x:Name="startPolling" ToolTip="Cyclic Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runPolling">
+                                    <Button IsEnabled="False" x:Name="startPolling" ToolTip="{x:Static p:Resources.cycle_fetch}" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runPolling">
                                         <Image Source="Icons/arrow-repeat.png" Width="20" Height="20" />
                                     </Button>
-                                    <Button IsEnabled="False" x:Name="startSingle" ToolTip="Single Fetch" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runSingle">
+                                <Button IsEnabled="False" x:Name="startSingle" ToolTip="{x:Static p:Resources.single_fetch}" HorizontalAlignment="Left" VerticalAlignment="Top" Click="runSingle">
                                         <Image Source="Icons/play-fill.png" Width="20" Height="20" />
                                     </Button>
                                     <Button IsEnabled="False" x:Name="stop" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Stop">
                                         <Image Source="Icons/stop-fill.png" Width="20" Height="20" />
                                     </Button>
-                                    <CheckBox x:Name="resumePollingStartup" Content="Resume polling at startup" IsChecked="False" Checked="resumePollingStartup_Checked" Unchecked="resumePollingStartup_Checked"/>
+                                <CheckBox x:Name="resumePollingStartup" Content="{x:Static p:Resources.resume_polling_startup}" IsChecked="False" Checked="resumePollingStartup_Checked" Unchecked="resumePollingStartup_Checked"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,10,10" >
                                     <TextBlock x:Name="ProgressLabel" Margin="0,0,0,10" />
                                     <ProgressBar x:Name="Progress" Height="21" Value="50" MinWidth="300" />
-                                    <TextBlock x:Name="FileName" TextWrapping="Wrap" Text="No file being processed" Margin="0,5,0,0"/>
+                                <TextBlock x:Name="FileName" TextWrapping="Wrap" Text="{x:Static p:Resources.no_file_being_processed}" Margin="0,5,0,0"/>
                                     <ProgressBar x:Name="FileProgress" Height="21" Margin="0,10,0,0" />
-                                    <ListBox x:Name="actionsbox" Margin="0,10,0,0" d:ItemsSource="{d:SampleData ItemCount=5}" Height="117"/>
+                                    <ListBox x:Name="actionsbox" Margin="0,10,0,0" Height="117"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
                     
 
                 </TabItem>
-                <TabItem VerticalAlignment="Stretch" x:Name="configurationModeTab" Header="Configuration mode">
+                <TabItem VerticalAlignment="Stretch" x:Name="configurationModeTab" Header="{x:Static p:Resources.configuration_tab}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <GroupBox HorizontalAlignment="Stretch" Margin="5" Header="Profile" Grid.Row="0">
+                        <GroupBox HorizontalAlignment="Stretch" Margin="5" Header="{x:Static p:Resources.profile}" Grid.Row="0">
                             <Grid HorizontalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -102,7 +103,7 @@
 
                                 <ComboBox SelectionChanged="profileSelector_SelectionChanged" Grid.Row="0" Grid.Column="0" x:Name="profileSelector" IsEnabled="False">
                                     <ComboBox.Items>
-                                        <ComboBoxItem IsSelected="True" Content="No profile">
+                                        <ComboBoxItem IsSelected="True" Content="{x:Static p:Resources.no_profile}">
 
                                         </ComboBoxItem>
                                     </ComboBox.Items>
@@ -114,7 +115,7 @@
                                         <ColumnDefinition Width="300" />
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" VerticalAlignment="Center">Root Folder</Label>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="{x:Static p:Resources.root_folder}"/>
                                     <TextBox Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Height="25" MinWidth="140" x:Name="rootFolderInput" TextChanged="profileFieldChanged" />
                                     <Button Grid.Column="2" VerticalAlignment="Center" Padding="5,0,5,0" Height="25" Content="Browse" Click="BrowseProfileRootFolder"/>
                                 </Grid>
@@ -124,7 +125,7 @@
                                         <ColumnDefinition Width="300" />
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" VerticalAlignment="Center">Polling Interval (1-60 min)</Label>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="{x:Static p:Resources.polling_interval}" />
                                     <xctk:IntegerUpDown Minimum="1" Maximum="60" Text="10" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Height="25" MinWidth="140" x:Name="pollingInterval" ValueChanged="profileFieldChanged" />
                                 </Grid>
                                 <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,5,0,0" Orientation="Horizontal">
@@ -138,29 +139,29 @@
                                             <Setter Property="Width" Value="22" />
                                         </Style>
                                     </StackPanel.Resources>
-                                    <Button Click="createProfile" x:Name="newProfileButton" ToolTip="New profile">
+                                    <Button Click="createProfile" x:Name="newProfileButton" ToolTip="{x:Static p:Resources.new_profile}">
                                         <Image Source="Icons/database-fill-add.png" />
                                     </Button>
-                                    <Button Click="saveIeds" x:Name="saveProfileButton" ToolTip="Save profile">
+                                    <Button Click="saveIeds" x:Name="saveProfileButton" ToolTip="{x:Static p:Resources.save_profile}">
                                         <Image Source="Icons/database-fill-check.png" />
                                     </Button>
-                                    <Button Click="importProfile" x:Name="loadProfileButton" ToolTip="Import profile">
+                                    <Button Click="importProfile" x:Name="loadProfileButton" ToolTip="{x:Static p:Resources.import_profile}">
                                         <Image Source="Icons/database-fill-down.png" />
                                     </Button>
-                                    <Button x:Name="exportProfileButton" ToolTip="Export profile" Click="exportProfile">
+                                    <Button x:Name="exportProfileButton" ToolTip="{x:Static p:Resources.export_profile}" Click="exportProfile">
                                         <Image Source="Icons/database-fill-up.png" />
                                     </Button>
-                                    <Button Click="renameProfile" x:Name="renameProfileButton" ToolTip="Rename profile">
+                                    <Button Click="renameProfile" x:Name="renameProfileButton" ToolTip="{x:Static p:Resources.rename_profile}">
                                         <Image Source="Icons/database-fill-gear.png" />
                                     </Button>
-                                    <Button Click="deleteProfile" x:Name="deleteProfileButton" ToolTip="Delete profile">
+                                    <Button Click="deleteProfile" x:Name="deleteProfileButton" ToolTip="{x:Static p:Resources.delete_profile}">
                                         <Image Source="Icons/database-fill-x.png" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
 
                         </GroupBox>
-                        <GroupBox HorizontalAlignment="Stretch" Header="Connections" Grid.Row="1">
+                        <GroupBox HorizontalAlignment="Stretch" Header="{x:Static p:Resources.connections}" Grid.Row="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="150" />
@@ -178,11 +179,11 @@
                                         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
                                     </ListBox.Background>
                                 </ListBox>
-                                <Button Grid.Row="1" HorizontalAlignment="Stretch" ToolTip="Test the connection to the IED and fetch the currently used file extensions and folders" x:Name="connectIedInConf" Margin="0,5,0,5" IsEnabled="False" Click="fetchIedData">
+                                <Button Grid.Row="1" HorizontalAlignment="Stretch" ToolTip="{x:Static p:Resources.fetch_data_tooltip}" x:Name="connectIedInConf" Margin="0,5,0,5" IsEnabled="False" Click="fetchIedData">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <Image VerticalAlignment="Center" Source="Icons/arrow-repeat.png" Width="20" />
-                                            <TextBlock x:Name="fetchDataText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">Fetch data</TextBlock>
+                                            <TextBlock x:Name="fetchDataText" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0" Text="{x:Static p:Resources.fetch_data}" />
                                         </StackPanel>
                                     </Button.Content>
                                 </Button>
@@ -194,16 +195,16 @@
 
                                     </StackPanel.Resources>
 
-                                    <Button x:Name="newIedBtn" ToolTip="New connection" Click="addIed">
+                                    <Button x:Name="newIedBtn" ToolTip="{x:Static p:Resources.new_connection}" Click="addIed">
                                         <Image Width="20" Source="Icons/journal-plus.png"/>
                                     </Button>
-                                    <Button x:Name="cloneIedBtn" ToolTip="Clone selected connection" Click="cloneIed">
+                                    <Button x:Name="cloneIedBtn" ToolTip="{x:Static p:Resources.clone_connection}" Click="cloneIed">
                                         <Image Width="20" Source="Icons/journals.png"/>
                                     </Button>
-                                    <Button x:Name="deleteIedBtn" ToolTip="Delete selected connection" Click="deleteIed">
+                                    <Button x:Name="deleteIedBtn" ToolTip="{x:Static p:Resources.delete_connection}" Click="deleteIed">
                                         <Image Width="20" Source="Icons/journal-minus.png"/>
                                     </Button>
-                                    <Button ToolTip="Save the IED data to the profile" x:Name="saveIED" IsEnabled="False" Click="saveIed">
+                                    <Button ToolTip="{x:Static p:Resources.save_connection}" x:Name="saveIED" IsEnabled="False" Click="saveIed">
                                         <Image VerticalAlignment="Center" Source="Icons/journal-check.png" Width="20" />
                                     </Button>
                                 </StackPanel>
@@ -235,7 +236,7 @@
                                             </Style>
 
                                         </StackPanel.Resources>
-                                        <Label HorizontalAlignment="Stretch">Connection Name</Label>
+                                        <Label Content="{x:Static p:Resources.connection_name}" HorizontalAlignment="Stretch" />
                                         <TextBox HorizontalAlignment="Stretch" x:Name="iedNameInput" TextChanged="updateNameLabel" PreviewTextInput="GenericTextBox_PreviewTextInput"  />
 
                                         <Grid>
@@ -252,37 +253,37 @@
                                                 <ColumnDefinition Width="10" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch">Protocol</Label>
+                                            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.protocol}" />
                                             <ComboBox Grid.Row="1" Grid.Column="0">
                                                 <ComboBox.Items>
                                                     <ComboBoxItem IsSelected="True" Content="IEC61850" />
                                                     <ComboBoxItem Visibility="Hidden" Content="FTP" IsEnabled="False" />
                                                     <ComboBoxItem Visibility="Hidden" Content="SFTP" IsEnabled="False" />
-                                                    <ComboBoxItem Visibility="Hidden" Content="Direct" IsEnabled="False" />
+                                                    <ComboBoxItem Visibility="Hidden" Content="{x:Static p:Resources.direct_protocol}" IsEnabled="False" />
                                                 </ComboBox.Items>
                                             </ComboBox>
-                                            <Label Grid.Row="0" Grid.Column="2" >IP Address</Label>
+                                            <Label Grid.Row="0" Grid.Column="2" Content="{x:Static p:Resources.ip_address}" />
                                             <TextBox Grid.Row="1" Grid.Column="2" x:Name="iedIpInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" PreviewTextInput="ipFormatting" />
-                                            <Label Grid.Row="2" Grid.Column="0">Port</Label>
+                                            <Label Grid.Row="2" Grid.Column="0" Content="{x:Static p:Resources.port}" />
                                             <xctk:IntegerUpDown Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="65353" x:Name="iedPortInput" ValueChanged="iedFieldChanged" />
-                                            <Label Grid.Row="2" Visibility="Hidden" Grid.Column="2">Encryption</Label>
+                                            <Label Grid.Row="2" Visibility="Hidden" Grid.Column="2" Content="{x:Static p:Resources.encryption}" />
                                             <ComboBox Visibility="Hidden" Grid.Row="3" Grid.Column="2">
                                                 <ComboBox.Items>
-                                                    <ComboBoxItem IsSelected="True" Content="No encryption" />
+                                                    <ComboBoxItem IsSelected="True" Content="{x:Static p:Resources.no_encryption_choice}" />
                                                 </ComboBox.Items>
                                             </ComboBox>
-                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="0" >Username</Label>
+                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="0" Content="{x:Static p:Resources.username}" />
                                             <TextBox Visibility="Hidden" Grid.Row="5" Grid.Column="0" x:Name="iedUsernameInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
-                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="2" >Password</Label>
+                                            <Label Visibility="Hidden" Grid.Row="4" Grid.Column="2" Content="{x:Static p:Resources.password}" />
                                             <TextBox Visibility="Hidden" Grid.Row="5" Grid.Column="2" x:Name="iedPasswordInput"  LostFocus="validateIedIP" TextChanged="iedFieldChanged" />
                                         </Grid>
 
 
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Grid.Column="2">
-                                        <Label>Subfolder name</Label>
+                                        <Label Content="{x:Static p:Resources.subfolder}" />
                                         <TextBox x:Name="iedLogFolderInput" TextChanged="iedFieldChanged" PreviewTextInput="GenericTextBox_PreviewTextInput" />
-                                        <GroupBox Header="Source filter">
+                                        <GroupBox Header="{x:Static p:Resources.source_filter}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="2*" />
@@ -294,9 +295,9 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <Label Grid.Row="0" Grid.Column="0">Folders</Label>
+                                                <Label Grid.Row="0" Grid.Column="0" Content="{x:Static p:Resources.folders}" />
                                                 <ListBox Grid.Row="1" Grid.Column="0" x:Name="iedLogFoldersIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-                                                <Label Grid.Row="0" Grid.Column="2">Extensions</Label>
+                                                <Label Grid.Row="0" Grid.Column="2" Content="{x:Static p:Resources.extensions}" />
                                                 <ListBox Grid.Row="1" Grid.Column="2" x:Name="iedLogExtensionsIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
                                             </Grid>
                                         </GroupBox>

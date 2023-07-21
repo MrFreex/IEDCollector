@@ -20,19 +20,19 @@ namespace IEDCollector
 
             logLevels.Items.Add(new ComboBoxItem()
             {
-                Content = "Basic",
+                Content = Properties.Resources.loglevel_basic,
                 Tag = LogLevel.Basic,
                 IsSelected = Globals.config.config.logLevel == LogLevel.Basic
             });
             logLevels.Items.Add(new ComboBoxItem()
             {
-                Content = "Detailed",
+                Content = Properties.Resources.loglevel_detailed,
                 Tag = LogLevel.Detailed,
                 IsSelected = Globals.config.config.logLevel == LogLevel.Detailed
             });
             logLevels.Items.Add(new ComboBoxItem()
             {
-                Content = "Debug",
+                Content = Properties.Resources.loglevel_debug,
                 Tag = LogLevel.Debug,
                 IsSelected = Globals.config.config.logLevel == LogLevel.Debug
             });
@@ -42,7 +42,7 @@ namespace IEDCollector
         {
             VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
             folderBrowserDialog.InitialDirectory = ConfigFolder.Path;
-            folderBrowserDialog.Description = "Select the new configuration folder";
+            folderBrowserDialog.Description = Properties.Resources.select_new_config_folder;
             bool? result = folderBrowserDialog.ShowDialog();
 
             if (result != null && (bool)result)
@@ -54,7 +54,7 @@ namespace IEDCollector
                 }
                 catch
                 {
-                    MessageBox.Show("The folder doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_folder_doesnt_exist, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace IEDCollector
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("The number of log files kept must be a number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_number_of_log_files_error, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
@@ -85,7 +85,7 @@ namespace IEDCollector
 
             if (dataLocation.Text != ConfigFolder.Path)
             {
-                if (MessageBox.Show("Changing the configuration folder will reset the application. Are you sure you want to continue? The application will restart to apply the configuration.", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                if (MessageBox.Show(Properties.Resources.messagebox_confirm_folder_change, Properties.Resources.warning, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 {
                     return;
                 }
@@ -101,7 +101,7 @@ namespace IEDCollector
                 }
                 catch
                 {
-                    MessageBox.Show("The folder doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.messagebox_folder_doesnt_exist, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 

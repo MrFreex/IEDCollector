@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IEDCollector.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -8,7 +9,7 @@ namespace IEDCollector
 {
     internal class IEDConfigDefaults
     {
-        public const string NAME = "New IED";
+        public static readonly string NAME = Properties.Resources.new_ied;
         public const string IP = "127.0.0.1";
         public const int PORT = 102;
         public const string USERNAME = "";
@@ -265,7 +266,7 @@ namespace IEDCollector
             catch (Exception e)
             {
                 Globals.logs.log(String.Format("Error while saving profile {0} {1}", this.profileName, e.ToString()));
-                MessageBox.Show("Error while saving profile", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Resources.messagebox_error_saving_profile, Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -320,8 +321,8 @@ namespace IEDCollector
                 }
                 catch (IOException) { c++; ok = false; }
             } while (!ok);
-
-            MessageBox.Show("The profile '" + this.profileName + "' file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the '" + path + "' file, close the software and rename the file to '" + this.FileName + "'.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            
+            MessageBox.Show(Resources.messagebox_error_reading_profile_backup, Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
             this.save();
         }

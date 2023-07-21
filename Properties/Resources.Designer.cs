@@ -22,7 +22,7 @@ namespace IEDCollector.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace IEDCollector.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("IEDCollector.Properties.Resources", typeof(Resources).Assembly);
@@ -51,12 +51,1308 @@ namespace IEDCollector.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string about {
+            get {
+                return ResourceManager.GetString("about", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string browse {
+            get {
+                return ResourceManager.GetString("browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string cancel {
+            get {
+                return ResourceManager.GetString("cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clone selected connection.
+        /// </summary>
+        public static string clone_connection {
+            get {
+                return ResourceManager.GetString("clone_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string close {
+            get {
+                return ResourceManager.GetString("close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string configuration {
+            get {
+                return ResourceManager.GetString("configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration.
+        /// </summary>
+        public static string configuration_tab {
+            get {
+                return ResourceManager.GetString("configuration_tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string confirm {
+            get {
+                return ResourceManager.GetString("confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to create a new profile? All unsaved changes will be lost..
+        /// </summary>
+        public static string confirm_profile_creation {
+            get {
+                return ResourceManager.GetString("confirm_profile_creation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm profile creation.
+        /// </summary>
+        public static string confirm_profile_creation_instruction {
+            get {
+                return ResourceManager.GetString("confirm_profile_creation_instruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm profile creation.
+        /// </summary>
+        public static string confirm_profile_creation_title {
+            get {
+                return ResourceManager.GetString("confirm_profile_creation_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect to IED.
+        /// </summary>
+        public static string connect_to_ied {
+            get {
+                return ResourceManager.GetString("connect_to_ied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting to IED....
+        /// </summary>
+        public static string connecting_ied {
+            get {
+                return ResourceManager.GetString("connecting_ied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection Name.
+        /// </summary>
+        public static string connection_name {
+            get {
+                return ResourceManager.GetString("connection_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connections.
+        /// </summary>
+        public static string connections {
+            get {
+                return ResourceManager.GetString("connections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string copy {
+            get {
+                return ResourceManager.GetString("copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new profile.
+        /// </summary>
+        public static string create_new_profile_window {
+            get {
+                return ResourceManager.GetString("create_new_profile_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cyclic Fetch.
+        /// </summary>
+        public static string cycle_fetch {
+            get {
+                return ResourceManager.GetString("cycle_fetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete selected connection.
+        /// </summary>
+        public static string delete_connection {
+            get {
+                return ResourceManager.GetString("delete_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete profile.
+        /// </summary>
+        public static string delete_profile {
+            get {
+                return ResourceManager.GetString("delete_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Direct.
+        /// </summary>
+        public static string direct_protocol {
+            get {
+                return ResourceManager.GetString("direct_protocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email:.
+        /// </summary>
+        public static string email {
+            get {
+                return ResourceManager.GetString("email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encryption.
+        /// </summary>
+        public static string encryption {
+            get {
+                return ResourceManager.GetString("encryption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string error {
+            get {
+                return ResourceManager.GetString("error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export profile.
+        /// </summary>
+        public static string export_profile {
+            get {
+                return ResourceManager.GetString("export_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extensions.
+        /// </summary>
+        public static string extensions {
+            get {
+                return ResourceManager.GetString("extensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch Data.
+        /// </summary>
+        public static string fetch_data {
+            get {
+                return ResourceManager.GetString("fetch_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test the connection to the IED and fetch the currently used file extensions and folders.
+        /// </summary>
+        public static string fetch_data_tooltip {
+            get {
+                return ResourceManager.GetString("fetch_data_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch directories.
+        /// </summary>
+        public static string fetch_directories {
+            get {
+                return ResourceManager.GetString("fetch_directories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetching data....
+        /// </summary>
+        public static string fetching_data {
+            get {
+                return ResourceManager.GetString("fetching_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch IED data.
+        /// </summary>
+        public static string fetching_data_title {
+            get {
+                return ResourceManager.GetString("fetching_data_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File metadata.
+        /// </summary>
+        public static string file_metadata {
+            get {
+                return ResourceManager.GetString("file_metadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to files.
+        /// </summary>
+        public static string files {
+            get {
+                return ResourceManager.GetString("files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folders.
+        /// </summary>
+        public static string folders {
+            get {
+                return ResourceManager.GetString("folders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full name: license owner&apos;s full name.
+        /// </summary>
+        public static string full_name {
+            get {
+                return ResourceManager.GetString("full_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hash Code.
+        /// </summary>
+        public static string hash_code {
+            get {
+                return ResourceManager.GetString("hash_code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Idling.
+        /// </summary>
+        public static string idling {
+            get {
+                return ResourceManager.GetString("idling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IED Collector version  1.0.0.
+        /// </summary>
+        public static string ied_collector_version {
+            get {
+                return ResourceManager.GetString("ied_collector_version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import profile.
+        /// </summary>
+        public static string import_profile {
+            get {
+                return ResourceManager.GetString("import_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IP Address.
+        /// </summary>
+        public static string ip_address {
+            get {
+                return ResourceManager.GetString("ip_address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep all files.
+        /// </summary>
+        public static string keep_all_files {
+            get {
+                return ResourceManager.GetString("keep_all_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string language {
+            get {
+                return ResourceManager.GetString("language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last modified.
+        /// </summary>
+        public static string last_modified {
+            get {
+                return ResourceManager.GetString("last_modified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License.
+        /// </summary>
+        public static string license {
+            get {
+                return ResourceManager.GetString("license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License details.
+        /// </summary>
+        public static string license_details {
+            get {
+                return ResourceManager.GetString("license_details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Key.
+        /// </summary>
+        public static string license_key {
+            get {
+                return ResourceManager.GetString("license_key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Management.
+        /// </summary>
+        public static string license_management {
+            get {
+                return ResourceManager.GetString("license_management", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Request.
+        /// </summary>
+        public static string license_request_window {
+            get {
+                return ResourceManager.GetString("license_request_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load a profile to continue.
+        /// </summary>
+        public static string load_profile_to_continue {
+            get {
+                return ResourceManager.GetString("load_profile_to_continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local file.
+        /// </summary>
+        public static string local_file {
+            get {
+                return ResourceManager.GetString("local_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location: the establishment the license will be used in.
+        /// </summary>
+        public static string location {
+            get {
+                return ResourceManager.GetString("location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log files kept.
+        /// </summary>
+        public static string log_files_kept {
+            get {
+                return ResourceManager.GetString("log_files_kept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log Level.
+        /// </summary>
+        public static string log_level {
+            get {
+                return ResourceManager.GetString("log_level", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic.
+        /// </summary>
+        public static string loglevel_basic {
+            get {
+                return ResourceManager.GetString("loglevel_basic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        public static string loglevel_debug {
+            get {
+                return ResourceManager.GetString("loglevel_debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detailed.
+        /// </summary>
+        public static string loglevel_detailed {
+            get {
+                return ResourceManager.GetString("loglevel_detailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buy the full version to use this feature.
+        /// </summary>
+        public static string messagebox_buy_full_version {
+            get {
+                return ResourceManager.GetString("messagebox_buy_full_version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature not available.
+        /// </summary>
+        public static string messagebox_buy_full_version_title {
+            get {
+                return ResourceManager.GetString("messagebox_buy_full_version_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot configure the software while it&apos;s running.
+        /// </summary>
+        public static string messagebox_cannot_configure_while_running {
+            get {
+                return ResourceManager.GetString("messagebox_cannot_configure_while_running", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the language requires restarting the application, continue?.
+        /// </summary>
+        public static string messagebox_confirm_change_language {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_change_language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this connection?.
+        /// </summary>
+        public static string messagebox_confirm_delete_connection {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_delete_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete connection.
+        /// </summary>
+        public static string messagebox_confirm_delete_connection_title {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_delete_connection_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete this profile? The action cannot be undone..
+        /// </summary>
+        public static string messagebox_confirm_delete_profile {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_delete_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete profile.
+        /// </summary>
+        public static string messagebox_confirm_delete_profile_title {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_delete_profile_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the configuration folder will reset the application. Are you sure you want to continue? The application will restart to apply the configuration..
+        /// </summary>
+        public static string messagebox_confirm_folder_change {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_folder_change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forcefully terminate the process?.
+        /// </summary>
+        public static string messagebox_confirm_forced_termination {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_forced_termination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Abort process.
+        /// </summary>
+        public static string messagebox_confirm_forced_termination_title {
+            get {
+                return ResourceManager.GetString("messagebox_confirm_forced_termination_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The configured name differs from the one found inside the IED. Continue anyway?.
+        /// </summary>
+        public static string messagebox_crosscheck_differs {
+            get {
+                return ResourceManager.GetString("messagebox_crosscheck_differs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading the device directory..
+        /// </summary>
+        public static string messagebox_error_reading_device_dir {
+            get {
+                return ResourceManager.GetString("messagebox_error_reading_device_dir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The profile &apos;{0}&apos; file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the &apos;{1}&apos; file, close the software and rename the file to &apos;{2}&apos;..
+        /// </summary>
+        public static string messagebox_error_reading_profile_backup {
+            get {
+                return ResourceManager.GetString("messagebox_error_reading_profile_backup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while saving profile.
+        /// </summary>
+        public static string messagebox_error_saving_profile {
+            get {
+                return ResourceManager.GetString("messagebox_error_saving_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found on the IED.
+        /// </summary>
+        public static string messagebox_file_not_found {
+            get {
+                return ResourceManager.GetString("messagebox_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The folder doesn&apos;t exist..
+        /// </summary>
+        public static string messagebox_folder_doesnt_exist {
+            get {
+                return ResourceManager.GetString("messagebox_folder_doesnt_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The config file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the &apos;{0}&apos; file, close the software and rename the file to &apos;{1}&apos;..
+        /// </summary>
+        public static string messagebox_global_config_not_readable {
+            get {
+                return ResourceManager.GetString("messagebox_global_config_not_readable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to IED. Check the credentials and retry..
+        /// </summary>
+        public static string messagebox_ied_connection_failed {
+            get {
+                return ResourceManager.GetString("messagebox_ied_connection_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please insert a valid license.
+        /// </summary>
+        public static string messagebox_insert_valid_license {
+            get {
+                return ResourceManager.GetString("messagebox_insert_valid_license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid IP address.
+        /// </summary>
+        public static string messagebox_invalid_ip {
+            get {
+                return ResourceManager.GetString("messagebox_invalid_ip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid logs path. The directory path is invalid or doesn&apos;t exist..
+        /// </summary>
+        public static string messagebox_invalid_logs_path {
+            get {
+                return ResourceManager.GetString("messagebox_invalid_logs_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid port.
+        /// </summary>
+        public static string messagebox_invalid_port {
+            get {
+                return ResourceManager.GetString("messagebox_invalid_port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License not valid. Request a license if you have none..
+        /// </summary>
+        public static string messagebox_license_invalid {
+            get {
+                return ResourceManager.GetString("messagebox_license_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The logs path is being used by another IED..
+        /// </summary>
+        public static string messagebox_logs_path_used {
+            get {
+                return ResourceManager.GetString("messagebox_logs_path_used", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of log files kept must be a number..
+        /// </summary>
+        public static string messagebox_number_of_log_files_error {
+            get {
+                return ResourceManager.GetString("messagebox_number_of_log_files_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The profile already exists, rename it before proceeding..
+        /// </summary>
+        public static string messagebox_profile_already_exists {
+            get {
+                return ResourceManager.GetString("messagebox_profile_already_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile exported successfully.
+        /// </summary>
+        public static string messagebox_profile_exported_successfully {
+            get {
+                return ResourceManager.GetString("messagebox_profile_exported_successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really wish to remove the current license key?.
+        /// </summary>
+        public static string messagebox_remove_license_confirmation {
+            get {
+                return ResourceManager.GetString("messagebox_remove_license_confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This root folder is already in use by another profile.
+        /// </summary>
+        public static string messagebox_root_folder_in_use {
+            get {
+                return ResourceManager.GetString("messagebox_root_folder_in_use", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to save changes?.
+        /// </summary>
+        public static string messagebox_save_changes {
+            get {
+                return ResourceManager.GetString("messagebox_save_changes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save changes.
+        /// </summary>
+        public static string messagebox_save_changes_title {
+            get {
+                return ResourceManager.GetString("messagebox_save_changes_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to save the current connection?.
+        /// </summary>
+        public static string messagebox_save_connection {
+            get {
+                return ResourceManager.GetString("messagebox_save_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save connection.
+        /// </summary>
+        public static string messagebox_save_connection_title {
+            get {
+                return ResourceManager.GetString("messagebox_save_connection_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation successful, save the connection?.
+        /// </summary>
+        public static string messagebox_success_save_connection {
+            get {
+                return ResourceManager.GetString("messagebox_success_save_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thank you for requesting a license. You will hear from us as soon as possible..
+        /// </summary>
+        public static string messagebox_thanks_for_requesting_license {
+            get {
+                return ResourceManager.GetString("messagebox_thanks_for_requesting_license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monitor.
+        /// </summary>
+        public static string monitor_tab {
+            get {
+                return ResourceManager.GetString("monitor_tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New connection.
+        /// </summary>
+        public static string new_connection {
+            get {
+                return ResourceManager.GetString("new_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NewIED.
+        /// </summary>
+        public static string new_ied {
+            get {
+                return ResourceManager.GetString("new_ied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New profile.
+        /// </summary>
+        public static string new_profile {
+            get {
+                return ResourceManager.GetString("new_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No connections configured.
+        /// </summary>
+        public static string no_connections_configured {
+            get {
+                return ResourceManager.GetString("no_connections_configured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No encryption.
+        /// </summary>
+        public static string no_encryption_choice {
+            get {
+                return ResourceManager.GetString("no_encryption_choice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file being processed.
+        /// </summary>
+        public static string no_file_being_processed {
+            get {
+                return ResourceManager.GetString("no_file_being_processed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No license found on the computer, please input yours..
+        /// </summary>
+        public static string no_license_found_on_computer {
+            get {
+                return ResourceManager.GetString("no_license_found_on_computer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No operation queued.
+        /// </summary>
+        public static string no_operation_queued {
+            get {
+                return ResourceManager.GetString("no_operation_queued", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No profile.
+        /// </summary>
+        public static string no_profile {
+            get {
+                return ResourceManager.GetString("no_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string open {
+            get {
+                return ResourceManager.GetString("open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open log file.
+        /// </summary>
+        public static string open_log_file {
+            get {
+                return ResourceManager.GetString("open_log_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string options {
+            get {
+                return ResourceManager.GetString("options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string password {
+            get {
+                return ResourceManager.GetString("password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string path {
+            get {
+                return ResourceManager.GetString("path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone:.
+        /// </summary>
+        public static string phone {
+            get {
+                return ResourceManager.GetString("phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polling Interval (1-60 min).
+        /// </summary>
+        public static string polling_interval {
+            get {
+                return ResourceManager.GetString("polling_interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port.
+        /// </summary>
+        public static string port {
+            get {
+                return ResourceManager.GetString("port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preferences.
+        /// </summary>
+        public static string preferences {
+            get {
+                return ResourceManager.GetString("preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preferences.
+        /// </summary>
+        public static string preferences_window {
+            get {
+                return ResourceManager.GetString("preferences_window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string profile {
+            get {
+                return ResourceManager.GetString("profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile Name.
+        /// </summary>
+        public static string profile_name {
+            get {
+                return ResourceManager.GetString("profile_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties.
+        /// </summary>
+        public static string properties {
+            get {
+                return ResourceManager.GetString("properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protocol.
+        /// </summary>
+        public static string protocol {
+            get {
+                return ResourceManager.GetString("protocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote File.
+        /// </summary>
+        public static string remote_file {
+            get {
+                return ResourceManager.GetString("remote_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove License.
+        /// </summary>
+        public static string remove_license {
+            get {
+                return ResourceManager.GetString("remove_license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string rename {
+            get {
+                return ResourceManager.GetString("rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename profile.
+        /// </summary>
+        public static string rename_profile {
+            get {
+                return ResourceManager.GetString("rename_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request.
+        /// </summary>
+        public static string request {
+            get {
+                return ResourceManager.GetString("request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request License.
+        /// </summary>
+        public static string request_license {
+            get {
+                return ResourceManager.GetString("request_license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resume polling at startup.
+        /// </summary>
+        public static string resume_polling_startup {
+            get {
+                return ResourceManager.GetString("resume_polling_startup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IEDCollector is a software designed, developed and published by Engiprot LDA. All rights reserved..
+        /// </summary>
+        public static string rights {
+            get {
+                return ResourceManager.GetString("rights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Root Folder.
+        /// </summary>
+        public static string root_folder {
+            get {
+                return ResourceManager.GetString("root_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string save {
+            get {
+                return ResourceManager.GetString("save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save the connection data to the profile.
+        /// </summary>
+        public static string save_connection {
+            get {
+                return ResourceManager.GetString("save_connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save profile.
+        /// </summary>
+        public static string save_profile {
+            get {
+                return ResourceManager.GetString("save_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the folder where the logs will be saved.
+        /// </summary>
+        public static string select_folder_where_logs_will_be_saved {
+            get {
+                return ResourceManager.GetString("select_folder_where_logs_will_be_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the local root folder.
+        /// </summary>
+        public static string select_local_root_folder {
+            get {
+                return ResourceManager.GetString("select_local_root_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the new configuration folder.
+        /// </summary>
+        public static string select_new_config_folder {
+            get {
+                return ResourceManager.GetString("select_new_config_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Fetch.
+        /// </summary>
+        public static string single_fetch {
+            get {
+                return ResourceManager.GetString("single_fetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string size {
+            get {
+                return ResourceManager.GetString("size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software data location.
+        /// </summary>
+        public static string software_data_location {
+            get {
+                return ResourceManager.GetString("software_data_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Filter.
+        /// </summary>
+        public static string source_filter {
+            get {
+                return ResourceManager.GetString("source_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start with windows.
+        /// </summary>
+        public static string start_with_windows {
+            get {
+                return ResourceManager.GetString("start_with_windows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subfolder name.
+        /// </summary>
+        public static string subfolder {
+            get {
+                return ResourceManager.GetString("subfolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string submit {
+            get {
+                return ResourceManager.GetString("submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string success {
+            get {
+                return ResourceManager.GetString("success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch to free version.
+        /// </summary>
+        public static string switch_free_mode {
+            get {
+                return ResourceManager.GetString("switch_free_mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferring from {0}.
+        /// </summary>
+        public static string transferring_from_x {
+            get {
+                return ResourceManager.GetString("transferring_from_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string username {
+            get {
+                return ResourceManager.GetString("username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string warning {
+            get {
+                return ResourceManager.GetString("warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Website:.
+        /// </summary>
+        public static string website {
+            get {
+                return ResourceManager.GetString("website", resourceCulture);
             }
         }
     }

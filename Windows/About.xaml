@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:IEDCollector.Properties"
         xmlns:local="clr-namespace:IEDCollector"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
@@ -11,21 +12,22 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <Image Margin="10" Width="198" Source="../Images/logo.png" Height="120" />
             <StackPanel Width="315">
-                <TextBlock Margin="10" FontWeight="Bold">IED Collector version 1.0.0</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="IEDCollector is a software designed, developed and published by Engiprot LDA. All rights reserved."/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+                <TextBlock Margin="10" FontWeight="Bold" Text="{x:Static p:Resources.ied_collector_version}" />
+                <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="{x:Static p:Resources.rights}"/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
                 <TextBlock TextWrapping="Wrap" HorizontalAlignment="Right" Margin="10,0,10,0">
-                    <Run Text="Website:" />
+                    <Run Text="{x:Static p:Resources.website}" />
                     <Hyperlink>https://engiprot.pt</Hyperlink>
                     <LineBreak />
-                    <Run Text="Email:" />
+                    <Run Text="{x:Static p:Resources.email}" />
                     <Hyperlink NavigateUri="mailto:geral@engiprot.pt">geral@engiprot.pt</Hyperlink>
                     <LineBreak />
-                    <Run Text="Phone: +351 211 920 004" />
+                    <Run Text="{x:Static p:Resources.phone}" />
+                    <Run Text=" +351 211 920 004" />
                 </TextBlock>
             </StackPanel>
 
 
         </StackPanel>
-        <Button Margin="10" Padding="10,5,10,5" DockPanel.Dock="Bottom" Content="Close" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="close"/>
+        <Button Margin="10" Padding="10,5,10,5" DockPanel.Dock="Bottom" Content="{x:Static p:Resources.close}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="close"/>
     </DockPanel>
 </Window>

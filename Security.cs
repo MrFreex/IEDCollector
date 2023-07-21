@@ -5,6 +5,7 @@ using Standard.Licensing.Validation;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
 using License = Standard.Licensing.License;
 
@@ -111,6 +112,39 @@ namespace IEDCollector
             }
             catch (Exception)
             {
+            }
+        }
+
+        private static bool isFreeMode()
+        {
+            using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+            {
+                if (licenseStorage == null) return false;
+
+                object value = licenseStorage.GetValue("freemode");
+
+                if (value == null) return false;
+
+               
+
+                return value.Equals("1") ? true : false;
+            }
+        }
+
+        public static bool IsFreeMode => isFreeMode();
+
+        public static void setFreeMode(bool set)
+        {
+            try
+            {
+                using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
+                {
+                    licenseStorage.SetValue("freemode", set ? "1" : "0");
+                }
+            }
+            catch (Exception e)
+            {
+                
             }
         }
     }
