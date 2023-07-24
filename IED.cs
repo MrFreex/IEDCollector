@@ -198,7 +198,7 @@ namespace IEDCollector
 
 
 
-            Globals.logs.log(String.Format("Reading file tree for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root), LogLevel.Detailed);
+            Globals.logs.log(String.Format("Reading file list for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root), LogLevel.Basic);
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
@@ -358,48 +358,41 @@ namespace IEDCollector
                 return DownloadedFileState.SKIPPED_FILTER;
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            try {
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
 
-            if (Globals.IsFreeMode)
-            {
-                File.WriteAllText(destination, "FREE MODE!");
-                return DownloadedFileState.SKIPPED_FREEMODE;
-            }
-
-            using (ConnStateHandler handler = new ConnStateHandler(this))
-            {
-                //FileData reference = new FileData() { path = path.GetFileName() };
-                double size = path.GetFileSize();
-
-                
-                using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
+                if (Globals.IsFreeMode)
                 {
-                    
-                    this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
-                    {
-                        //reference.data.Add(data);
-                        writer.Write(data, 0, data.Length);
-                        if (size > 0)
-                        {
-                            monitor.Progress += (sizeof(byte) * data.Length) / size;
-                        }
-                        else
-                        {
-                            monitor.IsIndeterminate = true;
-                        }
-
-                        return true;
-                    }, null);
-
-                    //byte[] finalFileContent = sumByteArrays(reference.data);
-
-                    
+                    File.WriteAllText(destination, "FREE MODE!");
+                    return DownloadedFileState.SKIPPED_FREEMODE;
                 }
 
+                using (ConnStateHandler handler = new ConnStateHandler(this))
+                {
+                    double size = path.GetFileSize();
 
 
+                    using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
+                    {
 
-                //File.WriteAllBytes(destination, finalFileContent);
+                        this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
+                        {
+                            writer.Write(data, 0, data.Length);
+                            if (size > 0)
+                            {
+                                monitor.Progress += (sizeof(byte) * data.Length) / size;
+                            }
+                            else
+                            {
+                                monitor.IsIndeterminate = true;
+                            }
+
+                            return true;
+                        }, null);
+                    }
+                }
+            } catch (IOException e) {
+                throw e;
             }
 
             return DownloadedFileState.DOWNLOADED;

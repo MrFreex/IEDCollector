@@ -167,7 +167,7 @@ namespace IEDCollector
                                 {
                                     foreach (EditableFileDirectoryEntry entry in tree)
                                     {
-                                        realQueue.addLast(new ListBoxItem() { Content = String.Format("[{1}] Download file '{0}'", entry.GetFileName(), ied.ToString()) });
+                                        realQueue.addLast(new ListBoxItem() { Content = String.Format(Properties.Resources.ied_download_x, entry.GetFileName(), ied.ToString()) });
                                     }
                                 });
 
@@ -193,13 +193,26 @@ namespace IEDCollector
                                             this.fileName.Text = entry.fileName;
                                         }, System.Windows.Threading.DispatcherPriority.Background);
 
-                                        DownloadedFileState state = ied.DownloadFile(entry, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder, fixEntry), new FileProgressMonitor(this.updateFileProgress), false);
+                                        DownloadedFileState state;
+                                        string dest = Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder, fixEntry);
+                                        try
+                                        {
+                                            state = ied.DownloadFile(entry, dest, new FileProgressMonitor(this.updateFileProgress), false);
+                                        } catch(IOException e)
+                                        {
+                                            Globals.logs.log("Execution stopped due to insufficient disk space. IED Collector is stopped." + e.Message, LogLevel.Basic);
+                                            MessageBox.Show(Properties.Resources.not_enough_disk_space, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                                            Application.Current.Shutdown();
+                                            return;
+                                        }
+
 
                                         string log = String.Empty;
+                                        LogLevel level = LogLevel.Detailed;
 
                                         if (state == DownloadedFileState.SKIPPED_NEWER)
                                         {
-                                            log = String.Format("[SKIP] [{1}] File '{0}' is newer or equal locally", entry.GetFileName(), ied.ToString());
+                                            log = String.Format("[SKIP] [{1}] File '{0}' is older or equal than stored file", entry.GetFileName(), ied.ToString());
                                         }
                                         else if (state == DownloadedFileState.SKIPPED_DIRECTORY)
                                         {
@@ -207,7 +220,8 @@ namespace IEDCollector
                                         }
                                         else if (state == DownloadedFileState.DOWNLOADED)
                                         {
-                                            log = String.Format("[{1}] File '{0}' downloaded", entry.GetFileName(), ied.ToString());
+                                            log = String.Format("[{1}] File '{0}' downloaded to '{2}'", entry.GetFileName(), ied.ToString(), dest);
+                                            level = LogLevel.Basic;
                                         }
                                         else if (state == DownloadedFileState.SKIPPED_FILTER)
                                         {
@@ -215,12 +229,13 @@ namespace IEDCollector
                                         } else if (state == DownloadedFileState.SKIPPED_FREEMODE)
                                         {
                                             log = String.Format("[FREEMODE] Would have downloaded file '{0}', but the software is in free mode.", entry.GetFileName());
+                                            level = LogLevel.Basic;
                                         }
 
-                                        Application.Current.Dispatcher.Invoke(() =>
-                                        {
-                                            Globals.logs.log(log, Globals.IsFreeMode ? LogLevel.Basic : LogLevel.Detailed);
-                                        });
+                                        //Application.Current.Dispatcher.Invoke(() =>
+                                        //{
+                                            Globals.logs.log(log, level);
+                                        //});
                                     }
                                     catch (Exception e)
                                     {
@@ -263,7 +278,7 @@ namespace IEDCollector
                         Globals.logs.log("[SKIP] " + ied.ToString() + " because it is unchecked", LogLevel.Detailed);
                     }
 
-
+                    ied.Dispose();
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {

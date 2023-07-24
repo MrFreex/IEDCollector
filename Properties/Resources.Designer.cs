@@ -403,6 +403,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [{1}] Download file &apos;{0}&apos;.
+        /// </summary>
+        public static string ied_download_x {
+            get {
+                return ResourceManager.GetString("ied_download_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import profile.
         /// </summary>
         public static string import_profile {
@@ -975,6 +984,15 @@ namespace IEDCollector.Properties {
         public static string no_profile {
             get {
                 return ResourceManager.GetString("no_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IED Collector cannot proceed due to insufficient disk space. Please remove unnecessary files to increase free disk space. The program will now close..
+        /// </summary>
+        public static string not_enough_disk_space {
+            get {
+                return ResourceManager.GetString("not_enough_disk_space", resourceCulture);
             }
         }
         

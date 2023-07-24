@@ -242,6 +242,9 @@
   <data name="ied_collector_version" xml:space="preserve">
     <value>IED Collector version  1.0.0</value>
   </data>
+  <data name="ied_download_x" xml:space="preserve">
+    <value>[{1}] Download file '{0}'</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Import profile</value>
     <comment>Tooltip</comment>
@@ -426,6 +429,9 @@
   <data name="new_profile" xml:space="preserve">
     <value>New profile</value>
     <comment>Tooltip</comment>
+  </data>
+  <data name="not_enough_disk_space" xml:space="preserve">
+    <value>IED Collector cannot proceed due to insufficient disk space. Please remove unnecessary files to increase free disk space. The program will now close.</value>
   </data>
   <data name="no_connections_configured" xml:space="preserve">
     <value>No connections configured</value>

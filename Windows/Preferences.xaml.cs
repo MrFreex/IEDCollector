@@ -12,8 +12,10 @@ namespace IEDCollector
             InitializeComponent(); 
             Language selected = Lang.language;
 
-            foreach (Language l in IEDCollector.Language.GetValues(typeof(Language)))
+            System.Collections.IList list = System.Enum.GetValues(typeof(Language));
+            for (int i = 0; i < list.Count; i++)
             {
+                Language l = (Language)list[i];
                 if (l.Equals(selected))
                 {
                     this.languageCombo.Items.Add(new ComboBoxItem() { Content = l, IsSelected = true, Tag = l });

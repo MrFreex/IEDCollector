@@ -121,80 +121,80 @@
     <value>Acerca</value>
   </data>
   <data name="browse" xml:space="preserve">
-    <value>Percorrer</value>
+    <value>Navegar</value>
   </data>
   <data name="cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>Anular</value>
   </data>
   <data name="clone_connection" xml:space="preserve">
-    <value>Clonar conexão</value>
+    <value>Clonar conexión</value>
     <comment>Tooltip</comment>
   </data>
   <data name="close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>Cerrar</value>
   </data>
   <data name="configuration" xml:space="preserve">
-    <value>Configuração</value>
+    <value>Configuración</value>
   </data>
   <data name="configuration_tab" xml:space="preserve">
-    <value>Configuração</value>
+    <value>Configuración</value>
   </data>
   <data name="confirm" xml:space="preserve">
-    <value>Confirmar</value>
+    <value>Validar</value>
     <comment>Window title?</comment>
   </data>
   <data name="confirm_profile_creation" xml:space="preserve">
-    <value>Tem a certeza que pretende criar um novo perfil ? Todas as modificações não salvas serão perdidas.</value>
+    <value>¿Está seguro de que desea crear un nuevo perfil? Todos los cambios no guardados se perderán.</value>
   </data>
   <data name="confirm_profile_creation_instruction" xml:space="preserve">
-    <value>Confirmar criação de perfil</value>
+    <value>Confirmar creación de perfil</value>
   </data>
   <data name="confirm_profile_creation_title" xml:space="preserve">
-    <value>Confirmar criação de perfil</value>
+    <value>Confirmar creación de perfil</value>
     <comment>Window title</comment>
   </data>
   <data name="connecting_ied" xml:space="preserve">
-    <value>Conexão ao IED em curso ...</value>
+    <value>Conexión al IED en curso...</value>
   </data>
   <data name="connections" xml:space="preserve">
-    <value>Conexões</value>
+    <value>Conexiones</value>
   </data>
   <data name="connection_name" xml:space="preserve">
-    <value>Nome da conexão</value>
+    <value>Nombre de la conexión</value>
   </data>
   <data name="connect_to_ied" xml:space="preserve">
-    <value>Conetar ao IED</value>
+    <value>Conectar al IED</value>
   </data>
   <data name="copy" xml:space="preserve">
     <value>Copiar</value>
   </data>
   <data name="create_new_profile_window" xml:space="preserve">
-    <value>Criar um novo perfil</value>
+    <value>Crear un nuevo perfil</value>
     <comment>Window title</comment>
   </data>
   <data name="cycle_fetch" xml:space="preserve">
-    <value>Execução cíclica</value>
+    <value>Ejecución cíclica</value>
     <comment>Tooltip</comment>
   </data>
   <data name="delete_connection" xml:space="preserve">
-    <value>Eliminar a conexão selecionada</value>
+    <value>Borrar conexión seleccionada</value>
     <comment>Tooltip</comment>
   </data>
   <data name="delete_profile" xml:space="preserve">
-    <value>Eliminar perfil</value>
+    <value>Borrar perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="direct_protocol" xml:space="preserve">
-    <value>Direto</value>
+    <value>Directo</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>Email:</value>
   </data>
   <data name="encryption" xml:space="preserve">
-    <value>Encriptação</value>
+    <value>Cifrado</value>
   </data>
   <data name="error" xml:space="preserve">
-    <value>Erro</value>
+    <value>Error</value>
     <comment>Window title?</comment>
   </data>
   <data name="export_profile" xml:space="preserve">
@@ -202,90 +202,90 @@
     <comment>Tooltip</comment>
   </data>
   <data name="extensions" xml:space="preserve">
-    <value>Extensões</value>
+    <value>Extensiones</value>
   </data>
   <data name="fetching_data" xml:space="preserve">
-    <value>Sincronização ...</value>
+    <value>Sincronización...</value>
   </data>
   <data name="fetching_data_title" xml:space="preserve">
-    <value>Sincronização de dados do IED</value>
+    <value>Sincronización de datos del IED</value>
     <comment>Window title</comment>
   </data>
   <data name="fetch_data" xml:space="preserve">
     <value>Sincronizar</value>
   </data>
   <data name="fetch_data_tooltip" xml:space="preserve">
-    <value>Verifique a conexão com o IED e sincronize as diretorias e as extensões utilizadas</value>
+    <value>Comprobar la conexión con el IED y sincronizar las carpetas y extensiones utilizadas</value>
     <comment>Tooltip</comment>
   </data>
   <data name="fetch_directories" xml:space="preserve">
-    <value>Sincronizar diretorias</value>
+    <value>Sincronizar carpetas</value>
   </data>
   <data name="files" xml:space="preserve">
-    <value>Ficheiro</value>
+    <value>Archivo</value>
   </data>
   <data name="file_metadata" xml:space="preserve">
-    <value>Metadados do ficheiro</value>
+    <value>Metadatos del archivo</value>
   </data>
   <data name="folders" xml:space="preserve">
-    <value>Diretoria</value>
+    <value>Carpeta</value>
   </data>
   <data name="full_name" xml:space="preserve">
-    <value>Nome completo: nome e apelido do proprietário da licença</value>
+    <value>Nombre completo: nombre y apellidos del titular de la licencia</value>
   </data>
   <data name="hash_code" xml:space="preserve">
     <value>Hash</value>
   </data>
   <data name="idling" xml:space="preserve">
-    <value>Em espera</value>
+    <value>En espera</value>
   </data>
   <data name="ied_collector_version" xml:space="preserve">
-    <value>IED Collector versão 1.0.0</value>
+    <value>IED Collector versión 1.0.0</value>
   </data>
   <data name="ied_download_x" xml:space="preserve">
-    <value>[{1}] Carregar ficheiro '{0}'</value>
+    <value>[{1}] Cargar archivo '{0}'</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="ip_address" xml:space="preserve">
-    <value>Endereço IP</value>
+    <value>Dirección IP</value>
   </data>
   <data name="keep_all_files" xml:space="preserve">
-    <value>Manter todos os ficheiros</value>
+    <value>Mantener todos los archivos</value>
   </data>
   <data name="language" xml:space="preserve">
     <value>Idioma</value>
   </data>
   <data name="last_modified" xml:space="preserve">
-    <value>Última modificação</value>
+    <value>Última modificación</value>
   </data>
   <data name="license" xml:space="preserve">
-    <value>Licença</value>
+    <value>Licencia</value>
   </data>
   <data name="license_details" xml:space="preserve">
-    <value>Detalhes da licença</value>
+    <value>Detalles de la licencia</value>
   </data>
   <data name="license_key" xml:space="preserve">
-    <value>Chave de licença (license key)</value>
+    <value>Clave de licencia (license key)</value>
   </data>
   <data name="license_management" xml:space="preserve">
-    <value>Gestão de licença</value>
+    <value>Gestión de licencias</value>
     <comment>Window title</comment>
   </data>
   <data name="license_request_window" xml:space="preserve">
-    <value>Solicitar licença</value>
+    <value>Solicitar licencia</value>
     <comment>Window title</comment>
   </data>
   <data name="load_profile_to_continue" xml:space="preserve">
-    <value>Carregue um perfil para continuar</value>
+    <value>Cargue un perfil para continuar</value>
   </data>
   <data name="local_file" xml:space="preserve">
-    <value>Ficheiro local</value>
+    <value>Archivo local</value>
   </data>
   <data name="location" xml:space="preserve">
-    <value>Local: a instalação onde a licença será utilizada</value>
+    <value>Ubicación: la instalación donde se utilizará la licencia</value>
   </data>
   <data name="loglevel_basic" xml:space="preserve">
     <value>Básico</value>
@@ -294,300 +294,300 @@
     <value>Debug</value>
   </data>
   <data name="loglevel_detailed" xml:space="preserve">
-    <value>Detalhado</value>
+    <value>Detallado</value>
   </data>
   <data name="log_files_kept" xml:space="preserve">
-    <value>Ficheiros log mantidos</value>
+    <value>Archivos de log mantenidos</value>
   </data>
   <data name="log_level" xml:space="preserve">
-    <value>Nível de log</value>
+    <value>Nivel de log</value>
   </data>
   <data name="messagebox_buy_full_version" xml:space="preserve">
-    <value>Adquira a versão completa para utilizar esta função</value>
+    <value>Compre la versión completa para utilizar esta función</value>
   </data>
   <data name="messagebox_buy_full_version_title" xml:space="preserve">
-    <value>Funcionalidade indisponível</value>
+    <value>Funcionalidad no disponible</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_cannot_configure_while_running" xml:space="preserve">
-    <value>Não é possível configurar o software enquanto a transferência está ativa</value>
+    <value>No se puede configurar el software mientras la transferencia está activa</value>
   </data>
   <data name="messagebox_confirm_change_language" xml:space="preserve">
-    <value>Para alterar o idioma a aplicação irá reiniciar, continuar ?</value>
+    <value>Para cambiar el idioma la aplicación se reiniciará, ¿continuar?</value>
   </data>
   <data name="messagebox_confirm_delete_connection" xml:space="preserve">
-    <value>Tem a certeza que pretende eliminar a conexão ?</value>
+    <value>¿Está seguro de que desea eliminar la conexión?</value>
   </data>
   <data name="messagebox_confirm_delete_connection_title" xml:space="preserve">
-    <value>Eliminar conexão</value>
+    <value>Borrar conexión</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_confirm_delete_profile" xml:space="preserve">
-    <value>Tem a certeza que pretende excluir este perfil ? Não poderá anular esta operação.</value>
+    <value>¿Está seguro de que desea borrar este perfil? No podrá deshacer esta operación.</value>
   </data>
   <data name="messagebox_confirm_delete_profile_title" xml:space="preserve">
-    <value>Eliminar perfil</value>
+    <value>Borrar perfil</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_confirm_folder_change" xml:space="preserve">
-    <value>Para alterar a diretoria de configuração a aplicação irá reiniciar, continuar?</value>
+    <value>Para cambiar la carpeta de configuración la aplicación se reiniciará, ¿continuar?</value>
   </data>
   <data name="messagebox_confirm_forced_termination" xml:space="preserve">
-    <value>Forçar a paragem do processo ?</value>
+    <value>¿Forzar la parada del proceso?</value>
   </data>
   <data name="messagebox_confirm_forced_termination_title" xml:space="preserve">
-    <value>Parar processo</value>
+    <value>Parar el proceso</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
-    <value>O nome configurado não corresponde ao do IED, continuar mesmo assim ?</value>
+    <value>El nombre configurado no coincide con el del IED, ¿continuar de todos modos?</value>
   </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
-    <value>Não é possível ler a diretoria remota</value>
+    <value>No se puede leer la carpeta remota</value>
   </data>
   <data name="messagebox_error_reading_profile_backup" xml:space="preserve">
-    <value>O arquivo de perfil '{0}' está corrompido. Foi guardado um backup . Para restaurá-lo, resolva os erros no arquivo '{1}', feche o software e renomeie o arquivo para '{2}'.</value>
+    <value>El archivo de perfil '{0}' está dañado. Se ha guardado una copia de seguridad. Para restaurarlo, resuelva los errores en el archivo '{1}', cierre el software y cambie el nombre del archivo a '{2}'.</value>
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
-    <value>Erro ao salvar perfil</value>
+    <value>Error al guardar perfil</value>
   </data>
   <data name="messagebox_file_not_found" xml:space="preserve">
-    <value>Ficheiro não encontrado no IED</value>
+    <value>Archivo no encontrado en el IED</value>
   </data>
   <data name="messagebox_folder_doesnt_exist" xml:space="preserve">
-    <value>A diretoria não existe</value>
+    <value>La carpeta no existe</value>
   </data>
   <data name="messagebox_global_config_not_readable" xml:space="preserve">
-    <value>O arquivo de configuração estava mal formatado. A configuração foi restaurada e foi guardado um backup . Para restaurá-lo, repare o arquivo '{0}' , feche o software e renomeie o arquivo para '{1}'.</value>
+    <value>El archivo de configuración estaba mal formateado. La configuración se ha restaurado y se ha guardado una copia de seguridad. Para restaurarlo, repare el archivo '{0}', cierre el software y cambie el nombre del archivo a '{1}'.</value>
   </data>
   <data name="messagebox_ied_connection_failed" xml:space="preserve">
-    <value>O arquivo de configuração estava mal formatado. A configuração foi restaurada e foi guardado um backup . Para restaurá-lo, repare o arquivo '{0}' , feche o software e renomeie o arquivo para '{1}'.</value>
+    <value>No fue posible conectar con el IED. Verifique sus credenciales y vuelva a intentarlo.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
-    <value>Insira uma licença válida</value>
+    <value>Introduzca una licencia válida</value>
   </data>
   <data name="messagebox_invalid_ip" xml:space="preserve">
-    <value>Endereço IP inválido</value>
+    <value>Dirección IP inválida</value>
   </data>
   <data name="messagebox_invalid_logs_path" xml:space="preserve">
-    <value>Caminho de arquivo inválido. A diretoria não existe ou o caminho está incorreto.</value>
+    <value>Ruta de archivo no válida. La carpeta no existe o la ruta es incorrecta.</value>
   </data>
   <data name="messagebox_invalid_port" xml:space="preserve">
-    <value>Porta inválida.</value>
+    <value>Porta non valida.</value>
   </data>
   <data name="messagebox_license_invalid" xml:space="preserve">
-    <value>Licença inválida, solicite uma se ainda não a tiver recebido.</value>
+    <value>Licencia no válida, solicite una si aún no la ha recibido.</value>
   </data>
   <data name="messagebox_logs_path_used" xml:space="preserve">
-    <value>O caminho do arquivo de log está a ser usado por outro programa.</value>
+    <value>La ruta del archivo de log está siendo utilizada por otro programa.</value>
   </data>
   <data name="messagebox_number_of_log_files_error" xml:space="preserve">
-    <value>O número de arquivos de log mantidos deve ser um número válido.</value>
+    <value>El número de archivos de log guardados debe ser un número válido.</value>
   </data>
   <data name="messagebox_profile_already_exists" xml:space="preserve">
-    <value>Já existe um perfil com este nome, renomeie-o antes de continuar.</value>
+    <value>Ya existe un perfil con este nombre, cámbiele el nombre antes de continuar.</value>
   </data>
   <data name="messagebox_profile_exported_successfully" xml:space="preserve">
-    <value>Perfil exportado com sucesso.</value>
+    <value>Perfil exportado con éxito.</value>
   </data>
   <data name="messagebox_remove_license_confirmation" xml:space="preserve">
-    <value>Deseja realmente remover a chave de licença atual ?</value>
+    <value>¿Realmente desea eliminar la clave de licencia actual?</value>
   </data>
   <data name="messagebox_root_folder_in_use" xml:space="preserve">
-    <value>Esta diretoria já está a ser utilizada por outro perfil.</value>
+    <value>Esta carpeta ya está siendo utilizada por otro perfil.</value>
   </data>
   <data name="messagebox_save_changes" xml:space="preserve">
-    <value>Deseja salvar as alterações ?</value>
+    <value>¿Desea guardar los cambios?</value>
   </data>
   <data name="messagebox_save_changes_title" xml:space="preserve">
-    <value>Salvar</value>
+    <value>Guardar</value>
   </data>
   <data name="messagebox_save_connection" xml:space="preserve">
-    <value>Deseja salvar a conexão atual ?</value>
+    <value>¿Desea guardar la conexión actual?</value>
   </data>
   <data name="messagebox_save_connection_title" xml:space="preserve">
-    <value>Salvar conexão</value>
+    <value>Guardar conexión</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_success_save_connection" xml:space="preserve">
-    <value>Operação concluída com sucesso, salvar conexão ?</value>
+    <value>Operación completada con éxito, ¿guardar conexión?</value>
   </data>
   <data name="messagebox_thanks_for_requesting_license" xml:space="preserve">
-    <value>Obrigado por solicitar uma licença. Receberá uma resposta a curto prazo.</value>
+    <value>Gracias por solicitar una licencia. Recibirá una respuesta a corto plazo.</value>
   </data>
   <data name="monitor_tab" xml:space="preserve">
-    <value>Monitorização</value>
+    <value>Supervisión</value>
   </data>
   <data name="new_connection" xml:space="preserve">
-    <value>Nova conexão</value>
+    <value>Nueva conexión</value>
     <comment>Tooltip</comment>
   </data>
   <data name="new_ied" xml:space="preserve">
-    <value>Novo IED</value>
+    <value>Nuevo IED</value>
   </data>
   <data name="new_profile" xml:space="preserve">
-    <value>Novo perfil</value>
+    <value>Nuevo perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="not_enough_disk_space" xml:space="preserve">
-    <value>O IEDCollector não pode prosseguir devido a espaço em disco insuficiente. Remova os arquivos desnecessários antes de reiniciar a execução. O programa será fechado.</value>
+    <value>IEDCollector no puede continuar debido a que no hay suficiente espacio en disco. Elimine los archivos innecesarios antes de reiniciar la ejecución. El programa se cerrará.</value>
   </data>
   <data name="no_connections_configured" xml:space="preserve">
-    <value>Nenhuma conexão configurada</value>
+    <value>No hay conexión configurada</value>
   </data>
   <data name="no_encryption_choice" xml:space="preserve">
-    <value>Nenhuma encriptação seleccionada</value>
+    <value>No hay cifrado seleccionado</value>
   </data>
   <data name="no_file_being_processed" xml:space="preserve">
-    <value>Nenhum arquivo em processamento de momento</value>
+    <value>No hay archivos procesando actualmente</value>
   </data>
   <data name="no_license_found_on_computer" xml:space="preserve">
-    <value>Nenhuma licença encontrada no computador. Por favor insira uma.</value>
+    <value>No se encontró ninguna licencia en la computadora. Por favor ingrese uno.</value>
   </data>
   <data name="no_operation_queued" xml:space="preserve">
-    <value>Nenhuma operação na fila</value>
+    <value>No hay operaciones en cola</value>
   </data>
   <data name="no_profile" xml:space="preserve">
-    <value>Nenhum perfil</value>
+    <value>Sin perfil</value>
   </data>
   <data name="open" xml:space="preserve">
     <value>Abrir</value>
   </data>
   <data name="open_log_file" xml:space="preserve">
-    <value>Abrir o arquivo de log</value>
+    <value>Abrir el archivo de log</value>
   </data>
   <data name="options" xml:space="preserve">
-    <value>Opções</value>
+    <value>Opciones</value>
   </data>
   <data name="password" xml:space="preserve">
-    <value>Password</value>
+    <value>Contraseña</value>
   </data>
   <data name="path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>Camino</value>
   </data>
   <data name="phone" xml:space="preserve">
-    <value>Telefone:</value>
+    <value>Teléfono:</value>
   </data>
   <data name="polling_interval" xml:space="preserve">
-    <value>Intervalo de execução (1-60 min)</value>
+    <value>Intervalo de ejecución (1-60 min)</value>
   </data>
   <data name="port" xml:space="preserve">
-    <value>Porta</value>
+    <value>Puerta</value>
   </data>
   <data name="preferences" xml:space="preserve">
-    <value>Preferências</value>
+    <value>Preferencias</value>
   </data>
   <data name="preferences_window" xml:space="preserve">
-    <value>Preferências</value>
+    <value>Preferencias</value>
     <comment>Window title</comment>
   </data>
   <data name="profile" xml:space="preserve">
     <value>Perfil</value>
   </data>
   <data name="profile_name" xml:space="preserve">
-    <value>Nome do perfil</value>
+    <value>Nombre del perfil</value>
   </data>
   <data name="properties" xml:space="preserve">
-    <value>Propriedades</value>
+    <value>Propiedades</value>
   </data>
   <data name="protocol" xml:space="preserve">
     <value>Protocolo</value>
   </data>
   <data name="remote_file" xml:space="preserve">
-    <value>Ficheiro remoto</value>
+    <value>Archivo remoto</value>
   </data>
   <data name="remove_license" xml:space="preserve">
-    <value>Remover licença</value>
+    <value>Quitar licencia</value>
   </data>
   <data name="rename" xml:space="preserve">
-    <value>Renomear</value>
+    <value>Renombrar</value>
   </data>
   <data name="rename_profile" xml:space="preserve">
-    <value>Renomear perfil</value>
+    <value>Renombrar perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="request" xml:space="preserve">
     <value>Solicitar</value>
   </data>
   <data name="request_license" xml:space="preserve">
-    <value>Solicitar licença</value>
+    <value>Solicitar licencia</value>
   </data>
   <data name="resume_polling_startup" xml:space="preserve">
-    <value>Retomar a execução cíclica ao iniciar</value>
+    <value>Reanudar ejecución cíclica al inicio</value>
   </data>
   <data name="rights" xml:space="preserve">
-    <value>O IEDCollector é um software concebido, desenvolvido e publicado pela Engiprot Lda. Todos os direitos reservados.</value>
+    <value>IEDCollector es un software concebido, desarrollado y publicado por Engiprot Lda. Todos los derechos reservados.</value>
   </data>
   <data name="root_folder" xml:space="preserve">
-    <value>Diretoria principal</value>
+    <value>Carpeta principal</value>
   </data>
   <data name="save" xml:space="preserve">
-    <value>Diretoria principal</value>
+    <value>Guardar</value>
   </data>
   <data name="save_connection" xml:space="preserve">
-    <value>Salvar os dados de conexão no arquivo de perfil</value>
+    <value>Guardar datos de conexión en el archivo de perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="save_profile" xml:space="preserve">
-    <value>Salvar perfil</value>
+    <value>Guardar perfil</value>
     <comment>Tooltip</comment>
   </data>
   <data name="select_folder_where_logs_will_be_saved" xml:space="preserve">
-    <value>Selecione a diretoria de destino para os arquivos de log.</value>
+    <value>Seleccione la carpeta de destino para los archivos de log.</value>
   </data>
   <data name="select_local_root_folder" xml:space="preserve">
-    <value>Selecione a diretoria base de destino.</value>
+    <value>Seleccione la carpeta base de destino.</value>
   </data>
   <data name="select_new_config_folder" xml:space="preserve">
-    <value>Selecione a nova diretoria de configuração</value>
+    <value>Seleccionar la nueva carpeta de configuración</value>
   </data>
   <data name="single_fetch" xml:space="preserve">
-    <value>Execução única</value>
+    <value>Ejecución única</value>
     <comment>Tooltip</comment>
   </data>
   <data name="size" xml:space="preserve">
-    <value>Dimensão</value>
+    <value>Dimensión</value>
   </data>
   <data name="software_data_location" xml:space="preserve">
-    <value>Diretoria de dados do software</value>
+    <value>Carpeta de datos del software</value>
   </data>
   <data name="source_filter" xml:space="preserve">
     <value>Filtro</value>
   </data>
   <data name="start_with_windows" xml:space="preserve">
-    <value>Iniciar com o Windows</value>
+    <value>Empezar con Windows</value>
   </data>
   <data name="subfolder" xml:space="preserve">
-    <value>Nome da subdiretoria</value>
+    <value>Nombre de la subcarpeta</value>
   </data>
   <data name="submit" xml:space="preserve">
-    <value>Confirmar</value>
+    <value>Validar</value>
   </data>
   <data name="success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>Éxito</value>
     <comment>Window title?</comment>
   </data>
   <data name="switch_free_mode" xml:space="preserve">
-    <value>Passar para a versão gratuita</value>
+    <value>Cambiar a la versión gratuita</value>
   </data>
   <data name="transferring_from_x" xml:space="preserve">
-    <value>Transferindo de {0}</value>
+    <value>Transfiriendo desde {0}</value>
   </data>
   <data name="username" xml:space="preserve">
-    <value>Username</value>
+    <value>Nombre de usuario</value>
   </data>
   <data name="waiting_x_minute" xml:space="preserve">
-    <value>Aguardando {0} minuto</value>
+    <value>Esperando {0} minuto</value>
   </data>
   <data name="waiting_x_minutes" xml:space="preserve">
-    <value>Aguardando {1} minutos</value>
+    <value>Esperando {1} minutos</value>
   </data>
   <data name="warning" xml:space="preserve">
-    <value>Atenção</value>
+    <value>Atención</value>
     <comment>Window title?</comment>
   </data>
   <data name="website" xml:space="preserve">
-    <value>Página web:</value>
+    <value>Sitio web:</value>
   </data>
 </root>

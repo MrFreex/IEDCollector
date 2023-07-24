@@ -172,7 +172,7 @@ namespace IEDCollector
 
         */
 
-        public string genLogMessage(string message, LogLevel level) => string.Format("|{2}| [{0}] {1} \n", DateTime.Now.ToString(), message, levelsTexts[level]);
+        public string genLogMessage(string message, LogLevel level) => string.Format("|{2}| [{0}] {1} \n", DateTime.Now.ToString("o"), message, levelsTexts[level]);
 
         public void log(string message) => log(message, LogLevel.Basic);
 

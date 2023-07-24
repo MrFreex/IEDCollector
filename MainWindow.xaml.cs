@@ -1435,7 +1435,7 @@ namespace IEDCollector
                     Dictionary<string, bool> extensions = ied.GetAllUsedExtensions(dirTree);
                     Dictionary<string, bool> folders = ied.GetAllUsedFolders(dirTree);
 
-                    Application.Current.Dispatcher.Invoke(() =>
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         selectedIed.logEnabledExtensions = extensions;
                         selectedIed.logEnabledFolders = folders;
@@ -1469,19 +1469,25 @@ namespace IEDCollector
 
                         fetchDataText.Text = Properties.Resources.fetch_data;
 
-                    }, System.Windows.Threading.DispatcherPriority.Render);
+                        if (success && MessageBox.Show(Properties.Resources.messagebox_success_save_connection, Properties.Resources.success, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            saveIed(sender, null);
+                        }
+
+                    }), System.Windows.Threading.DispatcherPriority.Render);
                 }
             };
 
             progress.RunWorkerCompleted += (object sender2, RunWorkerCompletedEventArgs e2) =>
             {
                 fetchDataText.Text = Properties.Resources.fetch_data;
-                if (success && MessageBox.Show(Properties.Resources.messagebox_success_save_connection, Properties.Resources.success, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    saveIed(sender, null);
-                }
+                
             };
         }
+
+        private readonly BitmapImage folderIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"));
+        private readonly BitmapImage fileIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/file-plus-fill.png"));
+        private readonly BitmapImage wrenchicon = new BitmapImage(new Uri("pack://application:,,,/Icons/wrench-adjustable.png"));
 
         private void buildIedFilesTree(IEDConfig ied, TreeViewItem iedItem, string path)
         {
@@ -1490,12 +1496,14 @@ namespace IEDCollector
                 foreach (string directory in Directory.GetDirectories(path))
                 {
                     TreeViewItem directoryItem = new TreeViewItem();
-                    StackPanel iconAndName = new StackPanel();
+                    StackPanel iconAndName = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
 
-                    iconAndName.Orientation = Orientation.Horizontal;
                     iconAndName.Children.Add(new Image()
                     {
-                        Source = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png")),
+                        Source = folderIcon,
                         Width = 16,
                         Height = 16,
 
@@ -1520,7 +1528,7 @@ namespace IEDCollector
                         {
                             Width = 16,
                             Height = 16,
-                            Source = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"))
+                            Source = folderIcon
                         }
                     };
 
@@ -1554,7 +1562,7 @@ namespace IEDCollector
                 iconAndName.Orientation = Orientation.Horizontal;
                 iconAndName.Children.Add(new Image()
                 {
-                    Source = new BitmapImage(new Uri("pack://application:,,,/Icons/file-plus-fill.png")),
+                    Source = fileIcon,
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 2.5, 5, 2.5)
@@ -1576,7 +1584,7 @@ namespace IEDCollector
                     {
                         Width = 16,
                         Height = 16,
-                        Source = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"))
+                        Source = folderIcon
                     }
                 };
 
@@ -1599,7 +1607,7 @@ namespace IEDCollector
                     {
                         Width = 16,
                         Height = 16,
-                        Source = new BitmapImage(new Uri("pack://application:,,,/Icons/wrench-adjustable.png"))
+                        Source = wrenchicon
                     }
                 };
 
@@ -1695,6 +1703,9 @@ namespace IEDCollector
 
         }
 
+        private static BitmapImage greenIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/hdd-network-fill-green.png"));
+        private static BitmapImage redIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/hdd-network-fill-red.png"));
+
         private void iedProcessed_Callback(IED ied, ExecutionResult status)
         {
             foreach (TreeViewItem iedItem in iedTree.Items)
@@ -1705,13 +1716,13 @@ namespace IEDCollector
                     Image icon = (Image)header.Children[1];
                     //name.Foreground = status ? Brushes.Green : Brushes.Red;
 
-                    icon.Source = new BitmapImage(new Uri((status == ExecutionResult.SUCCESS || status == ExecutionResult.SKIPPED) ? "pack://application:,,,/Icons/hdd-network-fill-green.png" : "pack://application:,,,/Icons/hdd-network-fill-red.png"));
+                    icon.Source = status == ExecutionResult.SUCCESS || status == ExecutionResult.SKIPPED ? greenIcon : redIcon;
 
 
 
                     if (status == ExecutionResult.SUCCESS || status == ExecutionResult.PARTIAL)
                     {
-                        iedItem.Items.Clear();
+                        iedItem.Items.Clear(); 
                         buildIedFilesTree(ied.config, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder));
                     }
 

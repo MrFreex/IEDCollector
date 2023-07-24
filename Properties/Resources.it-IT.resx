@@ -242,6 +242,9 @@
   <data name="ied_collector_version" xml:space="preserve">
     <value>IED Collector versione 1.0.0</value>
   </data>
+  <data name="ied_download_x" xml:space="preserve">
+    <value>[{1}] Scarica file '{0}'</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importa profilo</value>
     <comment>Tooltip</comment>
@@ -426,6 +429,9 @@
   <data name="new_profile" xml:space="preserve">
     <value>Nuovo profilo</value>
     <comment>Tooltip</comment>
+  </data>
+  <data name="not_enough_disk_space" xml:space="preserve">
+    <value>IEDCollector non può procedere a causa dello spazio su disco insufficiente. Rimuovi file non necessari prima di riavviare l'esecuzione. Il programma si chiuderà.</value>
   </data>
   <data name="no_connections_configured" xml:space="preserve">
     <value>Nessuna connessione configurata</value>
