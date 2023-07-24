@@ -1,5 +1,8 @@
 ﻿namespace IEDCollector
 {
+    /// <summary>
+    /// Handles the file download progress.
+    /// </summary>
     internal class FileProgressMonitor
     {
         public delegate void OnFileProgressChanged(double newProgress);
@@ -21,6 +24,10 @@
             get => indeterminate;
         }
 
+        /// <summary>
+        /// Load Assembly, DLL from Embedded Resources into memory.
+        /// </summary>
+        /// <param name="cb">The callback to execute when the progress changes</param>
         public FileProgressMonitor(OnFileProgressChanged cb)
         {
             this.cb = cb;

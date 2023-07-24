@@ -22,6 +22,7 @@ namespace IEDCollector
         public static bool HasLicense => validate().Equals(SecurityValidationResult.OK);
         public static string License => getLicense() ?? String.Empty;
 
+        // Decodes the given license from base64url
         private static string decodeLicense(string license)
         {
             try
@@ -34,6 +35,11 @@ namespace IEDCollector
             }
         }
 
+        /// <summary>
+        /// Validates the given license
+        /// </summary>
+        /// <param name="license">The encoded license to validate</param>
+        /// <returns>true: OK, false: Otherwise</returns>
         public static bool validateLicense(string license)
         {
             license = decodeLicense(license);
@@ -61,6 +67,10 @@ namespace IEDCollector
                    .AssertValidLicense().Any();
         }
 
+        /// <summary>
+        /// Retrieves the license from disk
+        /// </summary>
+        /// <returns>the license</returns>
         private static string getLicense()
         {
             using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
@@ -77,6 +87,10 @@ namespace IEDCollector
             }
         }
 
+        /// <summary>
+        /// Validates the license present on the disk (winreg)
+        /// </summary>
+        /// <returns>a SecurityValidationResult matching the result</returns>
         public static SecurityValidationResult validate()
         {
             string license = getLicense();
@@ -84,6 +98,11 @@ namespace IEDCollector
             return validateLicense(license) ? SecurityValidationResult.OK : SecurityValidationResult.INVALID;
         }
 
+        /// <summary>
+        /// Saves the given encoded license to disk
+        /// </summary>
+        /// <param name="key">the given encoded license</param>
+        /// <returns></returns>
         public static SecurityValidationResult setLicense(string key)
         {
             try
@@ -101,6 +120,9 @@ namespace IEDCollector
 
         }
 
+        /// <summary>
+        /// Removes the license from disk
+        /// </summary>
         public static void removeLicense()
         {
             try
@@ -115,6 +137,10 @@ namespace IEDCollector
             }
         }
 
+        /// <summary>
+        /// Checks whether the software is in free mode or not
+        /// </summary>
+        /// <returns>True: yes, False: no</returns>
         private static bool isFreeMode()
         {
             using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
@@ -133,6 +159,10 @@ namespace IEDCollector
 
         public static bool IsFreeMode => isFreeMode();
 
+        /// <summary>
+        /// Sets the free mode
+        /// </summary>
+        /// <param name="set">True: free mode on, False: free mode off</param>
         public static void setFreeMode(bool set)
         {
             try

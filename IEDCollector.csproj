@@ -219,7 +219,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EmbeddedAssembly.cs" />
-    <Compile Include="FilesDownloader.cs" />
     <Compile Include="Logs.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

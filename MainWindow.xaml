@@ -152,7 +152,7 @@
                                     <Button Click="createProfile" x:Name="newProfileButton" ToolTip="{x:Static p:Resources.new_profile}">
                                         <Image Source="Icons/database-fill-add.png" />
                                     </Button>
-                                    <Button Click="saveIeds" x:Name="saveProfileButton" ToolTip="{x:Static p:Resources.save_profile}">
+                                    <Button Click="saveProfile" x:Name="saveProfileButton" ToolTip="{x:Static p:Resources.save_profile}">
                                         <Image Source="Icons/database-fill-check.png" />
                                     </Button>
                                     <Button Click="importProfile" x:Name="loadProfileButton" ToolTip="{x:Static p:Resources.import_profile}">

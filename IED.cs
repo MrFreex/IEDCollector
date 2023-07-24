@@ -7,6 +7,7 @@ using System.Threading;
 
 namespace IEDCollector
 {
+    // Used to allow to execute a block of code using the IED object and then tell the rest of the threads it is available
     internal class ConnStateHandler : IDisposable
     {
         private IED ied;
@@ -22,12 +23,13 @@ namespace IEDCollector
         }
     }
 
+    // Describes a transfer's state
     public enum DownloadedFileState
     {
         DOWNLOADED, SKIPPED_DIRECTORY, SKIPPED_FILTER, SKIPPED_NEWER, SKIPPED_FREEMODE
     }
 
-
+    // Same as FileDirectoryEntry in libiec61850, but with writable fields and a proper Equals method
     internal class EditableFileDirectoryEntry
     {
         public string fileName;
@@ -72,6 +74,7 @@ namespace IEDCollector
         }
     }
 
+    // Comparer to allow a dictionary to verify its keys are equal with the proper .Equals method
     internal class FileDirectoryEntryComparer : IEqualityComparer<EditableFileDirectoryEntry>
     {
         public bool Equals(EditableFileDirectoryEntry x, EditableFileDirectoryEntry y)
@@ -85,6 +88,7 @@ namespace IEDCollector
         }
     }
 
+    // Represents a connection to an IED with the needed methods
     internal class IED : IDisposable
     {
         public readonly IEDConfig config;
@@ -105,6 +109,10 @@ namespace IEDCollector
             this.config = config;
         }
 
+        /// <summary>
+        /// Connects to the IED handling the IEDConnection exceptions
+        /// </summary>
+        /// <returns>True: success, False: otherwise</returns>
         public bool connect()
         {
             if (this.connection != null)
@@ -127,6 +135,10 @@ namespace IEDCollector
             return true;
         }
 
+        /// <summary>
+        /// Performs the name's cross check on the device
+        /// </summary>
+        /// <returns>True: CrossCheck Ok, False: CrossCheck differs</returns>
         public bool CrossCheckName()
         {
             if (this.connection == null) throw new InvalidOperationException("Not connected");
@@ -144,15 +156,20 @@ namespace IEDCollector
             {
                 if (!device.StartsWith(this.config.name))
                 {
-                    Globals.logs.log(String.Format("Cross check failed for '{0}': '{1}' is not the device's name", this.ToString(), device));
+                    Globals.logs.log(String.Format("Cross check failed for '{0}': '{1}' is not the device's name", this.ToString(), this.config.name));
                     return false;
                 }
             }
 
-            Globals.logs.log(String.Format("Cross check ok for '{0}'", this.ToString()), LogLevel.Detailed);
+            Globals.logs.log(String.Format("Cross check OK for '{0}'", this.ToString()), LogLevel.Detailed);
             return true;
         }
 
+        /// <summary>
+        ///  Retrieves all present extensions in the files list
+        /// </summary>
+        /// <param name="dir">The IED tree previously retrieved</param>
+        /// <returns>A dictionary with the extensions as keys and the values as true, comfortable to init the checkboxes</returns>
         public Dictionary<string, bool> GetAllUsedExtensions(List<string> dir)
         {
             Dictionary<string, bool> extensions = new Dictionary<string, bool>();
@@ -168,6 +185,11 @@ namespace IEDCollector
             return extensions;
         }
 
+        /// <summary>
+        ///  Retrieves all present folders in the files list
+        /// </summary>
+        /// <param name="dir">The IED tree previously retrieved</param>
+        /// <returns>A dictionary with the folders as keys and the values as true, comfortable to init the checkboxes</returns>
         public Dictionary<string, bool> GetAllUsedFolders(List<string> dir)
         {
             Dictionary<string, bool> folders = new Dictionary<string, bool>();
@@ -187,11 +209,21 @@ namespace IEDCollector
             return folders;
         }
 
+        /// <summary>
+        ///  Retrieves all present extensions in the files list. The file list is retrieved automatically.
+        /// </summary>
+        /// <returns>A dictionary with the extensions as keys and the values as true, comfortable to init the checkboxes</returns>
         public Dictionary<string, bool> GetAllUsedExtensions()
         {
             return GetAllUsedExtensions(this.ReadFileTree());
         }
 
+        /// <summary>
+        /// Reads all the file entries in the IED
+        /// </summary>
+        /// <param name="root">the folder to start from</param>
+        /// <param name="a">dummy parameter</param>
+        /// <returns>A Dictionary with the Entry as key, and a bool value to distinguish folders (false) from files (true)</returns>
         public Dictionary<EditableFileDirectoryEntry, bool> ReadFileTree(string root, bool a)
         {
             List<FileDirectoryEntry> files;
@@ -244,11 +276,20 @@ namespace IEDCollector
             return newTree;
         }
 
+        /// <summary>
+        /// Reads the IED file tree
+        /// </summary>
+        /// <param name="root">The path to start from (remote)</param>
+        /// <returns>The list of entries found</returns>
         public List<EditableFileDirectoryEntry> ReadFileTree(string root)
         {
             return new List<EditableFileDirectoryEntry>(ReadFileTree(root, true).Keys);
         }
 
+        /// <summary>
+        /// Reads the IED file tree
+        /// </summary>
+        /// <returns>The list of strings representing the files/folders paths</returns>
         public List<string> ReadFileTree()
         {
             List<string> converted = new List<string>();
@@ -261,6 +302,9 @@ namespace IEDCollector
             return converted;
         }
 
+        /// <summary>
+        /// Forcefully closes the connection
+        /// </summary>
         public void CloseNow()
         {
             if (this.connection == null) return;
@@ -269,6 +313,9 @@ namespace IEDCollector
             this.connection = null;
         }
 
+        /// <summary>
+        /// Disposes the connection when it's not busy
+        /// </summary>
         public void Dispose()
         {
             if (this.connection == null) return;
@@ -310,12 +357,15 @@ namespace IEDCollector
             }
         }
         */
-        internal class FileData
-        {
-            public string path;
-            public List<byte[]> data = new List<byte[]>();
-        }
 
+        /// <summary>
+        /// Downloads a file from the IED
+        /// </summary>
+        /// <param name="path">The remote file path</param>
+        /// <param name="destination">The local destination</param>
+        /// <param name="monitor">The FileProgressMonitor object that handles the progress update</param>
+        /// <param name="overwrite">Whether to overwrite (true) or not (false) any homonym local file</param>
+        /// <returns>A DownloadedFileState enum to represent the download state</returns>
         public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, FileProgressMonitor monitor, bool overwrite)
         {
             if (!overwrite && File.Exists(destination) && (ulong)File.GetLastWriteTime(destination).Ticks >= (path.GetLastModified())) return DownloadedFileState.SKIPPED_NEWER;

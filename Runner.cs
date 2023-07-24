@@ -44,7 +44,18 @@ namespace IEDCollector
         private int ProgressPerIed { get => 100 / this.subjects.Count; }
 
         public delegate void OnThreadOver();
-
+        /// <summary>
+        /// Creates a new Runner object
+        /// </summary>
+        /// <param name="callback">The delegate to call when the runner completes its job (completely)</param>
+        /// <param name="runType">The type of execution (RunType.SINGLE or RunType.POLLING)</param>
+        /// <param name="subjects">The IEDs treated</param>
+        /// <param name="progress">The "total progress" progress bar</param>
+        /// <param name="fileProgress">The "file progress" progress bar</param>
+        /// <param name="fileName">The textblock to put the file name into</param>
+        /// <param name="queue">The actions remaining listbox (used: actionsbox)</param>
+        /// <param name="status">The textblock to write the current action in</param>
+        /// <param name="onSingleExecutionOver">The delegate called when an IED finishes processing</param>
         public Runner(OnThreadOver callback, RunType runType, List<IEDConfig> subjects, ProgressBar progress, ProgressBar fileProgress, TextBlock fileName, ListBox queue, TextBlock status, IedFinishedCallback onSingleExecutionOver)
         {
             this.runType = runType;
@@ -59,6 +70,7 @@ namespace IEDCollector
 
         }
 
+        // Updates the file progress bar
         private void updateFileProgress(double progress)
         {
             if (this.fileProgress != null)
@@ -80,6 +92,7 @@ namespace IEDCollector
             }
         }
 
+        // Executes the fetch
         private void Execution()
         {
 
@@ -308,16 +321,23 @@ namespace IEDCollector
         public bool IsRunning { get => running; }
         public bool IsIdling { get => idling; }
 
+        // Stops the runner
         public void Dispose()
         {
             running = false;
         }
 
+        /// <summary>
+        /// Forcefully stops the worker thread
+        /// </summary>
         public void Abort()
         {
             if (this.worker != null && this.worker.IsAlive) this.worker.Abort();
         }
 
+        /// <summary>
+        /// Starts the runner
+        /// </summary>
         public void Start()
         {
             if (this.worker != null && this.worker.IsAlive)

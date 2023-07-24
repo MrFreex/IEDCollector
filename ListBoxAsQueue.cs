@@ -2,6 +2,7 @@
 
 namespace IEDCollector
 {
+    // Handles the actionsBox as a queue
     internal class ListBoxAsQueue
     {
         private ListBox listBox;

@@ -6,14 +6,7 @@ using System.Management;
 
 namespace IEDCollector
 {
-    internal class HardDrive
-    {
-        public string Model { get; set; }
-        public string InterfaceType { get; set; }
-        public string Caption { get; set; }
-        public string SerialNo { get; set; }
-    }
-
+    // Simple class to allow the extraction of the CPU ID
     internal class ComputerInfo
     {
         public string CpuId
@@ -29,40 +22,6 @@ namespace IEDCollector
                 }
 
                 return String.Empty;
-            }
-        }
-
-        public List<string> Drives
-        {
-            get
-            {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
-
-                List<string> hdCollection = new List<string>();
-
-                foreach (ManagementObject wmi_HD in searcher.Get())
-                {
-                    hdCollection.Add(wmi_HD.GetPropertyValue("SerialNumber").ToString());
-                }
-
-                return hdCollection;
-            }
-        }
-
-        public string MotherBoard
-        {
-            get
-            {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
-
-                string mb = String.Empty;
-
-                foreach (ManagementObject wmi_HD in searcher.Get())
-                {
-                    mb = wmi_HD.GetPropertyValue("SerialNumber").ToString();
-                }
-
-                return mb;
             }
         }
     }

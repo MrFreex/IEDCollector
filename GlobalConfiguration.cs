@@ -12,6 +12,9 @@ namespace IEDCollector
         public const string USERCONFIGFOLDERS = "userConfigFolders";
     }
 
+    /// <summary>
+    /// Handles the file containing the references to user specific configration folders.
+    /// </summary>
     class GlobalConfiguration
     {
         private const string GLOBALCONFIGNAME = "config.xml";
@@ -56,13 +59,21 @@ namespace IEDCollector
 
         }
 
+        // Adds the current user to the file with the default path
         private void addUsernameToFolders() => this.tree[GlobalConfigurationCategories.USERCONFIGFOLDERS].Add(Environment.UserName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Globals.FOLDERSNAME));
 
+        /// <summary>
+        /// Sets the new user specific config folder
+        /// </summary>
+        /// <param name="newFolder">The new configuration folder.</param>
         public void setConfigFolder(string newFolder)
         {
             this.tree[GlobalConfigurationCategories.USERCONFIGFOLDERS][string.Format("{0}", Environment.UserName)] = newFolder;
         }
 
+        /// <summary>
+        /// Saves the current global configuration to the file
+        /// </summary>
         public void save()
         {
             XDocument globalConfiguration = new XDocument(new XElement("root"));
@@ -83,6 +94,9 @@ namespace IEDCollector
             globalConfiguration.Save(filePath);
         }
 
+        /// <summary>
+        /// Loads the global configuration from the file
+        /// </summary>
         private void load()
         {
             if (!File.Exists(filePath))
@@ -126,6 +140,12 @@ namespace IEDCollector
 
         }
 
+        /// <summary>
+        /// Set a value in the config file
+        /// </summary>
+        /// <param name="category">The category to write into</param>
+        /// <param name="key">The key to write</param>
+        /// <param name="value">The value to write</param>
         public void set(string category, string key, string value)
         {
             if (!tree.ContainsKey(category)) throw new ArgumentException("The category does not exist");
@@ -135,6 +155,12 @@ namespace IEDCollector
             save();
         }
 
+        /// <summary>
+        /// Retrieves a file entry
+        /// </summary>
+        /// <param name="category">The value category</param>
+        /// <param name="key">The value key</param>
+        /// <returns>The wanted value</returns>
         public string get(string category, string key)
         {
             if (!tree.ContainsKey(category)) throw new ArgumentException("The category does not exist");
@@ -143,10 +169,15 @@ namespace IEDCollector
             return tree[category][key];
         }
 
+        /// <summary>
+        /// Gets the current configuration folder for the current user
+        /// </summary>
+        /// <returns>The current configuration folder for the current user</returns>
         public string getCurrentConfigFolder()
         {
             return tree[GlobalConfigurationCategories.USERCONFIGFOLDERS][Environment.UserName];
         }
+
 
         private void resetConfigAndSaveBackup()
         {

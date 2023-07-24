@@ -242,13 +242,16 @@ namespace IEDCollector
             ConfigFolder.IEDLOGSROOT
         };
 
+        // Event handler for the checkboxes in the iedTree
         private void iedCheckedUnchecked(IEDConfig c, bool isChecked)
         {
             c.includedInCollection = isChecked;
 
-            saveIeds(null, null);
+            saveProfile(null, null);
         }
 
+        // Responsible for loading the list of IEDs from the profile and loading their file structure
+        // The file structure is taken from the local folders and hence refers to the last fetched one.
         private void populateIedTree()
         {
             iedTree.Items.Clear();
@@ -340,10 +343,12 @@ namespace IEDCollector
             }
         }
 
+        // Adds the profile items to the selector
         public void buildProfileSelector()
         {
             string[] profiles = Directory.GetFiles(ConfigFolder.extend(ConfigFolder.PROFILES), String.Format("*{0}", Profile.PROFILEEXTENSION));
             profileSelector.Items.Clear();
+            profileSelector.IsEnabled = false;
             foreach (string file in profiles)
             {
                 string profileName = Path.GetFileNameWithoutExtension(file);
@@ -358,6 +363,9 @@ namespace IEDCollector
             profileSelector.IsEnabled = true;
         }
 
+        // On application startup, it is responsible to determine whether the user has a license or not.
+        // It also handles the "Switch to free mode" button.
+        // @return : true if the user has a valid license or opted for the free version, false otherwise.
         public bool verifyLicense()
         {
             
@@ -407,28 +415,15 @@ namespace IEDCollector
             return false;
         }
 
+        // Taken from IEDExplorer, helps resolve the iec61850 dlls
         static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             Globals.logs.log(String.Format("Loading assembly {0}", args.Name), LogLevel.Debug);
             return EmbeddedAssembly.Get(args.Name);
         }
 
-        [DllImport("kernel32", SetLastError = true)]
-        private static extern bool FreeLibrary(IntPtr hModule);
 
-        public static void UnloadImportedDll(string DllPath)
-        {
-            foreach (System.Diagnostics.ProcessModule mod in System.Diagnostics.Process.GetCurrentProcess().Modules)
-            {
-                if (mod.FileName.ToUpper() == DllPath.ToUpper())
-                {
-                    FreeLibrary(mod.BaseAddress);
-                }
-            }
-        }
-
-        
-
+        // Entry point
 
         public MainWindow()
         {
@@ -436,9 +431,9 @@ namespace IEDCollector
 
             if (!verifyLicense()) return;
 
-            InitializeComponent();
+            InitializeComponent(); // Load all the WPF components
 
-            Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) =>
+            Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) => // handle watchdog restart
             {
                 closeFromTray = true;
                 handleClosing(sender, e);
@@ -446,7 +441,7 @@ namespace IEDCollector
 
             this.Title = Globals.IsFreeMode ? this.Title + " - Free Mode" : this.Title;
 
-            Globals.logs = new Logs(new List<TextBox>()
+            Globals.logs = new Logs(new List<TextBox>() // Initialize the logs object, no logs are allowed before this line
             {
                 this.Logs
             });
@@ -482,47 +477,30 @@ namespace IEDCollector
                 }
             };
 
-            //this.Hide();
+            
 
             Globals.logs.log("Software started");
+
+            // Load the options.xml file in the programData root folder, it contains the data path for each user
+
             Globals.globalConfiguration = new GlobalConfiguration();
             ConfigFolder.Path = Globals.globalConfiguration.getCurrentConfigFolder();
-            initializeFolders(Globals.globalConfiguration.Folder);
-            Globals.logs.setFolder(ConfigFolder.extend(ConfigFolder.LOGS));
+            
+            initializeFolders(Globals.globalConfiguration.Folder); // Create the needed folders if they do not exist
+            Globals.logs.setFolder(ConfigFolder.extend(ConfigFolder.LOGS)); // Set logs folder
 
-            Globals.config = new UserConfig(ConfigFolder.Path, (FSyncConfiguration config, FSyncPreferences pref) =>
+            Globals.config = new UserConfig(ConfigFolder.Path, (config, pref) =>
             {
                 resumePollingStartup.IsChecked = config.resumePollingOnStartup;
                 buildProfileSelector();
 
             });
+
             Globals.logs.updateLogLevelSelectors();
 
             EmbeddedAssembly.Load("IEDCollector.Embed.iec61850.dll", "iec61850.dll");
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-
-            /*
-            new Thread(() =>
-            {
-                IED ied = new IED(new IEDConfig("Test", "10.1.21.211", "", "", 102, "C:\\Users\\FL\\AppData\\Local\\IEDCollector\\IEDlogs\\Test", new Dictionary<string, bool>(), new Dictionary<string, bool>()));
-                ied.connect();
-                foreach (string entry in ied.ReadFileTree())
-                {
-                    Globals.logs.log(entry);
-                }
-            }).Start();
-
-            /*
-            new Thread(() =>
-            {
-                for (int i = 0; i < 1000; i++)
-                {
-                    Globals.logs.log("Test " + i);
-                    Thread.Sleep(10);
-                }
-            }).Start();
-            */
 
             bool startingAfterPolling = false;
 
@@ -591,13 +569,10 @@ namespace IEDCollector
                     }
                 }
 
-                File.WriteAllText(ConfigFolder.extend(ConfigFolder.LASTPROFILEFILE), Globals.currentProfile.FilePath);
+                File.WriteAllText(ConfigFolder.extend(ConfigFolder.LASTPROFILEFILE), Globals.currentProfile.FilePath); // Save the last loaded profile to file so we can automatically load it on next start
 
                 Globals.currentProfile.IedsChanged = new Profile.IedsChangedHandler(populateIedTree);
 
-
-
-                //this.currentProfileName.Text = Globals.currentProfile.Name;
                 if (renameOnly)
                 {
                     ((ComboBoxItem)profileSelector.SelectedItem).Content = Globals.currentProfile.Name;
@@ -660,6 +635,7 @@ namespace IEDCollector
                 }
             };
 
+            // Set the selected profile to the last one loaded
             if (File.Exists(ConfigFolder.extend(ConfigFolder.LASTPROFILEFILE)))
             {
                 string profilePath = File.ReadAllText(ConfigFolder.extend(ConfigFolder.LASTPROFILEFILE));
@@ -713,7 +689,7 @@ namespace IEDCollector
                     if (Keyboard.IsKeyDown(Key.S))
                     {
                         saveIed(sender, e);
-                        saveIeds(sender, e);
+                        saveProfile(sender, e);
                     }
                 }
             };
@@ -728,15 +704,7 @@ namespace IEDCollector
             deleteIedBtn.IsEnabled = toggle;
         }
 
-        public static bool receiveF(object param, byte[] data)
-        {
-            if (param is FileData)
-            {
-                FileData fd = (FileData)param;
-            }
-            return true;
-        }
-
+        // Initializes all the needed folders in the user data folder
         private void initializeFolders(string path)
         {
             foreach (string folder in NEEDEDFOLDERS)
@@ -749,43 +717,7 @@ namespace IEDCollector
             }
         }
 
-        private void TestConnection()
-
-        {
-            var connection = new IedConnection();
-            connection.Connect("10.1.21.201", 102);
-
-            List<string> devices = connection.GetServerDirectory();
-
-            foreach (string device in devices)
-            {
-                Debug.WriteLine(device);
-            }
-
-            /*
-
-            FilesDownloader f = new FilesDownloader("/", (List<string> files) => {
-                Debug.WriteLine("Thread Over");
-                connection.Abort();
-            }, connection);
-            */
-
-        }
-
-        private void iedLogFolderBrowse_Click(object sender, RoutedEventArgs e)
-        {
-            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
-            dialog.Description = Properties.Resources.select_folder_where_logs_will_be_saved;
-            dialog.InitialDirectory = this.iedLogFolderInput.Text;
-            dialog.ShowNewFolderButton = true;
-
-            Nullable<bool> result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                this.iedLogFolderInput.Text = dialog.SelectedPath;
-            }
-        }
+        // Opens the preferences window
 
         private void openPreferences(object sender, RoutedEventArgs e)
         {
@@ -793,13 +725,13 @@ namespace IEDCollector
             preferences.Show();
         }
 
+        // Opens the configuration window
+
         private void openConfiguration(object sender, RoutedEventArgs e)
         {
-            //TODO: Add logged in check
+            //TODO: Add logged in check (v2)
 
             Configuration configuration = new Configuration();
-
-            //configuration.cyclePeriod.Text = Globals.config.config.cyclePeriod.ToString();
 
             if (Globals.config.config.logFilesKept < 0)
             {
@@ -817,13 +749,15 @@ namespace IEDCollector
             configuration.Show();
         }
 
+        // Opens the about window
+
         private void openAbout(object sender, RoutedEventArgs e)
         {
             About about = new About();
             about.Show();
         }
 
-        // Configuration view
+        // Adds a connection to the connection list in the current profile
 
         private void addIed(object sender, RoutedEventArgs e)
         {
@@ -853,6 +787,8 @@ namespace IEDCollector
             iedSelector.Items.Add(toAdd);
             iedSelector.SelectedIndex = iedSelector.Items.Count - 1;
         }
+
+        // Removes a connection in the connection list in the current profile
 
         private void deleteIed(object sender, RoutedEventArgs e)
         {
@@ -913,6 +849,8 @@ namespace IEDCollector
         }
         */
         private bool skipAtNext = false;
+
+        // Called when the user changes the selected connection
 
         private void iedSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -999,6 +937,8 @@ namespace IEDCollector
             isIedSaved = true;
         }
 
+        // Called on the click of the "Create Profile" button
+
         private void createProfile(object sender, RoutedEventArgs e)
         {
             if (Globals.currentProfile != null && !isProfileSaved)
@@ -1048,10 +988,14 @@ namespace IEDCollector
             }
         }
 
+        // When a new log is generated, this method is called
+
         private void scrollToBottom(object sender, TextChangedEventArgs e)
         {
             Logs.ScrollToEnd();
         }
+
+        // Called when the "Rename profile" button is pressed
 
         private void renameProfile(object sender, RoutedEventArgs e)
         {
@@ -1074,6 +1018,8 @@ namespace IEDCollector
             }
         }
 
+        // Called when the "Clone connection" button is pressed
+
         private void cloneIed(object sender, RoutedEventArgs e)
         {
             // TODO
@@ -1089,6 +1035,8 @@ namespace IEDCollector
             iedSelector.SelectedIndex = iedSelector.Items.Count - 1;
         }
 
+        // Utility: retrieves the currently selected connection
+
         private IEDConfig getSelectedIed()
         {
             if (!iedSelector.IsEnabled) return null;
@@ -1098,6 +1046,8 @@ namespace IEDCollector
 
             return Globals.currentProfile.IEDs[iedSelector.SelectedIndex];
         }
+
+        // Saves the given connection to the profile
 
         private void saveIed(IEDConfig selectedIed)
         {
@@ -1162,12 +1112,16 @@ namespace IEDCollector
             isProfileSaved = false;
         }
 
+        // Called when the "Save connection" button is pressed
+
         private void saveIed(object sender, RoutedEventArgs e)
         {
             IEDConfig selectedIed = getSelectedIed();
 
             saveIed(selectedIed);
         }
+
+        // Validates the port number
 
         private bool checkPortInt()
         {
@@ -1189,16 +1143,7 @@ namespace IEDCollector
             return !issue;
         }
 
-        private void checkPortInt(object sender, RoutedEventArgs e)
-        {
-
-
-            if (!checkPortInt())
-            {
-                MessageBox.Show(Properties.Resources.messagebox_invalid_port, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Warning);
-                iedPortInput.Text = "102";
-            }
-        }
+        // Validates the IP address input
 
         private void validateIedIP(object sender, RoutedEventArgs e)
         {
@@ -1220,6 +1165,8 @@ namespace IEDCollector
             USED,
             NOTEXIST
         }
+
+        // Validates the logs path input
 
         private LogFolderValidationResult validateLogsPath()
         {
@@ -1251,6 +1198,8 @@ namespace IEDCollector
         }
 
         private string previousConnectionName = "";
+
+        // Changes the logs path input to the connection name if it is empty or matches the previous name
         private void updateNameLabel(object sender, TextChangedEventArgs e)
         {
             //iedFieldChanged(sender, e);
@@ -1263,12 +1212,15 @@ namespace IEDCollector
             isIedSaved = false;
         }
 
+        // Updates the bool "isIedSaved" to match the field status
         private void iedFieldChanged(object sender, object e)
         {
             isIedSaved = false;
         }
 
-        private void saveIeds(object sender, RoutedEventArgs e)
+        // Called when the "Save profile" button is pressed
+
+        private void saveProfile(object sender, RoutedEventArgs e)
         {
             isProfileSaved = true;
 
@@ -1277,6 +1229,8 @@ namespace IEDCollector
             
             Globals.currentProfile.save();
         }
+
+        // Called when the "Delete profile" button is pressed
 
         private void deleteProfile(object sender, RoutedEventArgs e)
         {
@@ -1296,6 +1250,10 @@ namespace IEDCollector
         }
 
         private bool closeFromTray = false;
+
+        // Window closing event handler
+        // Close from window's "X" button -> minimize to tray
+        // Close from tray icon / rebooting -> exit
 
         private void handleClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1345,7 +1303,7 @@ namespace IEDCollector
                     if (res.Equals(MessageBoxResult.Yes))
                     {
                         saveIed(sender, null);
-                        saveIeds(sender, null);
+                        saveProfile(sender, null);
                     }
                     else if (res.Equals(MessageBoxResult.Cancel))
                     {
@@ -1360,6 +1318,8 @@ namespace IEDCollector
             }
             
         }
+
+        // Called when the "Fetch Data" button is pressed
 
         private void fetchIedData(object sender, RoutedEventArgs e)
         {
@@ -1489,6 +1449,8 @@ namespace IEDCollector
         private readonly BitmapImage fileIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/file-plus-fill.png"));
         private readonly BitmapImage wrenchicon = new BitmapImage(new Uri("pack://application:,,,/Icons/wrench-adjustable.png"));
 
+        // Generates the files and folders of the IEDs in the iedTree
+        // ! RECURSIVE !
         private void buildIedFilesTree(IEDConfig ied, TreeViewItem iedItem, string path)
         {
             try
@@ -1636,6 +1598,8 @@ namespace IEDCollector
             }
         }
 
+        // Called on right click -> properties on a file in the iedTree
+
         private void openFileMetadata(IEDConfig iedConf, string file)
         {
             IED ied = new IED(iedConf);
@@ -1706,6 +1670,8 @@ namespace IEDCollector
         private static BitmapImage greenIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/hdd-network-fill-green.png"));
         private static BitmapImage redIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/hdd-network-fill-red.png"));
 
+        // Callback : called when the Runner finishes processing one IED
+
         private void iedProcessed_Callback(IED ied, ExecutionResult status)
         {
             foreach (TreeViewItem iedItem in iedTree.Items)
@@ -1734,6 +1700,8 @@ namespace IEDCollector
 
 
         }
+
+        // Called when the single execution "play" button is pressed
 
         private void runSingle(object sender, RoutedEventArgs e)
         {
@@ -1765,7 +1733,7 @@ namespace IEDCollector
             Globals.currentProcess = runner;
         }
 
-
+        // Called when the cyclic execution "arrows" button is pressed
 
         private void runPolling(object sender, RoutedEventArgs e)
         {
@@ -1815,6 +1783,9 @@ namespace IEDCollector
         }
 
         private bool alreadyClicked = false;
+
+        // Called when the stop button is pressed
+
         private void Stop(object sender, RoutedEventArgs e)
         {
             Globals.logs.log("Stopping execution");
@@ -1859,6 +1830,8 @@ namespace IEDCollector
             }
         }
 
+        // Handles the user trying to switch between the viewer and configuration tabs
+
         private void tabChangeHandler(object sender, SelectionChangedEventArgs e)
         {
             if (e.RemovedItems.Count == 0) return;
@@ -1875,9 +1848,11 @@ namespace IEDCollector
             if (MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 saveIed(sender, null);
-                saveIeds(sender, null);
+                saveProfile(sender, null);
             }
         }
+
+        // Saves the "resumePolling" setting
 
         private void resumePollingStartup_Checked(object sender, RoutedEventArgs e)
         {
@@ -1887,6 +1862,8 @@ namespace IEDCollector
                 Globals.config.save();
             }
         }
+
+        // Changes the loaded profile when the combobox selection varies
 
         private void profileSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1906,7 +1883,7 @@ namespace IEDCollector
                 if (result.ButtonType.Equals(ButtonType.Yes))
                 {
                     saveIed(null, null);
-                    saveIeds(null, null);
+                    saveProfile(null, null);
                 }
                 else if (result.ButtonType.Equals(ButtonType.Cancel))
                 {
@@ -1928,6 +1905,8 @@ namespace IEDCollector
             Globals.currentProfile = selected;
         }
 
+        // Generic input validation (connection name)
+
         private void GenericTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text, @"[^a-zA-Z-_0-9]");
@@ -1946,10 +1925,14 @@ namespace IEDCollector
             }
         }
 
+        // Validates the ip address field on real time
+
         private void ipFormatting(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsTextAllowed(e.Text, @"[^0-9\.]");
         }
+
+        // Tells the software the profile is not saved when its root folder or polling interval field varies
 
         private void profileFieldChanged(object sender, TextChangedEventArgs e)
         {
@@ -1957,11 +1940,15 @@ namespace IEDCollector
             isProfileSaved = false;
         }
 
+        // Tells the software the profile is not saved when its root folder or polling interval field varies
+
         private void profileFieldChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (Globals.currentProfile == null || pollingInterval.Value == Globals.currentProfile.Settings.PollingInterval) return;
             isProfileSaved = false;
         }
+
+        // Called when the "Browse" button is clicked in the profile root folder selection
 
         private void BrowseProfileRootFolder(object sender, RoutedEventArgs e)
         {
@@ -1995,6 +1982,8 @@ namespace IEDCollector
             }
         }
 
+        // Called when the "Export profile" button is pressed
+
         private void exportProfile(object sender, RoutedEventArgs e)
         {
             if (Globals.currentProfile == null) return;
@@ -2016,6 +2005,8 @@ namespace IEDCollector
                 MessageBox.Show(Properties.Resources.messagebox_profile_exported_successfully, Properties.Resources.success, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
+        // Called when the "import profile" button is pressed
 
         private void importProfile(object sender, RoutedEventArgs e)
         {
@@ -2039,7 +2030,7 @@ namespace IEDCollector
                     if (r.Equals(MessageBoxResult.Yes))
                     {
                         saveIed(null, null);
-                        saveIeds(null, null);
+                        saveProfile(null, null);
                     }
                     else if (r.Equals(MessageBoxResult.Cancel))
                     {
@@ -2068,6 +2059,8 @@ namespace IEDCollector
                 }
             }
         }
+
+        // Opens the license management window
 
         private void openLicenseWindow(object sender, RoutedEventArgs e)
         {

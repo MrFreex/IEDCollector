@@ -128,6 +128,10 @@ namespace IEDCollector
             }
         }
 
+        /// <summary>
+        /// Creates a new Profile object
+        /// </summary>
+        /// <param name="profileName">the profile name (used to load the profile file)</param>
         public Profile(string profileName)
         {
             if (profileName.EndsWith(PROFILEEXTENSION))
@@ -165,6 +169,10 @@ namespace IEDCollector
 
         public delegate void IedsChangedHandler();
 
+        /// <summary>
+        /// Load the profile from file
+        /// </summary>
+        /// <exception cref="IOException">when the file doesn't exist</exception>
         public void load()
         {
             Globals.logs.log("Loading profile " + this.profileName + " from disk");
@@ -206,6 +214,10 @@ namespace IEDCollector
             Globals.logs.log("Loaded profile " + this.profileName + " from disk");
         }
 
+        /// <summary>
+        /// Renames the profile
+        /// </summary>
+        /// <param name="newName">the new profile name</param>
         public void rename(string newName)
         {
             if (File.Exists(this.FilePath))
@@ -218,6 +230,9 @@ namespace IEDCollector
             Globals.logs.log("Profile renamed");
         }
 
+        /// <summary>
+        /// Saves the profile to file
+        /// </summary>
         public void save()
         {
             Globals.logs.log("Saving profile " + this.profileName);
@@ -270,6 +285,7 @@ namespace IEDCollector
             }
         }
 
+        // Decodes a dictionary from a string (used for folders and extensions)
         private Dictionary<string, bool> decodeDict(string encodedDict)
         {
             Dictionary<string, bool> output = new Dictionary<string, bool>();
@@ -291,6 +307,7 @@ namespace IEDCollector
             return output;
         }
 
+        // Encodes a dictionary to string (used for folders and extensions)
         private string encodeDict(Dictionary<string, bool> dict)
         {
             string output = String.Empty;
@@ -327,6 +344,10 @@ namespace IEDCollector
             this.save();
         }
 
+        /// <summary>
+        /// Deletes the profile
+        /// </summary>
+        /// <returns>True: success, False: Otherwise</returns>
         public bool delete()
         {
             Globals.logs.log("Deleting profile " + this.profileName);

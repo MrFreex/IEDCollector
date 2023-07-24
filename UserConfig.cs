@@ -7,7 +7,7 @@ namespace IEDCollector
 {
     
 
-    // Cycle period, log files kept (number or all [-1]), start with windows, data folder location?
+    // log files kept (number or all [-1]), start with windows, resume polling on startup, log level
     internal class FSyncConfiguration
     {
         public int logFilesKept;
@@ -21,7 +21,7 @@ namespace IEDCollector
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
     }
 
-    internal class FSyncPreferences
+    internal class FSyncPreferences // Unused, but kept for future use
     {
 
     }
@@ -39,6 +39,11 @@ namespace IEDCollector
 
         public delegate void OnLoad(FSyncConfiguration config, FSyncPreferences preferences);
 
+        /// <summary>
+        /// Initializes a new UserConfig object, representing the user specific configuration.
+        /// </summary>
+        /// <param name="folderPath">The user data path where the file will be located</param>
+        /// <param name="callback">A delegate called when the initialization is over</param>
         public UserConfig(string folderPath, OnLoad callback)
         {
             this.filePath = Path.Combine(folderPath, CONFIGFILENAME);
@@ -55,6 +60,9 @@ namespace IEDCollector
             this.onLoadCallback(this.config, this.preferences);
         }
 
+        /// <summary>
+        /// Saves the configuration to file
+        /// </summary>
         public void save()
         {
             FSyncConfiguration config = this.config != null ? this.config : new FSyncConfiguration()
@@ -92,6 +100,9 @@ namespace IEDCollector
             catch { }
         }
 
+        /// <summary>
+        /// Loads the configuration from the file
+        /// </summary>
         public void load()
         {
             if (!File.Exists(this.filePath))

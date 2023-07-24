@@ -51,6 +51,7 @@ namespace IEDCollector
         public readonly List<TextBox> outputs;
         public readonly ContextMenu context;
 
+        // Called when the logLevel radio buttons are clicked
         public void setLogLevel(object sender, RoutedEventArgs e)
         {
             
@@ -67,6 +68,9 @@ namespace IEDCollector
 
         }
 
+        /// <summary>
+        ///  Updates the logLevel radios to match the current logLevel (from the config)
+        /// </summary>
         public void updateLogLevelSelectors()
         {
             MenuItem levelSelector = (MenuItem)this.context.Items[this.context.Items.Count - 1];
@@ -83,6 +87,10 @@ namespace IEDCollector
             }
         }
 
+        /// <summary>
+        /// Constructs a Logs objects
+        /// </summary>
+        /// <param name="outputs">the textboxes monitoring the logs</param>
         public Logs(List<TextBox> outputs)
         {
             ContextMenu actions = new ContextMenu();
@@ -172,10 +180,19 @@ namespace IEDCollector
 
         */
 
-        public string genLogMessage(string message, LogLevel level) => string.Format("|{2}| [{0}] {1} \n", DateTime.Now.ToString("o"), message, levelsTexts[level]);
+        private string genLogMessage(string message, LogLevel level) => string.Format("|{2}| [{0}] {1} \n", DateTime.Now.ToString("o"), message, levelsTexts[level]);
 
+        /// <summary>
+        /// Logs a message in LogLevel.Basic mode
+        /// </summary>
+        /// <param name="message">the message to log</param>
         public void log(string message) => log(message, LogLevel.Basic);
 
+        /// <summary>
+        /// Logs a message
+        /// </summary>
+        /// <param name="message">the message to log</param>
+        /// <param name="level">the level of the message</param>
         public void log(string message, LogLevel level)
         {
             Debug.WriteLine(String.Format("[LOG] {0}", message));
@@ -208,6 +225,11 @@ namespace IEDCollector
 
         }
 
+        /// <summary>
+        /// Sets the folder where the logs will be saved
+        /// </summary>
+        /// <param name="folderPath">the folder path</param>
+        /// <exception cref="InvalidOperationException">when the path has already been specified</exception>
         public void setFolder(string folderPath)
         {
             if (this.folderPath != null) throw new InvalidOperationException("folderPath already defined");
