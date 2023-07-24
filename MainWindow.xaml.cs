@@ -99,7 +99,7 @@ namespace IEDCollector
 
     internal enum Language
     {
-        English, Portuguese, Italian, Spanish, French, German
+        English, Portuguese, Italian, Spanish, French
     }
 
 
@@ -133,12 +133,12 @@ namespace IEDCollector
 
         public static readonly Dictionary<Language, string> LanguageToCulture = new Dictionary<Language, string>()
         {
-            { Language.English, "" },
+            { Language.English, "en-UK" },
             { Language.Portuguese, "pt-PT" },
             { Language.Italian, "it-IT" },
             { Language.Spanish, "es-ES" },
             { Language.French, "fr-FR" },
-            { Language.German, "de-de" },
+            //{ Language.German, "de-de" },
         };
 
         public const string LANGUAGE = "language";
