@@ -330,7 +330,9 @@ namespace IEDCollector
                     this.connection.Abort();
                     this.connection.Dispose();
                 }
-                catch (IedConnectionException) { }
+                catch (IedConnectionException) { } catch (NullReferenceException) {
+                    Globals.logs.log("Connection already disposed. ", LogLevel.Debug);
+                }
 
                 this.connection = null;
             });
