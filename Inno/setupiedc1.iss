@@ -28,9 +28,9 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\FL\Desktop\Source\Fsync\Inno
+OutputDir=..\Inno
 OutputBaseFilename={#SetupOutputName}
-SetupIconFile=C:\Users\FL\Desktop\Source\Fsync\Icons\IEDCollector.ico
+SetupIconFile=..\Icons\IEDCollector.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -43,9 +43,9 @@ Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\FL\Desktop\Source\Fsync\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\FL\Desktop\Source\Fsync\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\FL\Desktop\Source\Fsync\bin\Release\iec61850.dll"; DestDir: "C:\Windows\System32"; Flags : ignoreversion
+Source: "..\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Release\iec61850.dll"; DestDir: "C:\Windows\System32"; Flags : ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
