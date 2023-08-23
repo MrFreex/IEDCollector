@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IEC61850.Client;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -130,9 +131,9 @@ namespace IEDCollector
 
                         if (!this.IsRunning) break;
 
+                        IedClientError connectionResult = ied.connect();
 
-
-                        if (ied.connect())
+                        if (connectionResult == IedClientError.IED_ERROR_OK)
                         {
                             if (!this.IsRunning) break;
 
@@ -278,7 +279,7 @@ namespace IEDCollector
                         else
                         {
                             success = ExecutionResult.FAILED;
-                            Globals.logs.log(String.Format("[WARNING] IED '{0}' is unreachable, skipping.", ied.ToString()));
+                            Globals.logs.log(String.Format("[WARNING] IED '{0}' is unreachable, skipping. Error code: {1}", ied.ToString(), connectionResult.ToString()));
                         }
                     }
                     else

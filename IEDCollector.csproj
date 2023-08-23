@@ -263,26 +263,32 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.es-ES.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.es-ES.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.fr-FR.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.fr-FR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.pt-PT.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.pt-PT.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.it-IT.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.it-IT.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.en-UK.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.en-UK.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

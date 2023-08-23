@@ -377,7 +377,7 @@
     <value>Il file di configurazione era malformato, la configurazione è stata ripristinata e un backup è stato salvato.Per ripristinarlo, ripare il file '{0}' , chiudi il software e rinomina il file in  '{1}'.</value>
   </data>
   <data name="messagebox_ied_connection_failed" xml:space="preserve">
-    <value>Impossibile connettersi all'IED. Controlla le credenziali e riprova.</value>
+    <value>Impossibile connettersi all'IED. Codice errore: "{0}". Controlla le credenziali e riprova.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
     <value>Immetti una licenza valid</value>

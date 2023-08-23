@@ -1354,9 +1354,10 @@ namespace IEDCollector
 
                 using (IED ied = new IED(selectedIed))
                 {
-                    if (!ied.connect())
+                    IedClientError connectionResult = ied.connect();
+                    if (connectionResult != IedClientError.IED_ERROR_OK)
                     {
-                        MessageBox.Show(Properties.Resources.messagebox_ied_connection_failed, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(String.Format(Properties.Resources.messagebox_ied_connection_failed, connectionResult.ToString()), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
                         success = false;
                         return;
@@ -1618,7 +1619,8 @@ namespace IEDCollector
             new Thread(() =>
             {
                 EditableFileDirectoryEntry fileEntry = null;
-                if (ied.connect())
+                IedClientError connectionResult = ied.connect();
+                if (connectionResult == IedClientError.IED_ERROR_OK)
                 {
                     //Globals.logs.log("Reading " + Path.GetDirectoryName(file)/*.TrimStart('\\')*/, LogLevel.Debug);
                     Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true);
@@ -1665,7 +1667,7 @@ namespace IEDCollector
                 }
                 else
                 {
-                    MessageBox.Show(Properties.Resources.messagebox_ied_connection_failed, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(String.Format(Properties.Resources.messagebox_ied_connection_failed, connectionResult.ToString()), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             }).Start();

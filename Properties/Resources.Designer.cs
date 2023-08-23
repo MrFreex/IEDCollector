@@ -781,7 +781,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to IED. Check the credentials and retry..
+        ///   Looks up a localized string similar to Failed to connect to IED. Error code: &quot;{0}&quot;. Check the credentials and retry..
         /// </summary>
         public static string messagebox_ied_connection_failed {
             get {

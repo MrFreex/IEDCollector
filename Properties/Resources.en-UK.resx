@@ -377,7 +377,7 @@
     <value>The config file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the '{0}' file, close the software and rename the file to '{1}'.</value>
   </data>
   <data name="messagebox_ied_connection_failed" xml:space="preserve">
-    <value>Failed to connect to IED. Check the credentials and retry.</value>
+    <value>Failed to connect to IED. Error code: "{0}". Check the credentials and retry.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
     <value>Please insert a valid license</value>

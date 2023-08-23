@@ -377,7 +377,7 @@
     <value>El archivo de configuración estaba mal formateado. La configuración se ha restaurado y se ha guardado una copia de seguridad. Para restaurarlo, repare el archivo '{0}', cierre el software y cambie el nombre del archivo a '{1}'.</value>
   </data>
   <data name="messagebox_ied_connection_failed" xml:space="preserve">
-    <value>No fue posible conectar con el IED. Verifique sus credenciales y vuelva a intentarlo.</value>
+    <value>No fue posible conectar con el IED. Error code: "{0}". Verifique sus credenciales y vuelva a intentarlo.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
     <value>Introduzca una licencia válida</value>

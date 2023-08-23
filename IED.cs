@@ -112,8 +112,8 @@ namespace IEDCollector
         /// <summary>
         /// Connects to the IED handling the IEDConnection exceptions
         /// </summary>
-        /// <returns>True: success, False: otherwise</returns>
-        public bool connect()
+        /// <returns>IedClientError matching the outcome</returns>
+        public IedClientError connect()
         {
             if (this.connection != null)
             {
@@ -125,14 +125,14 @@ namespace IEDCollector
             {
                 connection.Connect(this.config.ip, this.config.port);
             }
-            catch (IedConnectionException)
+            catch (IedConnectionException e)
             {
-                return false;
+                return e.GetIedClientError();
             }
 
             this.connection = connection;
 
-            return true;
+            return IedClientError.IED_ERROR_OK;
         }
 
         /// <summary>
