@@ -1366,7 +1366,6 @@ namespace IEDCollector
                         return;
                     }
 
-                    //progress.Text = "Performing device name cross-check...";
 
                     try
                     {
@@ -1390,7 +1389,6 @@ namespace IEDCollector
                         return;
                     }
 
-                    //progress.Text = "Reading folders and extensions...";
 
                     List<string> dirTree = ied.ReadFileTree();
 
