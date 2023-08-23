@@ -172,6 +172,12 @@
     <value>Create a new profile</value>
     <comment>Window title</comment>
   </data>
+  <data name="current_license_nok" xml:space="preserve">
+    <value>Current license INVALID</value>
+  </data>
+  <data name="current_license_ok" xml:space="preserve">
+    <value>Current license OK</value>
+  </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Cyclic Fetch</value>
     <comment>Tooltip</comment>
@@ -270,6 +276,9 @@
   <data name="license_key" xml:space="preserve">
     <value>License Key</value>
   </data>
+  <data name="license_key_file" xml:space="preserve">
+    <value>License Key File</value>
+  </data>
   <data name="license_management" xml:space="preserve">
     <value>License Management</value>
     <comment>Window title</comment>
@@ -349,6 +358,9 @@
     <value>The profile '{0}' file was not readable, a backup was saved and the configuration was reset. To restore it, fix the errors inside the '{1}' file, close the software and rename the file to '{2}'.</value>
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
+  <data name="messagebox_error_saving_file" xml:space="preserve">
+    <value>Error saving the file. Check the destination folder's permissions and whether it is read only.</value>
+  </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
     <value>Error while saving profile</value>
   </data>
@@ -376,8 +388,22 @@
   <data name="messagebox_invalid_port" xml:space="preserve">
     <value>Invalid port</value>
   </data>
+  <data name="messagebox_licensefile_not_found" xml:space="preserve">
+    <value>The specified file was not found</value>
+  </data>
+  <data name="messagebox_licensefile_not_found_title" xml:space="preserve">
+    <value>File not found</value>
+    <comment>Window title</comment>
+  </data>
   <data name="messagebox_license_invalid" xml:space="preserve">
     <value>License not valid. Request a license if you have none.</value>
+  </data>
+  <data name="messagebox_license_request_saved" xml:space="preserve">
+    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+  </data>
+  <data name="messagebox_license_request_saved_title" xml:space="preserve">
+    <value>License request file saved</value>
+    <comment>Window title</comment>
   </data>
   <data name="messagebox_logs_path_used" xml:space="preserve">
     <value>The logs path is being used by another IED.</value>

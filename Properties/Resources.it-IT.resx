@@ -172,6 +172,12 @@
     <value>Crea un nuovo profilo</value>
     <comment>Window title</comment>
   </data>
+  <data name="current_license_nok" xml:space="preserve">
+    <value>Current license INVALID</value>
+  </data>
+  <data name="current_license_ok" xml:space="preserve">
+    <value>Current license OK</value>
+  </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Esecuzione ciclica</value>
     <comment>Tooltip</comment>
@@ -270,6 +276,9 @@
   <data name="license_key" xml:space="preserve">
     <value>Chiave di licenza (license key)</value>
   </data>
+  <data name="license_key_file" xml:space="preserve">
+    <value>License Key File</value>
+  </data>
   <data name="license_management" xml:space="preserve">
     <value>Gestione licenza</value>
     <comment>Window title</comment>
@@ -349,6 +358,9 @@
     <value>Il file del profilo '{0}' è corrotto, un backup è stato salvato.Per ripristinarlo risolvi gli errori nel file '{1}', chiudi il software e rinomina il file in '{2}'.</value>
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
+  <data name="messagebox_error_saving_file" xml:space="preserve">
+    <value>Error saving the file. Check the destination folder's permissions and whether it is read only.</value>
+  </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
     <value>Errore durante il salvataggio del profilo</value>
   </data>
@@ -378,6 +390,13 @@
   </data>
   <data name="messagebox_license_invalid" xml:space="preserve">
     <value>Licenza non valida, richiedine una se non ne possiedi.</value>
+  </data>
+  <data name="messagebox_license_request_saved" xml:space="preserve">
+    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+  </data>
+  <data name="messagebox_license_request_saved_title" xml:space="preserve">
+    <value>License request file saved</value>
+    <comment>Window title</comment>
   </data>
   <data name="messagebox_logs_path_used" xml:space="preserve">
     <value>Il percorso dei file log è in uso da un altro dispositivo.</value>

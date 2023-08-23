@@ -24,15 +24,18 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="0" x:Name="Description" />
-            <Label Grid.Column="0" Grid.Row="1" Content="{x:Static p:Resources.license_key}" />
-            <PasswordBox Grid.Column="0" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Stretch" />
-            <Button Click="Copy_Click" Margin="5,0,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.copy}" />
+            <Label Grid.Column="0" Grid.Row="1" Content="{x:Static p:Resources.license_key_file}" />
+            <TextBox Grid.Column="0" x:Name="licenseBox"  Grid.Row="2"  HorizontalAlignment="Stretch" />
+            <Button Click="Browse_Click" Margin="5,0,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.browse}" />
+            <Label x:Name="license_ok_nok" Margin="0,5,0,0" Grid.Row="3" Content="{x:Static p:Resources.current_license_nok}" />
+            <Button x:Name="export_license" Margin="5,5,0,0" Padding="5,2.5,5,2.5" Grid.Column="1" Grid.Row="3" Click="export_license_Click">Export to file</Button>
         </Grid>
 
         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows;
+using System.IO;
+using Ookii.Dialogs.Wpf;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IEDCollector.Windows
 {
@@ -15,8 +18,13 @@ namespace IEDCollector.Windows
             if (!Security.HasLicense)
             {
                 removeLicenseButton.IsEnabled = false;
+                export_license.IsEnabled = false;
+                license_ok_nok.Content = Properties.Resources.current_license_nok;
+            } else
+            {
+                license_ok_nok.Content = Properties.Resources.current_license_ok;
             }
-            licenseBox.Password = Security.License;
+            //licenseBox.Text = Security.License;
             
             //this.requestLink.NavigateUri = new Uri(generateEmailLink());
         }
@@ -37,7 +45,18 @@ namespace IEDCollector.Windows
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
-            string license = this.licenseBox.Password;
+            string license;
+            
+            try
+            {
+                license = File.ReadAllText(this.licenseBox.Text);
+            } catch (IOException)
+            {
+                MessageBox.Show(Properties.Resources.messagebox_licensefile_not_found, Properties.Resources.messagebox_licensefile_not_found_title, MessageBoxButton.OK, MessageBoxImage.Error); return;
+            }
+
+            
+            
             if (license.Equals(String.Empty))
             {
                 MessageBox.Show(Properties.Resources.messagebox_insert_valid_license, "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -71,9 +90,23 @@ namespace IEDCollector.Windows
             }
         }
 
-        private void Copy_Click(object sender, RoutedEventArgs e)
+        private void Browse_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(this.licenseBox.Password);
+            //Clipboard.SetText(this.licenseBox.Text);
+            VistaOpenFileDialog dialog = new VistaOpenFileDialog()
+            {
+                CheckFileExists = true,
+                CheckPathExists = true,
+                Title = "Select the license file",
+                Filter = "License files (*.txt)|*.txt",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                Multiselect = false
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                this.licenseBox.Text = dialog.FileName;
+            }
         }
 
         private void FreeMode_Click(object sender, RoutedEventArgs e)
@@ -83,6 +116,24 @@ namespace IEDCollector.Windows
             //this.Close();
             System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
             Application.Current.Shutdown();
+        }
+
+        private void export_license_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog()
+            {
+                Description = "Select the folder where you want to save the license file",
+                UseDescriptionForTitle = true,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                ShowNewFolderButton = true
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                string cpuId = Base64UrlEncoder.Encode(new ComputerInfo().CpuId);
+                File.WriteAllText(Path.Combine(dialog.SelectedPath, cpuId + "_License_Key.txt"), Security.License);
+            }
         }
     }
 }

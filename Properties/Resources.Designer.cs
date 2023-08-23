@@ -214,6 +214,24 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current license INVALID.
+        /// </summary>
+        public static string current_license_nok {
+            get {
+                return ResourceManager.GetString("current_license_nok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current license OK.
+        /// </summary>
+        public static string current_license_ok {
+            get {
+                return ResourceManager.GetString("current_license_ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cyclic Fetch.
         /// </summary>
         public static string cycle_fetch {
@@ -484,6 +502,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License Key File.
+        /// </summary>
+        public static string license_key_file {
+            get {
+                return ResourceManager.GetString("license_key_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to License Management.
         /// </summary>
         public static string license_management {
@@ -700,6 +727,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error saving the file. Check the destination folder&apos;s permissions and whether it is read only..
+        /// </summary>
+        public static string messagebox_error_saving_file {
+            get {
+                return ResourceManager.GetString("messagebox_error_saving_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while saving profile.
         /// </summary>
         public static string messagebox_error_saving_profile {
@@ -786,6 +822,42 @@ namespace IEDCollector.Properties {
         public static string messagebox_license_invalid {
             get {
                 return ResourceManager.GetString("messagebox_license_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file containing the license request was saved, please email the file content to geral@engiprot.pt.
+        /// </summary>
+        public static string messagebox_license_request_saved {
+            get {
+                return ResourceManager.GetString("messagebox_license_request_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License request file saved.
+        /// </summary>
+        public static string messagebox_license_request_saved_title {
+            get {
+                return ResourceManager.GetString("messagebox_license_request_saved_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified file was not found.
+        /// </summary>
+        public static string messagebox_licensefile_not_found {
+            get {
+                return ResourceManager.GetString("messagebox_licensefile_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found.
+        /// </summary>
+        public static string messagebox_licensefile_not_found_title {
+            get {
+                return ResourceManager.GetString("messagebox_licensefile_not_found_title", resourceCulture);
             }
         }
         

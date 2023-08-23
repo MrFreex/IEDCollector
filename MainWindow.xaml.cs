@@ -391,9 +391,16 @@ namespace IEDCollector
 
                 askForLicense.ShowDialog();
 
-                string license = askForLicense.licenseBox.Password;
-                if (!Security.IsFreeMode)
+                if (Security.IsFreeMode)
                 {
+                    Globals.IsFreeMode = true;
+                    return true;
+                }
+
+                try
+                {
+                    string license = File.ReadAllText(askForLicense.licenseBox.Text);
+
                     if (Security.validateLicense(license))
                     {
                         Security.setLicense(license);
@@ -401,14 +408,12 @@ namespace IEDCollector
                     }
                     else
                     {
-                        
                         Application.Current.Shutdown();
                         return false;
                     }
-                } else
+                } catch (IOException)
                 {
-                    Globals.IsFreeMode = true;
-                    return true;
+                    return false;
                 }
             }
 
