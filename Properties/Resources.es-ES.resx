@@ -311,6 +311,9 @@
   <data name="log_level" xml:space="preserve">
     <value>Nivel de log</value>
   </data>
+  <data name="messagebox_activation_successful" xml:space="preserve">
+    <value>Congratulations! You have successfully activated the full version of IED Collector. Enjoy!</value>
+  </data>
   <data name="messagebox_buy_full_version" xml:space="preserve">
     <value>Compre la versión completa para utilizar esta función</value>
   </data>

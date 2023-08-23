@@ -601,6 +601,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Congratulations! You have successfully activated the full version of IED Collector. Enjoy!.
+        /// </summary>
+        public static string messagebox_activation_successful {
+            get {
+                return ResourceManager.GetString("messagebox_activation_successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buy the full version to use this feature.
         /// </summary>
         public static string messagebox_buy_full_version {

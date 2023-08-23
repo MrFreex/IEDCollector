@@ -404,6 +404,7 @@ namespace IEDCollector
                     if (Security.validateLicense(license))
                     {
                         Security.setLicense(license);
+                        MessageBox.Show(Properties.Resources.messagebox_activation_successful, Properties.Resources.success, MessageBoxButton.OK);
                         return true;
                     }
                     else
