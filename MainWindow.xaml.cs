@@ -1328,9 +1328,11 @@ namespace IEDCollector
 
         private void fetchIedData(object sender, RoutedEventArgs e)
         {
+            
             IEDConfig selectedIed = getSelectedIed();
-
             if (selectedIed == null) return;
+
+            
 
             fetchDataText.Text = Properties.Resources.fetching_data;
             ProgressDialog progress = new ProgressDialog();
@@ -1341,7 +1343,7 @@ namespace IEDCollector
             progress.ShowCancelButton = true;
             CancellationTokenSource source = new CancellationTokenSource();
             //progress.MinimizeBox = true;
-            progress.Show(source.Token);
+            
 
             bool success = true;
 
@@ -1446,8 +1448,9 @@ namespace IEDCollector
             progress.RunWorkerCompleted += (object sender2, RunWorkerCompletedEventArgs e2) =>
             {
                 fetchDataText.Text = Properties.Resources.fetch_data;
-                
             };
+
+            progress.Show(source.Token);
         }
 
         private readonly BitmapImage folderIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"));

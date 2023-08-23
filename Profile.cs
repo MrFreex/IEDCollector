@@ -242,7 +242,17 @@ namespace IEDCollector
 
             if (!Directory.Exists(this.settings.RootFolder))
             {
-                Directory.CreateDirectory(this.settings.RootFolder);
+                try
+                {
+                    Directory.CreateDirectory(this.settings.RootFolder);
+                } catch (IOException)
+                {
+                    MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                } catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
             }
 
             XSettings.Add(new XAttribute("rootFolder", this.settings.RootFolder));
