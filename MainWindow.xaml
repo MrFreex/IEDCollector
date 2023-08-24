@@ -182,6 +182,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <ListBox Grid.Row="0" x:Name="iedSelector" SelectionChanged="iedSelector_SelectionChanged">
@@ -197,6 +198,7 @@
                                         </StackPanel>
                                     </Button.Content>
                                 </Button>
+                                
                                 <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,5,0,0" Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <Style TargetType="{x:Type Button}">
@@ -298,16 +300,43 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="2*" />
                                                     <ColumnDefinition Width="5" />
-                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="1.5*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <Label Grid.Row="0" Grid.Column="0" Content="{x:Static p:Resources.folders}" />
+                                                <Grid Grid.Row="0" Grid.Column="0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Content="{x:Static p:Resources.folders}" />
+                                                    <Button x:Name="addFolderButton" Click="addFolderButton_Click" VerticalAlignment="Center" Grid.Column="1">
+                                                        <Image Width="15" Source="Icons/plus-lg.png"/>
+                                                    </Button>
+                                                    <Button Margin="2.5,0,0,0" x:Name="delFolderButton" Click="delFolderButton_Click" VerticalAlignment="Center" Grid.Column="2">
+                                                        <Image Width="15" Source="Icons/dash.png"/>
+                                                    </Button>
+                                                </Grid>
                                                 <ListBox Grid.Row="1" Grid.Column="0" x:Name="iedLogFoldersIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-                                                <Label Grid.Row="0" Grid.Column="2" Content="{x:Static p:Resources.extensions}" />
+                                                <Grid Grid.Row="0" Grid.Column="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Content="{x:Static p:Resources.extensions}" />
+                                                    <Button x:Name="addFileExtensionButton" Click="addFileExtensionButton_Click" VerticalAlignment="Center" Grid.Column="1">
+                                                        <Image Width="15" Source="Icons/plus-lg.png"/>
+                                                    </Button>
+                                                    <Button Margin="2.5,0,0,0" x:Name="delFileExtensionButton" Click="delFileExtensionButton_Click" VerticalAlignment="Center" Grid.Column="2">
+                                                        <Image Width="15" Source="Icons/dash.png"/>
+                                                    </Button>
+                                                </Grid>
+                                                
                                                 <ListBox Grid.Row="1" Grid.Column="2" x:Name="iedLogExtensionsIncludedInput" Height="80" d:ItemsSource="{d:SampleData ItemCount=5}"/>
                                             </Grid>
                                         </GroupBox>

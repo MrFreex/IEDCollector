@@ -251,6 +251,12 @@
   <data name="ied_download_x" xml:space="preserve">
     <value>[{1}] Scarica file '{0}'</value>
   </data>
+  <data name="ied_error_offline" xml:space="preserve">
+    <value>The IED is not responsive. Check that it is online and connected to the same network as your device. Error code: {0}</value>
+  </data>
+  <data name="ied_error_refused" xml:space="preserve">
+    <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importa profilo</value>
     <comment>Tooltip</comment>

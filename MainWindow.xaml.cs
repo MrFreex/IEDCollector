@@ -10,6 +10,8 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -431,6 +433,35 @@ namespace IEDCollector
 
         // Entry point
 
+        private BitmapImage upIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/caret-up-fill.png"));
+        private BitmapImage downIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/caret-down-fill.png"));
+
+        public void MoveItem(int direction, ListBoxItem item)
+        {
+            // Checking selected item
+
+            // Calculate new index using move direction
+            int newIndex = iedSelector.Items.IndexOf(item) + direction;
+
+            // Checking bounds of the range
+            if (newIndex < 0 || newIndex >= iedSelector.Items.Count)
+                return; // Index out of range - nothing to do
+
+            ListBoxItem selected = item;
+
+            // Removing removable element
+            iedSelector.Items.Remove(selected);
+            Globals.currentProfile.IEDs.Remove((IEDConfig)selected.Tag);
+            // Insert it in new position
+
+            Globals.currentProfile.IEDs.Insert(newIndex, (IEDConfig)selected.Tag);
+            iedSelector.Items.Insert(newIndex, selected);
+            // Restore selection
+            //iedSelector.SetSelected(newIndex, true);
+
+            isProfileSaved = false;
+        }
+
         public MainWindow()
         {
             //initCulture();
@@ -596,6 +627,33 @@ namespace IEDCollector
                 foreach (IEDConfig ied in Globals.currentProfile.IEDs)
                 {
                     ListBoxItem add = new ListBoxItem();
+
+                    add.ContextMenu = new ContextMenu();
+                    add.ContextMenu.Items.Add(new MenuItem()
+                    {
+                        Header = "Move up",
+                        Tag = "up"
+                    });
+                    add.ContextMenu.Items.Add(new MenuItem()
+                    {
+                        Header = "Move down",
+                        Tag = "down"
+                    });
+
+                    foreach (MenuItem item in add.ContextMenu.Items)
+                    {
+                        item.Click += (object sender, RoutedEventArgs e) =>
+                        {
+                            if (item.Tag.Equals("up"))
+                            {
+                                MoveItem(-1, add);
+                            } else
+                            {
+                                MoveItem(1, add);
+                            }
+                        };
+                    }
+
                     add.Content = ied.name;
                     add.Tag = ied;
                     iedSelector.Items.Add(add);
@@ -788,6 +846,8 @@ namespace IEDCollector
 
             Globals.currentProfile.IEDs.Add(ied);
             ListBoxItem toAdd = new ListBoxItem();
+
+            
             toAdd.Content = ied.name;
             toAdd.Tag = ied;
             iedSelector.Items.Add(toAdd);
@@ -1035,6 +1095,8 @@ namespace IEDCollector
             IEDConfig cloned = new IEDConfig(selectedIED);
             Globals.currentProfile.IEDs.Add(cloned);
             ListBoxItem add = new ListBoxItem();
+
+            
             add.Content = cloned.name;
             add.Tag = cloned;
             iedSelector.Items.Add(add);
@@ -1101,10 +1163,13 @@ namespace IEDCollector
             selectedIed.logsFolder = iedLogFolderInput.Text;
 
             //selectedIed.logEnabledExtensions.Clear();
-
+            selectedIed.logEnabledExtensions.Clear();
             foreach (CheckBox extension in iedLogExtensionsIncludedInput.Items)
             {
-                selectedIed.logEnabledExtensions[extension.Tag.ToString()] = (bool)extension.IsChecked;
+                if (extension.Tag != null)
+                {
+                    selectedIed.logEnabledExtensions[extension.Tag.ToString()] = (bool)extension.IsChecked;
+                }
             }
 
             selectedIed.logEnabledFolders.Clear();
@@ -1357,7 +1422,7 @@ namespace IEDCollector
                     IedClientError connectionResult = ied.connect();
                     if (connectionResult != IedClientError.IED_ERROR_OK)
                     {
-                        MessageBox.Show(String.Format(Properties.Resources.messagebox_ied_connection_failed, connectionResult.ToString()), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(String.Format(connectionResult == IedClientError.IED_ERROR_CONNECTION_REJECTED ? Properties.Resources.ied_error_refused : (connectionResult == IedClientError.IED_ERROR_TIMEOUT ? Properties.Resources.ied_error_offline : Properties.Resources.messagebox_ied_connection_failed), connectionResult.ToString()), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
                         success = false;
                         return;
@@ -1407,8 +1472,16 @@ namespace IEDCollector
                         selectedIed.logEnabledExtensions = extensions;
                         selectedIed.logEnabledFolders = folders;
 
-                        iedLogExtensionsIncludedInput.Items.Clear();
-                        iedLogFoldersIncludedInput.Items.Clear();
+                        //iedLogExtensionsIncludedInput.Items.Clear();
+                        //iedLogFoldersIncludedInput.Items.Clear();
+
+                        foreach (CheckBox item in iedLogExtensionsIncludedInput.Items)
+                        {
+                            if (item.Tag != null && extensions.ContainsKey((string)(item.Tag)))
+                            {
+                                extensions.Remove((string)(item.Tag));
+                            }
+                        }
 
                         foreach (KeyValuePair<string, bool> extension in extensions)
                         {
@@ -1419,6 +1492,14 @@ namespace IEDCollector
                             extensionBox.Checked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
                             extensionBox.Unchecked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
                             iedLogExtensionsIncludedInput.Items.Add(extensionBox);
+                        }
+
+                        foreach (CheckBox item in iedLogFoldersIncludedInput.Items)
+                        {
+                            if (item.Tag != null && folders.ContainsKey((string)(item.Tag)))
+                            {
+                                folders.Remove((string)(item.Tag));
+                            }
                         }
 
                         foreach (KeyValuePair<string, bool> folder in folders)
@@ -1606,6 +1687,18 @@ namespace IEDCollector
             }
         }
 
+        static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
         // Called on right click -> properties on a file in the iedTree
 
         private void openFileMetadata(IEDConfig iedConf, string file)
@@ -1649,7 +1742,7 @@ namespace IEDCollector
                             windows.localPathBox.Text = fileNoSlashes;
                             windows.localSizeBox.Text = fileInfo.Length.ToString() + " byte";
                             windows.localModifiedBox.Text = File.GetLastWriteTime(file).ToLongTimeString();
-                            windows.localHashCodeBox.Text = fileInfo.GetHashCode().ToString();
+                            windows.localHashCodeBox.Text = CalculateMD5(file);
 
                             windows.remotePathBox.Text = fileEntry.fileName;
                             Debug.WriteLine(fileEntry.lastModified);
@@ -2090,6 +2183,104 @@ namespace IEDCollector
                 System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                 Application.Current.Shutdown();
             }
+        }
+
+        private void addFileExtensionButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox input = new TextBox()
+            {
+                Text = ".new extension",
+
+            };
+
+            CheckBox item = new CheckBox()
+            {
+                Content = input,
+                IsChecked = true
+            };
+
+            input.KeyDown += (object s, KeyEventArgs ev) =>
+            {
+                if (ev.Key == Key.Enter)
+                {
+                    string extension = input.Text;
+                    //addFileExtension(input.Text);
+                    if (!input.Text.StartsWith("."))
+                    {
+                        extension = "." + extension;
+                    }
+
+                    extension.Replace(" ", "");
+
+                    iedLogExtensionsIncludedInput.Items.Remove(item);
+                    iedLogExtensionsIncludedInput.Items.Add(new CheckBox()
+                    {
+                        IsChecked = true,
+                        Content = extension,
+                        Tag = extension
+                    });
+
+                    isIedSaved = false;
+                }
+            };
+
+            iedLogExtensionsIncludedInput.Items.Add(item);
+        }
+
+        private void delFileExtensionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (iedLogExtensionsIncludedInput.SelectedItem == null) return;
+
+            iedLogExtensionsIncludedInput.Items.Remove(iedLogExtensionsIncludedInput.SelectedItem);
+            isIedSaved = false;
+        }
+
+        private void addFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox input = new TextBox()
+            {
+                Text = "new folder",
+
+            };
+
+            CheckBox item = new CheckBox()
+            {
+                Content = input,
+                IsChecked = true
+            };
+
+            input.KeyDown += (object s, KeyEventArgs ev) =>
+            {
+                if (ev.Key == Key.Enter)
+                {
+                    string extension = input.Text;
+                    //addFileExtension(input.Text);
+
+                    extension.Replace(" ", "%20");
+                    extension.Replace("\\", "/");
+                    extension.TrimStart('/');
+
+                    iedLogFoldersIncludedInput.Items.Remove(item);
+                    iedLogFoldersIncludedInput.Items.Add(new CheckBox()
+                    {
+                        IsChecked = true,
+                        Content = extension,
+                        Tag = extension
+                    });
+
+                    isIedSaved = false;
+                }
+            };
+
+            iedLogFoldersIncludedInput.Items.Add(item);
+        }
+
+        private void delFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (iedLogFoldersIncludedInput.SelectedItem == null) return;
+
+            iedLogFoldersIncludedInput.Items.Remove(iedLogFoldersIncludedInput.SelectedItem);
+            isIedSaved = false;
         }
     }
 }

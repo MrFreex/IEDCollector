@@ -211,14 +211,14 @@
     <value>Extensions</value>
   </data>
   <data name="fetching_data" xml:space="preserve">
-    <value>Fetching data...</value>
+    <value>Synchronizing...</value>
   </data>
   <data name="fetching_data_title" xml:space="preserve">
     <value>Fetch IED data</value>
     <comment>Window title</comment>
   </data>
   <data name="fetch_data" xml:space="preserve">
-    <value>Fetch Data</value>
+    <value>Synchronize</value>
   </data>
   <data name="fetch_data_tooltip" xml:space="preserve">
     <value>Test the connection to the IED and fetch the currently used file extensions and folders</value>
@@ -250,6 +250,12 @@
   </data>
   <data name="ied_download_x" xml:space="preserve">
     <value>[{1}] Download file '{0}'</value>
+  </data>
+  <data name="ied_error_offline" xml:space="preserve">
+    <value>The IED is not responsive. Check that it is online and connected to the same network as your device. Error code: {0}</value>
+  </data>
+  <data name="ied_error_refused" xml:space="preserve">
+    <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Import profile</value>

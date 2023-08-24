@@ -325,6 +325,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icons\caret-down-fill.png" />
+    <Resource Include="Icons\caret-up-fill.png" />
     <Content Include="References\Ookii.Dialogs.Wpf.dll" />
     <Content Include="References\Ookii.Dialogs.Wpf.pdb" />
     <Resource Include="Play.png" />

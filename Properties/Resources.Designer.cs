@@ -313,7 +313,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetch Data.
+        ///   Looks up a localized string similar to Synchronize.
         /// </summary>
         public static string fetch_data {
             get {
@@ -340,7 +340,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fetching data....
+        ///   Looks up a localized string similar to Synchronizing....
         /// </summary>
         public static string fetching_data {
             get {
@@ -426,6 +426,24 @@ namespace IEDCollector.Properties {
         public static string ied_download_x {
             get {
                 return ResourceManager.GetString("ied_download_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The IED is not responsive. Check that it is online and connected to the same network as your device. Error code: {0}.
+        /// </summary>
+        public static string ied_error_offline {
+            get {
+                return ResourceManager.GetString("ied_error_offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}.
+        /// </summary>
+        public static string ied_error_refused {
+            get {
+                return ResourceManager.GetString("ied_error_refused", resourceCulture);
             }
         }
         
