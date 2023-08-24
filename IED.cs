@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Threading;
 
 namespace IEDCollector
@@ -121,6 +122,16 @@ namespace IEDCollector
             }
 
             IedConnection connection = new IedConnection();
+
+            PingReply rep = new Ping().Send(this.config.ip, 1000);
+
+            Globals.logs.log(String.Format("[{0}] Ping result: {1}", this.ToString(), rep.Status.ToString()), LogLevel.Detailed);
+
+            if (rep.Status != IPStatus.Success)
+            {
+                return IedClientError.IED_ERROR_TIMEOUT;
+            }
+
             try
             {
                 connection.Connect(this.config.ip, this.config.port);
