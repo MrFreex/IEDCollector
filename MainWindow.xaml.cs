@@ -1712,6 +1712,7 @@ namespace IEDCollector
             new Thread(() =>
             {
                 EditableFileDirectoryEntry fileEntry = null;
+                string fileHash = null;
                 IedClientError connectionResult = ied.connect();
                 if (connectionResult == IedClientError.IED_ERROR_OK)
                 {
@@ -1723,6 +1724,9 @@ namespace IEDCollector
                         if (entry.Key.fileName.EndsWith(fileNoSlashes) || entry.Key.fileName.EndsWith(fileNoSlashes.Replace("\\", "/")))
                         {
                             fileEntry = entry.Key;
+                            ied.DownloadFile(fileEntry, ConfigFolder.extend(".tmpfile"), new FileProgressMonitor((double prog) => { }), true);
+
+                            fileHash = CalculateMD5(ConfigFolder.extend(".tmpfile"));
                             break;
                         }
                     }
@@ -1748,7 +1752,7 @@ namespace IEDCollector
                             Debug.WriteLine(fileEntry.lastModified);
                             windows.remoteModifiedBox.Text = DateTimeOffset.FromUnixTimeMilliseconds((long)fileEntry.lastModified).DateTime.ToLongTimeString();
                             windows.remoteSizeBox.Text = fileEntry.fileSize.ToString() + " byte";
-                            windows.remoteHashCodeBox.Text = fileEntry.GetHashCode().ToString();
+                            windows.remoteHashCodeBox.Text = fileHash;
 
                             windows.Show();
                         });
