@@ -349,7 +349,7 @@ namespace IEDCollector
                 catch (IOException) { c++; ok = false; }
             } while (!ok);
             
-            MessageBox.Show(Resources.messagebox_error_reading_profile_backup, Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(String.Format(Resources.messagebox_error_reading_profile_backup, this.Name, path, this.FilePath), Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
             this.save();
         }
