@@ -808,6 +808,7 @@ namespace IEDCollector
             }
 
             configuration.startWithWindows.IsChecked = Globals.config.config.startWithWindows;
+            configuration.minimizeToTray.IsChecked = Globals.config.config.minimizeToTray;
             configuration.dataLocation.Text = ConfigFolder.Path;
 
             configuration.Show();
@@ -954,7 +955,6 @@ namespace IEDCollector
 
             if (selectedIed == null)
             {
-                //iedName.Text = "Select a device to continue";
                 connectIedInConf.IsEnabled = false;
                 saveIED.IsEnabled = false;
                 cloneIedBtn.IsEnabled = false;
@@ -966,7 +966,6 @@ namespace IEDCollector
             cloneIedBtn.IsEnabled = true;
             deleteIedBtn.IsEnabled = true;
             connectIedInConf.IsEnabled = true;
-            //iedName.Text = selectedIed.name;
             iedNameInput.Text = selectedIed.name;
             iedIpInput.Text = selectedIed.ip;
 
@@ -1330,7 +1329,7 @@ namespace IEDCollector
         {
             
             //Debug.WriteLine(e == null);
-            if (closeFromTray) // Right click on tray icon -> exit
+            if (!Globals.config.config.minimizeToTray || closeFromTray) // Right click on tray icon -> exit
             {
                 if (Globals.currentProcess != null && Globals.currentProcess.IsRunning)
                 {
@@ -1383,6 +1382,13 @@ namespace IEDCollector
                 }
             } else
             {
+
+                if (!File.Exists(ConfigFolder.extend(".warned_about_tray")))
+                {
+                    MessageBox.Show(Properties.Resources.messagebox_tray_warning, Properties.Resources.warning, MessageBoxButton.OK, MessageBoxImage.Information);
+                    File.WriteAllText(ConfigFolder.extend(".warned_about_tray"), "true");
+                }
+
                 Globals.logs.log("Minimizing to tray", LogLevel.Basic);
                 this.Hide();
                 e.Cancel = true;
@@ -1717,7 +1723,7 @@ namespace IEDCollector
                 if (connectionResult == IedClientError.IED_ERROR_OK)
                 {
                     //Globals.logs.log("Reading " + Path.GetDirectoryName(file)/*.TrimStart('\\')*/, LogLevel.Debug);
-                    Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true);
+                    Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true); //
                     foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in remoteReducedTree)
                     {
                         Debug.WriteLine(String.Format("{0} {1} {2}", fileNoSlashes, entry.Key.fileName, file));
@@ -1727,32 +1733,35 @@ namespace IEDCollector
                             ied.DownloadFile(fileEntry, ConfigFolder.extend(".tmpfile"), new FileProgressMonitor((double prog) => { }), true);
 
                             fileHash = CalculateMD5(ConfigFolder.extend(".tmpfile"));
+                            try
+                            {
+                                File.Delete(ConfigFolder.extend(".tmpfile"));
+                            } catch (Exception e) { Globals.logs.log("Error: can't delete .tmpfile. Exception: " + e.ToString(), LogLevel.Detailed); }
                             break;
                         }
                     }
 
-                    if (fileEntry != null)
+                    if (fileEntry != null) // 
                     {
                         Dispatcher.Invoke(() =>
                         {
                             //FileMetadataWindow metadataWindow = new FileMetadataWindow(ied, fileEntry);
                             //metadataWindow.Show();
-                            FileMetadata windows = new FileMetadata();
-
-                            //file = Path.Combine(iedConf.logsFolder, fileNoSlashes);
                             FileInfo fileInfo = new FileInfo(file);
+                            FileMetadata windows = new FileMetadata(new MetadataWindowFileData(new Dictionary<string, string>()
+                            {
+                                { "Size", fileInfo.Length.ToString() + " byte" },
+                                { "Last Modified", File.GetLastWriteTime(file).ToString("u").Replace(" ", "T") },
+                                { "Hash", CalculateMD5(file) }
+                            }, file),
 
-
-                            windows.localPathBox.Text = fileNoSlashes;
-                            windows.localSizeBox.Text = fileInfo.Length.ToString() + " byte";
-                            windows.localModifiedBox.Text = File.GetLastWriteTime(file).ToLongTimeString();
-                            windows.localHashCodeBox.Text = CalculateMD5(file);
-
-                            windows.remotePathBox.Text = fileEntry.fileName;
-                            Debug.WriteLine(fileEntry.lastModified);
-                            windows.remoteModifiedBox.Text = DateTimeOffset.FromUnixTimeMilliseconds((long)fileEntry.lastModified).DateTime.ToLongTimeString();
-                            windows.remoteSizeBox.Text = fileEntry.fileSize.ToString() + " byte";
-                            windows.remoteHashCodeBox.Text = fileHash;
+                            new MetadataWindowFileData(new Dictionary<string, string>()
+                            {
+                                { "Size", fileEntry.fileSize.ToString() + " byte" },
+                                { "Last Modified", DateTimeOffset.FromUnixTimeMilliseconds((long)fileEntry.lastModified).DateTime.ToString("u").Replace(" ", "T") },
+                                { "Hash", fileHash }
+                            }, fileEntry.fileName)
+                            );
 
                             windows.Show();
                         });

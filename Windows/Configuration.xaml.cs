@@ -61,7 +61,6 @@ namespace IEDCollector
 
         private void save(object sender, RoutedEventArgs e)
         {
-            //TODO: Save data
 
             FSyncConfiguration config = Globals.config.config;
 
@@ -80,6 +79,8 @@ namespace IEDCollector
 
             config.logFilesKept = (bool)keepAllLogFiles.IsChecked ? -1 : int.Parse(logFilesKept.Text);
             config.startWithWindows = (bool)startWithWindows.IsChecked;
+            config.minimizeToTray = (bool)minimizeToTray.IsChecked;
+            
 
             config.logLevel = (LogLevel)((ComboBoxItem)logLevels.SelectedItem).Tag;
 

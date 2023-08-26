@@ -137,7 +137,7 @@
     <value>Configuration</value>
   </data>
   <data name="configuration_tab" xml:space="preserve">
-    <value>Configuration</value>
+    <value>IED Configuration</value>
   </data>
   <data name="confirm" xml:space="preserve">
     <value>Confirm</value>
@@ -450,6 +450,15 @@
   </data>
   <data name="messagebox_thanks_for_requesting_license" xml:space="preserve">
     <value>Thank you for requesting a license. You will hear from us as soon as possible.</value>
+  </data>
+  <data name="messagebox_tray_warning" xml:space="preserve">
+    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+  </data>
+  <data name="metadata_difference" xml:space="preserve">
+    <value>Difference</value>
+  </data>
+  <data name="minimize_to_tray_on_close" xml:space="preserve">
+    <value>Minimize to tray when closing the window</value>
   </data>
   <data name="monitor_tab" xml:space="preserve">
     <value>Monitor</value>

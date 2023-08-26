@@ -444,6 +444,15 @@
   <data name="messagebox_thanks_for_requesting_license" xml:space="preserve">
     <value>Grazie per aver richiesto una licenza, avrai un riscontro il prima possibile.</value>
   </data>
+  <data name="messagebox_tray_warning" xml:space="preserve">
+    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+  </data>
+  <data name="metadata_difference" xml:space="preserve">
+    <value>Difference</value>
+  </data>
+  <data name="minimize_to_tray_on_close" xml:space="preserve">
+    <value>Minimize to tray when closing the window</value>
+  </data>
   <data name="monitor_tab" xml:space="preserve">
     <value>Monitor</value>
   </data>

@@ -13,12 +13,14 @@ namespace IEDCollector
         public int logFilesKept;
         public LogLevel logLevel;
         public bool startWithWindows;
+        public bool minimizeToTray;
         public bool resumePollingOnStartup;
 
         public const string LOGFILESKEPT = "logFilesKept";
         public const string LOGLEVEL = "logLevel";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
+        public const string MINIMIZETOTRAY = "minimizeToTray";
     }
 
     internal class FSyncPreferences // Unused, but kept for future use
@@ -70,6 +72,7 @@ namespace IEDCollector
                 logFilesKept = 20,
                 startWithWindows = false,
                 resumePollingOnStartup = false,
+                minimizeToTray = true,
                 logLevel = LogLevel.Basic
             };
             /*
@@ -100,6 +103,11 @@ namespace IEDCollector
             catch { }
         }
 
+        private string getXmlValue<T>(XElement el, string key, T defaultValue)
+        {
+            return el.Element(key) != null && el.Element(key).Value != null ? el.Element(key).Value : defaultValue.ToString();
+        }
+
         /// <summary>
         /// Loads the configuration from the file
         /// </summary>
@@ -115,21 +123,15 @@ namespace IEDCollector
                 XDocument Xconfig = XDocument.Load(this.filePath);
 
                 XElement configurationNode = Xconfig.Root.Element("configuration");
-                XElement preferencesNode = Xconfig.Root.Element("preferences");
 
                 this.config = new FSyncConfiguration()
                 {
-                    logFilesKept = int.Parse(configurationNode.Element(FSyncConfiguration.LOGFILESKEPT).Value),
-                    logLevel = (LogLevel)int.Parse(configurationNode.Element(FSyncConfiguration.LOGLEVEL).Value),
-                    startWithWindows = bool.Parse(configurationNode.Element(FSyncConfiguration.STARTWITHWINDOWS).Value),
-                    resumePollingOnStartup = bool.Parse(configurationNode.Element(FSyncConfiguration.RESUMEPOLLINGONSTARTUP).Value)
+                    logFilesKept = int.Parse(getXmlValue<int>(configurationNode, FSyncConfiguration.LOGFILESKEPT, -1)), // int.Parse(doesXMLHaveKey(configurationNode.Element(FSyncConfiguration.LOGFILESKEPT).Value),
+                    logLevel = (LogLevel)int.Parse(getXmlValue(configurationNode, FSyncConfiguration.LOGLEVEL, 0)),
+                    startWithWindows = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.STARTWITHWINDOWS, false)),
+                    resumePollingOnStartup = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.RESUMEPOLLINGONSTARTUP, false)),
+                    minimizeToTray = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.MINIMIZETOTRAY, true))
                 };
-                /*
-                this.preferences = new FSyncPreferences()
-                {
-                    language = (Language)(int.Parse(preferencesNode.Element(FSyncPreferences.LANGUAGE).Value))
-                };
-                */
             }
             catch (Exception)
             {

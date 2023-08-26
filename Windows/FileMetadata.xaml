@@ -7,32 +7,53 @@
         xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
         Title="{x:Static p:Resources.file_metadata}" Height="292" Width="806">
-    <DockPanel Margin="10,10,10,10">
-        <Image DockPanel.Dock="Left" Height="160" Width="170" Source="/file-earmark-text-fill.png"/>
-        <DockPanel DockPanel.Dock="Right" Width="547">
-            <StackPanel DockPanel.Dock="Left" Width="244" Margin="10,5,10,5">
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.local_file}" FontSize="16" TextDecorations="Underline" Margin="0,0,0,5"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.path}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="localPathBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.last_modified}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="localModifiedBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.size}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="localSizeBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.hash_code}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="localHashCodeBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-            </StackPanel>
-            <StackPanel DockPanel.Dock="Right" Width="250" Margin="20,0,0,0">
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.remote_file}" FontSize="16" TextDecorations="Underline" Margin="0,0,0,5"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.path}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="remotePathBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.last_modified}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="remoteModifiedBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.size}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="remoteSizeBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" Text="{x:Static p:Resources.hash_code}" FontWeight="Bold" FontSize="14" Margin="0,0,0,2.5"/>
-                <TextBlock x:Name="remoteHashCodeBox" TextWrapping="Wrap" Text="TextBlock" FontSize="14"/>
-            </StackPanel>
-        </DockPanel>
-        
-    </DockPanel>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+            <Rectangle Fill="Gold" Width="15" Height="15" />
+            <Label Content="{x:Static p:Resources.metadata_difference}" />
+        </StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="{x:Static p:Resources.local_file}" />
+            <TextBox Margin="0,5,0,5" IsEnabled="False" Grid.Row="1" IsReadOnly="True" Text="{Binding Path=localFileData.path}" />
+            <ListView ItemsSource="{Binding Path=localFileData.ListItems}" Grid.Row="2">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Focusable" Value="False"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="{x:Static p:Resources.remote_file}" />
+            <TextBox Margin="0,5,0,5" IsEnabled="False" Grid.Row="1" IsReadOnly="True" Text="{Binding Path=remoteFileData.path}" />
+            <ListView ItemsSource="{Binding Path=remoteFileData.ListItems}" Grid.Row="2">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Focusable" Value="False"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+    </Grid>
 </Window>

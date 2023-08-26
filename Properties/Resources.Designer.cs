@@ -115,7 +115,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuration.
+        ///   Looks up a localized string similar to IED Configuration.
         /// </summary>
         public static string configuration_tab {
             get {
@@ -993,6 +993,33 @@ namespace IEDCollector.Properties {
         public static string messagebox_thanks_for_requesting_license {
             get {
                 return ResourceManager.GetString("messagebox_thanks_for_requesting_license", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window..
+        /// </summary>
+        public static string messagebox_tray_warning {
+            get {
+                return ResourceManager.GetString("messagebox_tray_warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Difference.
+        /// </summary>
+        public static string metadata_difference {
+            get {
+                return ResourceManager.GetString("metadata_difference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimize to tray when closing the window.
+        /// </summary>
+        public static string minimize_to_tray_on_close {
+            get {
+                return ResourceManager.GetString("minimize_to_tray_on_close", resourceCulture);
             }
         }
         
