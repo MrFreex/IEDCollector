@@ -385,8 +385,8 @@ namespace IEDCollector
             bool filterPassed = false;
             if (!ignoreSkip)
             {
-                Globals.logs.log("L: " + File.GetLastWriteTime(destination).Ticks + " R:" + DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks, LogLevel.Debug);
-                if ((!overwrite && File.Exists(destination)) || File.GetLastWriteTime(destination).Ticks >= DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks) return DownloadedFileState.SKIPPED_NEWER;
+                //Globals.logs.log("L: " + File.GetLastWriteTime(destination).Ticks + " R:" + DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks, LogLevel.Debug);
+                if (File.Exists(destination) && !overwrite && File.GetLastWriteTime(destination).Ticks >= DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks) return DownloadedFileState.SKIPPED_NEWER;
                 if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
 
                 
@@ -444,6 +444,26 @@ namespace IEDCollector
                 {
                     double size = path.GetFileSize();
 
+                    if (!overwrite && File.Exists(destination))
+                    {
+                        int append = 0;
+                        string newDestination = destination;
+                        do
+                        {
+                            append++;
+                            newDestination = Path.Combine(Path.GetDirectoryName(destination), Path.GetFileNameWithoutExtension(destination) + " (" + append + ")" + Path.GetExtension(destination));
+                        } while (File.Exists(newDestination));
+
+                        string previous = Path.Combine(Path.GetDirectoryName(destination), Path.GetFileNameWithoutExtension(destination) + " (" + (append - 1) + ")" + Path.GetExtension(destination));
+                        if (File.Exists(previous)) {
+                            if (File.GetLastWriteTime(previous).Ticks > DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks)
+                            {
+                                return DownloadedFileState.SKIPPED_NEWER;
+                            }
+                        }
+
+                        destination = newDestination;
+                    }
 
                     using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
                     {
