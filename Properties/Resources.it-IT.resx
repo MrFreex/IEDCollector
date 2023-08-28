@@ -360,6 +360,12 @@
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
     <value>Il nome configurato non corrisponde a quello del dispositivo, continuare ugualmente?</value>
   </data>
+  <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
+    <value>Impossibile salvare il profilo. Non è consentita la presenza di più connessioni con la stessa sottocartella di log. Duplicati (Percorso: connessioni duplicate) : {0}</value>
+  </data>
+  <data name="messagebox_duplicate_ied_name" xml:space="preserve">
+    <value>Impossibile salvare il profilo: non ci possono essere più connessioni identificate dallo stesso nome del dispositivo. Connessioni duplicate: {0}.</value>
+  </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
     <value>Impossibile leggere la cartella remota</value>
   </data>
@@ -410,6 +416,9 @@
   <data name="messagebox_logs_path_used" xml:space="preserve">
     <value>Il percorso dei file log è in uso da un altro dispositivo.</value>
   </data>
+  <data name="messagebox_metadata_window_error" xml:space="preserve">
+    <value>Il programma ha riscontrato un errore nell'accedere al file sul dispositivo IED: {0}. Verranno mostrate solo le proprietà del file locale.</value>
+  </data>
   <data name="messagebox_number_of_log_files_error" xml:space="preserve">
     <value>Il numero di file log mantenuti deve essere un numero valido.</value>
   </data>
@@ -449,6 +458,18 @@
   </data>
   <data name="metadata_difference" xml:space="preserve">
     <value>Differenza</value>
+  </data>
+  <data name="metadata_window_file_doesntexist_error" xml:space="preserve">
+    <value>il file non è più presente sull'IED</value>
+  </data>
+  <data name="metadata_window_not_connected_error" xml:space="preserve">
+    <value>l'IED è raggiungibile ma non accessibile (credenziali errate o protocollo disabilitato)</value>
+  </data>
+  <data name="metadata_window_remote_file_unaccessible" xml:space="preserve">
+    <value>File remoto non accessibile</value>
+  </data>
+  <data name="metadata_window_timeout_error" xml:space="preserve">
+    <value>l'IED non è raggiungibile</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
     <value>Minimizza nel tray alla chiusura</value>

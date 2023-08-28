@@ -8,8 +8,9 @@ namespace IEDCollector
     /// </summary>
     public partial class Preferences : Window
     {
-        public Preferences() { 
-            InitializeComponent(); 
+        public Preferences()
+        {
+            InitializeComponent();
             Language selected = Lang.language;
 
             System.Collections.IList list = System.Enum.GetValues(typeof(Language));

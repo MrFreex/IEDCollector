@@ -1,9 +1,8 @@
-﻿using Ookii.Dialogs.Wpf;
+﻿using Microsoft.IdentityModel.Tokens;
+using Ookii.Dialogs.Wpf;
 using System;
-using System.Diagnostics;
-using System.Windows;
 using System.IO;
-using Microsoft.IdentityModel.Tokens;
+using System.Windows;
 using System.Xml.Linq;
 
 namespace IEDCollector.Windows
@@ -33,7 +32,7 @@ namespace IEDCollector.Windows
                                                                                         new XElement("RequestId", cpuId),
                                                                                         new XElement("Date", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"))
                                                                                                        )
-                               
+
                                           );
 
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog()
@@ -52,11 +51,12 @@ namespace IEDCollector.Windows
                 {
                     licenseRequest.Save(Path.Combine(dialog.SelectedPath, cpuId + "_License_Request.xml"));
                     //File.WriteAllText(Path.Combine(dialog.SelectedPath, "License_Request.txt"), fileLines);
-                } catch (IOException)
+                }
+                catch (IOException)
                 {
                     MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error); return;
                 }
-                
+
                 MessageBox.Show(Properties.Resources.messagebox_license_request_saved, Properties.Resources.messagebox_license_request_saved_title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -85,7 +85,8 @@ namespace IEDCollector.Windows
             if (location.Text.Length > 0 && fullName.Text.Length > 0)
             {
                 req.IsEnabled = true;
-            } else
+            }
+            else
             {
                 req.IsEnabled = false;
             }

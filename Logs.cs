@@ -54,7 +54,7 @@ namespace IEDCollector
         // Called when the logLevel radio buttons are clicked
         public void setLogLevel(object sender, RoutedEventArgs e)
         {
-            
+
             RadioButton senderCast = (RadioButton)sender;
             if (senderCast.Tag == null) return;
 

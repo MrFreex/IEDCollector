@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -35,12 +34,17 @@ namespace IEDCollector
         public static UserConfig config = null;
         private static bool? freeMode = null;
 
-        public static bool IsFreeMode { get { return freeMode ?? true; } set { 
-                if (freeMode == null) { 
+        public static bool IsFreeMode
+        {
+            get { return freeMode ?? true; }
+            set
+            {
+                if (freeMode == null)
+                {
                     freeMode = value;
-                    
-                } 
-            } 
+
+                }
+            }
         }
 
 
@@ -108,8 +112,10 @@ namespace IEDCollector
 
     internal class Lang
     {
-        public static Language language { 
-            get {
+        public static Language language
+        {
+            get
+            {
                 using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
                 {
                     if (licenseStorage == null) return Language.English;
@@ -123,7 +129,7 @@ namespace IEDCollector
                     return license;
                 }
             }
-        
+
             set
             {
                 using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
@@ -370,7 +376,7 @@ namespace IEDCollector
         // @return : true if the user has a valid license or opted for the free version, false otherwise.
         public bool verifyLicense()
         {
-            
+
             SecurityValidationResult res = Security.validate();
 
             if (Security.IsFreeMode)
@@ -414,7 +420,8 @@ namespace IEDCollector
                         Application.Current.Shutdown();
                         return false;
                     }
-                } catch (IOException)
+                }
+                catch (IOException)
                 {
                     return false;
                 }
@@ -514,7 +521,7 @@ namespace IEDCollector
                 }
             };
 
-            
+
 
             Globals.logs.log("Software started");
 
@@ -522,7 +529,7 @@ namespace IEDCollector
 
             Globals.globalConfiguration = new GlobalConfiguration();
             ConfigFolder.Path = Globals.globalConfiguration.getCurrentConfigFolder();
-            
+
             initializeFolders(Globals.globalConfiguration.Folder); // Create the needed folders if they do not exist
             Globals.logs.setFolder(ConfigFolder.extend(ConfigFolder.LOGS)); // Set logs folder
 
@@ -647,7 +654,8 @@ namespace IEDCollector
                             if (item.Tag.Equals("up"))
                             {
                                 MoveItem(-1, add);
-                            } else
+                            }
+                            else
                             {
                                 MoveItem(1, add);
                             }
@@ -848,7 +856,7 @@ namespace IEDCollector
             Globals.currentProfile.IEDs.Add(ied);
             ListBoxItem toAdd = new ListBoxItem();
 
-            
+
             toAdd.Content = ied.name;
             toAdd.Tag = ied;
             iedSelector.Items.Add(toAdd);
@@ -1091,11 +1099,11 @@ namespace IEDCollector
             IEDConfig selectedIED = getSelectedIed();
 
             if (selectedIED == null) return;
-            IEDConfig cloned = new IEDConfig(selectedIED);
+            IEDConfig cloned = new IEDConfig(selectedIED, true);
             Globals.currentProfile.IEDs.Add(cloned);
             ListBoxItem add = new ListBoxItem();
 
-            
+
             add.Content = cloned.name;
             add.Tag = cloned;
             iedSelector.Items.Add(add);
@@ -1296,7 +1304,73 @@ namespace IEDCollector
 
             Globals.currentProfile.Settings.RootFolder = rootFolderInput.Text;
             Globals.currentProfile.Settings.PollingInterval = pollingInterval.Value == null ? 10 : (int)pollingInterval.Value;
-            
+
+            Dictionary<string, bool> usedNames = new Dictionary<string, bool>();
+            bool anyName = false;
+            // Check for duplicate names
+
+            foreach (IEDConfig config in Globals.currentProfile.IEDs)
+            {
+                if (usedNames.ContainsKey(config.name))
+                {
+                    usedNames[config.name] = true;
+                    anyName = true;
+                }
+                else
+                {
+                    usedNames.Add(config.name, false);
+                }
+            }
+
+            if (anyName)
+            {
+                List<string> duplicates = new List<string>();
+                foreach (KeyValuePair<string, bool> pair in usedNames)
+                {
+                    if (pair.Value)
+                    {
+                        duplicates.Add(pair.Key);
+                    }
+                }
+
+                MessageBox.Show(String.Format(Properties.Resources.messagebox_duplicate_ied_name, String.Join(", ", duplicates)), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Check for duplicate folders
+
+            Dictionary<string, List<string>> usedFolders = new Dictionary<string, List<string>>();
+            bool anyFolder = false;
+
+            foreach (IEDConfig config in Globals.currentProfile.IEDs)
+            {
+                if (!usedFolders.ContainsKey(config.logsFolder))
+                {
+                    usedFolders.Add(config.logsFolder, new List<string>() { config.name });
+
+                }
+                else
+                {
+                    usedFolders[config.logsFolder].Add(config.name);
+                    anyFolder = true;
+                }
+            }
+
+            if (anyFolder)
+            {
+                Dictionary<string, List<string>> onlyDuplicates = usedFolders.Where(pair => pair.Value.Count > 1).ToDictionary(pair => pair.Key, pair => pair.Value);
+                List<string> duplicatePairsForMessage = new List<string>();
+
+                foreach (KeyValuePair<string, List<string>> pair in onlyDuplicates)
+                {
+                    duplicatePairsForMessage.Add(String.Format("{0} : {1}", pair.Key, String.Join(", ", pair.Value)));
+                }
+
+                MessageBox.Show(String.Format(Properties.Resources.messagebox_duplicate_ied_folders, String.Join(";", duplicatePairsForMessage)), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return;
+            }
+
             Globals.currentProfile.save();
         }
 
@@ -1327,7 +1401,7 @@ namespace IEDCollector
 
         private void handleClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+
             //Debug.WriteLine(e == null);
             if (!Globals.config.config.minimizeToTray || closeFromTray) // Right click on tray icon -> exit
             {
@@ -1364,7 +1438,7 @@ namespace IEDCollector
                         return;
                     }
 
-                    
+
                 }
 
                 if (!isProfileSaved || !isIedSaved)
@@ -1380,7 +1454,8 @@ namespace IEDCollector
                         e.Cancel = true;
                     }
                 }
-            } else
+            }
+            else
             {
 
                 if (!File.Exists(ConfigFolder.extend(".warned_about_tray")))
@@ -1393,18 +1468,18 @@ namespace IEDCollector
                 this.Hide();
                 e.Cancel = true;
             }
-            
+
         }
 
         // Called when the "Fetch Data" button is pressed
 
         private void fetchIedData(object sender, RoutedEventArgs e)
         {
-            
+
             IEDConfig selectedIed = getSelectedIed();
             if (selectedIed == null) return;
 
-            
+
 
             fetchDataText.Text = Properties.Resources.fetching_data;
             ProgressDialog progress = new ProgressDialog();
@@ -1415,7 +1490,7 @@ namespace IEDCollector
             progress.ShowCancelButton = true;
             CancellationTokenSource source = new CancellationTokenSource();
             //progress.MinimizeBox = true;
-            
+
 
             bool success = true;
 
@@ -1720,9 +1795,92 @@ namespace IEDCollector
                 EditableFileDirectoryEntry fileEntry = null;
                 string fileHash = null;
                 IedClientError connectionResult = ied.connect();
+
+                IedClientError error = connectionResult;
+
                 if (connectionResult == IedClientError.IED_ERROR_OK)
                 {
-                    //Globals.logs.log("Reading " + Path.GetDirectoryName(file)/*.TrimStart('\\')*/, LogLevel.Debug);
+                    Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true); //
+                    foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in remoteReducedTree)
+                    {
+                        Debug.WriteLine(String.Format("{0} {1} {2}", fileNoSlashes, entry.Key.fileName, file));
+                        if (entry.Key.fileName.EndsWith(fileNoSlashes) || entry.Key.fileName.EndsWith(fileNoSlashes.Replace("\\", "/")))
+                        {
+                            fileEntry = entry.Key;
+                            ied.DownloadFile(fileEntry, ConfigFolder.extend(".tmpfile"), new FileProgressMonitor((double prog) => { }), true, true);
+
+                            fileHash = CalculateMD5(ConfigFolder.extend(".tmpfile"));
+                            try
+                            {
+                                File.Delete(ConfigFolder.extend(".tmpfile"));
+                            }
+                            catch (Exception e) { Globals.logs.log("Error: can't delete .tmpfile. Exception: " + e.ToString(), LogLevel.Detailed); }
+                            break;
+                        }
+                    }
+
+                    if (fileEntry == null)
+                    {
+                        error = IedClientError.IED_ERROR_OBJECT_DOES_NOT_EXIST;
+                    }
+                }
+                string message = "";
+
+                if (error != IedClientError.IED_ERROR_OK)
+                {
+                    
+
+                    switch (error)
+                    {
+                        case IedClientError.IED_ERROR_TIMEOUT: message = Properties.Resources.metadata_window_timeout_error; break;
+                        case IedClientError.IED_ERROR_OBJECT_DOES_NOT_EXIST: message = Properties.Resources.metadata_window_file_doesntexist_error; break;
+                        default: message = Properties.Resources.metadata_window_not_connected_error; break;
+                    }
+
+                    if (!MessageBox.Show(String.Format(Properties.Resources.messagebox_metadata_window_error, message), Properties.Resources.warning, MessageBoxButton.OKCancel, MessageBoxImage.Warning).Equals(MessageBoxResult.OK))
+                    {
+                        return;
+                    }
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    //FileMetadataWindow metadataWindow = new FileMetadataWindow(ied, fileEntry);
+                    //metadataWindow.Show();
+                    FileInfo fileInfo = new FileInfo(file);
+                    MetadataWindowFileData remoteFileData;
+                    if (error == IedClientError.IED_ERROR_OK)
+                    {
+                        remoteFileData = new MetadataWindowFileData(new Dictionary<string, string>() {
+                                { "Size", fileEntry.fileSize.ToString() + " byte" },
+                                        { "Last Modified", DateTimeOffset.FromUnixTimeMilliseconds((long)fileEntry.lastModified).DateTime.ToString("u").Replace(" ", "T") },
+                                        { "Hash", fileHash }
+                        }, fileEntry.fileName);
+                    }
+                    else
+                    {
+                        remoteFileData = new MetadataWindowFileData(new Dictionary<string, string>()
+                        {
+                            {  "File not accessible", message }
+                        }, Properties.Resources.metadata_window_remote_file_unaccessible);
+                    }
+                    FileMetadata windows = new FileMetadata(new MetadataWindowFileData(new Dictionary<string, string>()
+                            {
+                                { "Size", fileInfo.Length.ToString() + " byte" },
+                                { "Last Modified", File.GetLastWriteTime(file).ToString("u").Replace(" ", "T") },
+                                { "Hash", CalculateMD5(file) }
+                            }, file),
+                            remoteFileData
+
+                    );
+
+                    windows.Show();
+                });
+
+                /*
+                if (connectionResult == IedClientError.IED_ERROR_OK)
+                {
+                    //Globals.logs.log("Reading " + Path.GetDirectoryName(file)/*.TrimStart('\\'), LogLevel.Debug);
                     Dictionary<EditableFileDirectoryEntry, bool> remoteReducedTree = ied.ReadFileTree("", true); //
                     foreach (KeyValuePair<EditableFileDirectoryEntry, bool> entry in remoteReducedTree)
                     {
@@ -1743,28 +1901,7 @@ namespace IEDCollector
 
                     if (fileEntry != null) // 
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            //FileMetadataWindow metadataWindow = new FileMetadataWindow(ied, fileEntry);
-                            //metadataWindow.Show();
-                            FileInfo fileInfo = new FileInfo(file);
-                            FileMetadata windows = new FileMetadata(new MetadataWindowFileData(new Dictionary<string, string>()
-                            {
-                                { "Size", fileInfo.Length.ToString() + " byte" },
-                                { "Last Modified", File.GetLastWriteTime(file).ToString("u").Replace(" ", "T") },
-                                { "Hash", CalculateMD5(file) }
-                            }, file),
-
-                            new MetadataWindowFileData(new Dictionary<string, string>()
-                            {
-                                { "Size", fileEntry.fileSize.ToString() + " byte" },
-                                { "Last Modified", DateTimeOffset.FromUnixTimeMilliseconds((long)fileEntry.lastModified).DateTime.ToString("u").Replace(" ", "T") },
-                                { "Hash", fileHash }
-                            }, fileEntry.fileName)
-                            );
-
-                            windows.Show();
-                        });
+                        
                     }
                     else
                     {
@@ -1775,7 +1912,7 @@ namespace IEDCollector
                 {
                     MessageBox.Show(String.Format(Properties.Resources.messagebox_ied_connection_failed, connectionResult.ToString()), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
+                */
             }).Start();
 
 
@@ -1803,7 +1940,7 @@ namespace IEDCollector
 
                     if (status == ExecutionResult.SUCCESS || status == ExecutionResult.PARTIAL)
                     {
-                        iedItem.Items.Clear(); 
+                        iedItem.Items.Clear();
                         buildIedFilesTree(ied.config, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder));
                     }
 

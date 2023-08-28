@@ -1,7 +1,6 @@
 ﻿using IEC61850.Client;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -341,7 +340,9 @@ namespace IEDCollector
                     this.connection.Abort();
                     this.connection.Dispose();
                 }
-                catch (IedConnectionException) { } catch (NullReferenceException) {
+                catch (IedConnectionException) { }
+                catch (NullReferenceException)
+                {
                     Globals.logs.log("Connection already disposed. ", LogLevel.Debug);
                 }
 
@@ -379,49 +380,58 @@ namespace IEDCollector
         /// <param name="monitor">The FileProgressMonitor object that handles the progress update</param>
         /// <param name="overwrite">Whether to overwrite (true) or not (false) any homonym local file</param>
         /// <returns>A DownloadedFileState enum to represent the download state</returns>
-        public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, FileProgressMonitor monitor, bool overwrite)
+        public DownloadedFileState DownloadFile(EditableFileDirectoryEntry path, string destination, FileProgressMonitor monitor, bool overwrite, bool ignoreSkip = false)
         {
-            if (!overwrite && File.Exists(destination) && (ulong)File.GetLastWriteTime(destination).Ticks >= (path.GetLastModified())) return DownloadedFileState.SKIPPED_NEWER;
-            if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
-
             bool filterPassed = false;
-
-            if (!this.config.logEnabledExtensions.TryGetValue(Path.GetExtension(path.GetFileName()), out filterPassed) || !filterPassed)
+            if (!ignoreSkip)
             {
-                return DownloadedFileState.SKIPPED_FILTER;
-            }
+                Globals.logs.log("L: " + File.GetLastWriteTime(destination).Ticks + " R:" + DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks, LogLevel.Debug);
+                if ((!overwrite && File.Exists(destination)) || File.GetLastWriteTime(destination).Ticks >= DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks) return DownloadedFileState.SKIPPED_NEWER;
+                if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
 
-            filterPassed = false;
+                
 
-            string dir = Path.GetDirectoryName(path.GetFileName());
-
-            string[] dirAlternatives =
-            {
-                dir, dir.TrimStart('\\'), dir.Replace("\\", "/"), dir.Replace("\\", "/").TrimStart('/')
-            };
-
-            foreach (string alternative in dirAlternatives)
-            {
-                bool value = false;
-                bool has = this.config.logEnabledFolders.TryGetValue(alternative, out value);
-
-                if (has)
+                if (!this.config.logEnabledExtensions.TryGetValue(Path.GetExtension(path.GetFileName()), out filterPassed) || !filterPassed)
                 {
-                    if (value)
-                    {
-                        filterPassed = true;
-                    }
+                    return DownloadedFileState.SKIPPED_FILTER;
+                }
 
-                    break;
+                filterPassed = false;
+
+                string dir = Path.GetDirectoryName(path.GetFileName());
+
+                string[] dirAlternatives =
+                {
+                    dir, dir.TrimStart('\\'), dir.Replace("\\", "/"), dir.Replace("\\", "/").TrimStart('/')
+                };
+
+                foreach (string alternative in dirAlternatives)
+                {
+                    bool value = false;
+                    bool has = this.config.logEnabledFolders.TryGetValue(alternative, out value);
+
+                    if (has)
+                    {
+                        if (value)
+                        {
+                            filterPassed = true;
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!filterPassed)
+                {
+                    return DownloadedFileState.SKIPPED_FILTER;
                 }
             }
+            
 
-            if (!filterPassed)
+            
+
+            try
             {
-                return DownloadedFileState.SKIPPED_FILTER;
-            }
-
-            try {
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
 
                 if (Globals.IsFreeMode)
@@ -454,7 +464,9 @@ namespace IEDCollector
                         }, null);
                     }
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw e;
             }
 

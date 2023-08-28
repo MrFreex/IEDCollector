@@ -1,12 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
-using Standard.Licensing;
 using Standard.Licensing.Validation;
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Input;
 using License = Standard.Licensing.License;
 
 namespace IEDCollector
@@ -49,11 +45,12 @@ namespace IEDCollector
             try
             {
                 parsedLicense = Standard.Licensing.License.Load(license);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return false;
             }
-            
+
 
             return !parsedLicense.Validate().Signature(PUBLIC_KEY)
             .And()
@@ -151,7 +148,7 @@ namespace IEDCollector
 
                 if (value == null) return false;
 
-               
+
 
                 return value.Equals("1") ? true : false;
             }
@@ -174,7 +171,7 @@ namespace IEDCollector
             }
             catch (Exception e)
             {
-                
+
             }
         }
     }

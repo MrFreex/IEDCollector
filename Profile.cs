@@ -50,6 +50,12 @@ namespace IEDCollector
             this.protocol = toClone.protocol;
         }
 
+        public IEDConfig(IEDConfig toClone, bool appendCloneStr) : this(toClone)
+        {
+            this.name = this.name + "_clone";
+            this.logsFolder = this.name;
+        }
+
         public IEDConfig(string name, string ip, string username, string password, int port, string logsFolder, Dictionary<string, bool> logEnabledFolders, Dictionary<string, bool> logEnabledExtensions)
         {
             this.name = name;
@@ -245,14 +251,16 @@ namespace IEDCollector
                 try
                 {
                     Directory.CreateDirectory(this.settings.RootFolder);
-                } catch (IOException)
-                {
-                    MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
-                } catch (UnauthorizedAccessException)
+                }
+                catch (IOException)
                 {
                     MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
 
             XSettings.Add(new XAttribute("rootFolder", this.settings.RootFolder));
@@ -348,7 +356,7 @@ namespace IEDCollector
                 }
                 catch (IOException) { c++; ok = false; }
             } while (!ok);
-            
+
             MessageBox.Show(String.Format(Resources.messagebox_error_reading_profile_backup, this.Name, path, this.FilePath), Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
             this.save();

@@ -121,7 +121,7 @@ namespace IEDCollector
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                       
+
                         this.status.Text = String.Format(Properties.Resources.transferring_from_x, ied.ToString());
                         Globals.logs.log("Transferring from " + ied.ToString());
                     });
@@ -161,12 +161,12 @@ namespace IEDCollector
                                 }
 
                                 if (!this.IsRunning) break;
-                                
+
                                 foreach (EditableFileDirectoryEntry entry in tree)
                                 {
                                     Globals.logs.log("Found Tree file: " + entry.fileName, LogLevel.Debug);
                                 }
-                                
+
 
                                 double addProgress = (this.ProgressPerIed + 0.0) / (tree.Count + 0.0);
 
@@ -212,7 +212,8 @@ namespace IEDCollector
                                         try
                                         {
                                             state = ied.DownloadFile(entry, dest, new FileProgressMonitor(this.updateFileProgress), false);
-                                        } catch(IOException e)
+                                        }
+                                        catch (IOException e)
                                         {
                                             Globals.logs.log("Execution stopped due to insufficient disk space. IED Collector is stopped." + e.Message, LogLevel.Basic);
                                             MessageBox.Show(Properties.Resources.not_enough_disk_space, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -240,7 +241,8 @@ namespace IEDCollector
                                         else if (state == DownloadedFileState.SKIPPED_FILTER)
                                         {
                                             log = String.Format("[SKIP] [{1}] File '{0}' skipped due to filter (folder or file extension)", entry.GetFileName(), ied.ToString());
-                                        } else if (state == DownloadedFileState.SKIPPED_FREEMODE)
+                                        }
+                                        else if (state == DownloadedFileState.SKIPPED_FREEMODE)
                                         {
                                             log = String.Format("[FREEMODE] Would have downloaded file '{0}', but the software is in free mode.", entry.GetFileName());
                                             level = LogLevel.Basic;
@@ -248,7 +250,7 @@ namespace IEDCollector
 
                                         //Application.Current.Dispatcher.Invoke(() =>
                                         //{
-                                            Globals.logs.log(log, level);
+                                        Globals.logs.log(log, level);
                                         //});
                                     }
                                     catch (Exception e)

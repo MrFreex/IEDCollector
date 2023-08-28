@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows;
-using System.IO;
+﻿using Microsoft.IdentityModel.Tokens;
 using Ookii.Dialogs.Wpf;
-using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace IEDCollector.Windows
 {
@@ -20,12 +20,13 @@ namespace IEDCollector.Windows
                 removeLicenseButton.IsEnabled = false;
                 export_license.IsEnabled = false;
                 license_ok_nok.Content = Properties.Resources.current_license_nok;
-            } else
+            }
+            else
             {
                 license_ok_nok.Content = Properties.Resources.current_license_ok;
             }
             //licenseBox.Text = Security.License;
-            
+
             //this.requestLink.NavigateUri = new Uri(generateEmailLink());
         }
 
@@ -40,23 +41,24 @@ namespace IEDCollector.Windows
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+
         }
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             string license;
-            
+
             try
             {
                 license = File.ReadAllText(this.licenseBox.Text);
-            } catch (IOException)
+            }
+            catch (IOException)
             {
                 MessageBox.Show(Properties.Resources.messagebox_licensefile_not_found, Properties.Resources.messagebox_licensefile_not_found_title, MessageBoxButton.OK, MessageBoxImage.Error); return;
             }
 
-            
-            
+
+
             if (license.Equals(String.Empty))
             {
                 MessageBox.Show(Properties.Resources.messagebox_insert_valid_license, "IEDCollector", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -80,7 +82,7 @@ namespace IEDCollector.Windows
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult reallyRemove = MessageBox.Show(Properties.Resources.messagebox_remove_license_confirmation, Properties.Resources.confirm, MessageBoxButton.YesNo, MessageBoxImage.Warning);
-        
+
             if (reallyRemove.Equals(MessageBoxResult.Yes))
             {
                 Security.removeLicense();

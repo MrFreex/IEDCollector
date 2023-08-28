@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Xml.Linq;
@@ -195,7 +194,7 @@ namespace IEDCollector
                 }
                 catch (IOException) { c++; ok = false; }
             } while (!ok);
-            
+
             MessageBox.Show(String.Format(Properties.Resources.messagebox_global_config_not_readable, path, GLOBALCONFIGNAME), Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
 
             save();

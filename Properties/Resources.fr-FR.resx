@@ -360,6 +360,12 @@
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
     <value>Le nom configuré ne correspond pas à celui de l'IED, continuer quand même ?</value>
   </data>
+  <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
+    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}</value>
+  </data>
+  <data name="messagebox_duplicate_ied_name" xml:space="preserve">
+    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections: {0} .</value>
+  </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
     <value>Impossibile leggere la cartella remota</value>
   </data>
@@ -410,6 +416,9 @@
   <data name="messagebox_logs_path_used" xml:space="preserve">
     <value>Le chemin du fichier de log est utilisé par un autre logiciel.</value>
   </data>
+  <data name="messagebox_metadata_window_error" xml:space="preserve">
+    <value>The program encountered an error while accessing a file on the IED: {0}. Only the local file metadata will be displayed.</value>
+  </data>
   <data name="messagebox_number_of_log_files_error" xml:space="preserve">
     <value>Le nombre de fichiers de log conservés doit être un nombre valide.</value>
   </data>
@@ -449,6 +458,18 @@
   </data>
   <data name="metadata_difference" xml:space="preserve">
     <value>Difference</value>
+  </data>
+  <data name="metadata_window_file_doesntexist_error" xml:space="preserve">
+    <value>the file is not on the IED anymore</value>
+  </data>
+  <data name="metadata_window_not_connected_error" xml:space="preserve">
+    <value>the IED is reachable but not accessible (credentials are wrong or the protocol is disabled)</value>
+  </data>
+  <data name="metadata_window_remote_file_unaccessible" xml:space="preserve">
+    <value>Remote file not accessible</value>
+  </data>
+  <data name="metadata_window_timeout_error" xml:space="preserve">
+    <value>the IED is unreachable</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
     <value>Minimize to tray when closing the window</value>

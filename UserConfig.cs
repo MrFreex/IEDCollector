@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
 namespace IEDCollector
 {
-    
+
 
     // log files kept (number or all [-1]), start with windows, resume polling on startup, log level
     internal class FSyncConfiguration
@@ -53,7 +52,7 @@ namespace IEDCollector
 
             if (!File.Exists(this.filePath))
             {
-                
+
                 save();
             }
 
@@ -93,12 +92,12 @@ namespace IEDCollector
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup)), new XElement("preferences"/*, new XElement(FSyncPreferences.LANGUAGE, (int)preferences.language)*/)));
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup), new XElement(FSyncConfiguration.MINIMIZETOTRAY, config.minimizeToTray)), new XElement("preferences"/*, new XElement(FSyncPreferences.LANGUAGE, (int)preferences.language)*/)));
 
             try
             {
                 Xconfig.Save(this.filePath);
-                
+
             }
             catch { }
         }
@@ -140,7 +139,7 @@ namespace IEDCollector
                 load();
             }
 
-            
+
         }
     }
 }

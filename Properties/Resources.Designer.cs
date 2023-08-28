@@ -736,6 +736,24 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}.
+        /// </summary>
+        public static string messagebox_duplicate_ied_folders {
+            get {
+                return ResourceManager.GetString("messagebox_duplicate_ied_folders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections:\n {0} ..
+        /// </summary>
+        public static string messagebox_duplicate_ied_name {
+            get {
+                return ResourceManager.GetString("messagebox_duplicate_ied_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error reading the device directory..
         /// </summary>
         public static string messagebox_error_reading_device_dir {
@@ -898,6 +916,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The program encountered an error while accessing a file on the IED: {0}. Only the local file metadata will be displayed..
+        /// </summary>
+        public static string messagebox_metadata_window_error {
+            get {
+                return ResourceManager.GetString("messagebox_metadata_window_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of log files kept must be a number..
         /// </summary>
         public static string messagebox_number_of_log_files_error {
@@ -1011,6 +1038,42 @@ namespace IEDCollector.Properties {
         public static string metadata_difference {
             get {
                 return ResourceManager.GetString("metadata_difference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the file is not on the IED anymore.
+        /// </summary>
+        public static string metadata_window_file_doesntexist_error {
+            get {
+                return ResourceManager.GetString("metadata_window_file_doesntexist_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the IED is reachable but not accessible (credentials are wrong or the protocol is disabled).
+        /// </summary>
+        public static string metadata_window_not_connected_error {
+            get {
+                return ResourceManager.GetString("metadata_window_not_connected_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote file not accessible.
+        /// </summary>
+        public static string metadata_window_remote_file_unaccessible {
+            get {
+                return ResourceManager.GetString("metadata_window_remote_file_unaccessible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the IED is unreachable.
+        /// </summary>
+        public static string metadata_window_timeout_error {
+            get {
+                return ResourceManager.GetString("metadata_window_timeout_error", resourceCulture);
             }
         }
         

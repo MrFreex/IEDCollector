@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Controls;
-using IEDCollector.Properties;
+using System.Windows.Media;
 
 namespace IEDCollector
 {
@@ -16,13 +14,17 @@ namespace IEDCollector
 
     public class MetadataWindowFileData
     {
-        public ObservableCollection<ListViewItem> ListItems {
+        public ObservableCollection<ListViewItem> ListItems
+        {
             get
             {
                 ObservableCollection<ListViewItem> items = new ObservableCollection<ListViewItem>();
                 foreach (KeyValuePair<string, string> pair in this.dict)
                 {
-                    items.Add(new ListViewItem() { Content = pair.Key + ": " + pair.Value, Foreground = Brushes.Black, Background = this.otherItems[pair.Key] == pair.Value ? Brushes.Transparent : Brushes.Gold });
+                    string otherValue;
+                    this.otherItems.TryGetValue(pair.Key, out otherValue);
+                    otherValue = otherValue ?? pair.Value;
+                    items.Add(new ListViewItem() { Content = pair.Key + ": " + pair.Value, Foreground = Brushes.Black, Background = (otherValue) == pair.Value ? Brushes.Transparent : Brushes.Gold });
                 }
 
                 return items;
@@ -34,7 +36,7 @@ namespace IEDCollector
         public string path { get; set; }
         public string FileName => Path.GetFileName(path);
 
-        public MetadataWindowFileData(Dictionary<string,string> dict, string path)
+        public MetadataWindowFileData(Dictionary<string, string> dict, string path)
         {
             this.path = path;
             this.dict = dict;
@@ -51,7 +53,7 @@ namespace IEDCollector
         {
             localFileData.otherItems = remoteFileData.dict;
             this.localFileData = localFileData;
-            
+
             remoteFileData.otherItems = localFileData.dict;
             this.remoteFileData = remoteFileData;
             this.DataContext = this;
