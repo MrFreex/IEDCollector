@@ -173,10 +173,10 @@
     <comment>Window title</comment>
   </data>
   <data name="current_license_nok" xml:space="preserve">
-    <value>Current license INVALID</value>
+    <value>A licença atual é inválida</value>
   </data>
   <data name="current_license_ok" xml:space="preserve">
-    <value>Current license OK</value>
+    <value>A licença atual é válida</value>
   </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Execução cíclica</value>
@@ -234,13 +234,13 @@
     <value>Metadados do ficheiro</value>
   </data>
   <data name="folders" xml:space="preserve">
-    <value>Diretoria</value>
+    <value>Diretorias</value>
   </data>
   <data name="full_name" xml:space="preserve">
     <value>Nome completo: nome e apelido do proprietário da licença</value>
   </data>
   <data name="hash_code" xml:space="preserve">
-    <value>Hash</value>
+    <value>Código Hash</value>
   </data>
   <data name="idling" xml:space="preserve">
     <value>Em espera</value>
@@ -252,10 +252,10 @@
     <value>[{1}] Carregar ficheiro '{0}'</value>
   </data>
   <data name="ied_error_offline" xml:space="preserve">
-    <value>The IED is not responsive. Check that it is online and connected to the same network as your device. Error code: {0}</value>
+    <value>O IED não responde. Verifique se ele está online e conectado à mesma rede do seu dispositivo. Código de erro: {0}</value>
   </data>
   <data name="ied_error_refused" xml:space="preserve">
-    <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
+    <value>O IED responde, mas recusou a conexão. Verifique as credenciais inseridas e se o IED está com o protocolo selecionado habilitado. Código de erro: {0}</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>
@@ -283,7 +283,7 @@
     <value>Chave de licença (license key)</value>
   </data>
   <data name="license_key_file" xml:space="preserve">
-    <value>License Key File</value>
+    <value>Ficheiro de chave de licença</value>
   </data>
   <data name="license_management" xml:space="preserve">
     <value>Gestão de licença</value>
@@ -318,7 +318,7 @@
     <value>Nível de log</value>
   </data>
   <data name="messagebox_activation_successful" xml:space="preserve">
-    <value>Congratulations! You have successfully activated the full version of IED Collector. Enjoy!</value>
+    <value>Parabéns! Você ativou com sucesso a versão completa do IED Collector. Obrigado!</value>
   </data>
   <data name="messagebox_buy_full_version" xml:space="preserve">
     <value>Adquira a versão completa para utilizar esta função</value>
@@ -368,7 +368,7 @@
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
   <data name="messagebox_error_saving_file" xml:space="preserve">
-    <value>Error saving the file. Check the destination folder's permissions and whether it is read only.</value>
+    <value>Erro ao salvar o ficheiro. Verifique as permissões da pasta de destino e se ela permite leitura e escrita.</value>
   </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
     <value>Erro ao salvar perfil</value>
@@ -383,7 +383,7 @@
     <value>O arquivo de configuração estava mal formatado. A configuração foi restaurada e foi guardado um backup . Para restaurá-lo, repare o arquivo '{0}' , feche o software e renomeie o arquivo para '{1}'.</value>
   </data>
   <data name="messagebox_ied_connection_failed" xml:space="preserve">
-    <value>Failed to connect to IED. Error code: "{0}". Check the credentials and retry.</value>
+    <value>Falha ao conectar ao IED. Código de erro: "{0}". Verifique as credenciais e tente novamente.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
     <value>Insira uma licença válida</value>
@@ -401,10 +401,10 @@
     <value>Licença inválida, solicite uma se ainda não a tiver recebido.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+    <value>O ficheiro contendo o pedido de licença foi guardado. Por favor envie o ficheiro por email para geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
-    <value>License request file saved</value>
+    <value>Arquivo de solicitação de licença salvo</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_logs_path_used" xml:space="preserve">
@@ -448,7 +448,7 @@
     <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
   </data>
   <data name="metadata_difference" xml:space="preserve">
-    <value>Difference</value>
+    <value>Diferença</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
     <value>Minimize to tray when closing the window</value>
@@ -560,7 +560,7 @@
     <value>Diretoria principal</value>
   </data>
   <data name="save" xml:space="preserve">
-    <value>Diretoria principal</value>
+    <value>Salvar</value>
   </data>
   <data name="save_connection" xml:space="preserve">
     <value>Salvar os dados de conexão no arquivo de perfil</value>

@@ -173,10 +173,10 @@
     <comment>Window title</comment>
   </data>
   <data name="current_license_nok" xml:space="preserve">
-    <value>Current license INVALID</value>
+    <value>Current license is invalid</value>
   </data>
   <data name="current_license_ok" xml:space="preserve">
-    <value>Current license OK</value>
+    <value>Current license is valid</value>
   </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Cyclic Fetch</value>
@@ -214,7 +214,7 @@
     <value>Synchronizing...</value>
   </data>
   <data name="fetching_data_title" xml:space="preserve">
-    <value>Fetch IED data</value>
+    <value>Synchronize IED data</value>
     <comment>Window title</comment>
   </data>
   <data name="fetch_data" xml:space="preserve">
@@ -225,7 +225,7 @@
     <comment>Tooltip</comment>
   </data>
   <data name="fetch_directories" xml:space="preserve">
-    <value>Fetch directories</value>
+    <value>Synchronize directories</value>
   </data>
   <data name="files" xml:space="preserve">
     <value>files</value>
@@ -318,7 +318,7 @@
     <value>Log Level</value>
   </data>
   <data name="messagebox_activation_successful" xml:space="preserve">
-    <value>Congratulations! You have successfully activated the full version of IED Collector. Enjoy!</value>
+    <value>Congratulations! You have successfully activated the full version of IED Collector. Thank you!</value>
   </data>
   <data name="messagebox_buy_full_version" xml:space="preserve">
     <value>Buy the full version to use this feature</value>
@@ -368,7 +368,7 @@
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
   <data name="messagebox_error_saving_file" xml:space="preserve">
-    <value>Error saving the file. Check the destination folder's permissions and whether it is read only.</value>
+    <value>Error saving the file. Check the destination folder's permissions and whether it has read and write permissions.</value>
   </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
     <value>Error while saving profile</value>
@@ -401,7 +401,7 @@
     <value>License not valid. Request a license if you have none.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+    <value>The file containing the license request was saved. Please email the file to geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>License request file saved</value>

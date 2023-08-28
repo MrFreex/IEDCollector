@@ -252,10 +252,10 @@
     <value>[{1}] Scarica file '{0}'</value>
   </data>
   <data name="ied_error_offline" xml:space="preserve">
-    <value>The IED is not responsive. Check that it is online and connected to the same network as your device. Error code: {0}</value>
+    <value>Il dispositivo IED non risponde, controlla che sia online e connesso alla stessa rete del dispositivo attuale. Codice errore: {0}</value>
   </data>
   <data name="ied_error_refused" xml:space="preserve">
-    <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
+    <value>Il dispositivo IED è attivo, ma ha rifiutato la connessione. Controlla le credenziali e la configurazione del protocollo selezionato sul dispositivo IED. Codice errore: {0}</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importa profilo</value>
@@ -404,7 +404,7 @@
     <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
-    <value>License request file saved</value>
+    <value>File di richiesta della licenza salvato</value>
     <comment>Window title</comment>
   </data>
   <data name="messagebox_logs_path_used" xml:space="preserve">
@@ -445,13 +445,13 @@
     <value>Grazie per aver richiesto una licenza, avrai un riscontro il prima possibile.</value>
   </data>
   <data name="messagebox_tray_warning" xml:space="preserve">
-    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+    <value>Il programma è ancora in esecuzione. Controlla l'icona tray per altre opzioni. Puoi cambiare questo comportamento dalle impostazioni del software.</value>
   </data>
   <data name="metadata_difference" xml:space="preserve">
-    <value>Difference</value>
+    <value>Differenza</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
-    <value>Minimize to tray when closing the window</value>
+    <value>Minimizza nel tray alla chiusura</value>
   </data>
   <data name="monitor_tab" xml:space="preserve">
     <value>Monitor</value>
