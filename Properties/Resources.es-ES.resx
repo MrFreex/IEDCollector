@@ -635,11 +635,8 @@
   <data name="username" xml:space="preserve">
     <value>Nombre de usuario</value>
   </data>
-  <data name="waiting_x_minute" xml:space="preserve">
-    <value>Esperando {0} minuto</value>
-  </data>
   <data name="waiting_x_minutes" xml:space="preserve">
-    <value>Esperando {1} minutos</value>
+    <value>Esperando {0}:{1} (mm:ss)</value>
   </data>
   <data name="warning" xml:space="preserve">
     <value>Atención</value>

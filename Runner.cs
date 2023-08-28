@@ -378,7 +378,7 @@ namespace IEDCollector
                         });
                         this.Execution();
 
-                        string waitingString = String.Format(cyclePeriod == 1 ? Properties.Resources.waiting_x_minute : Properties.Resources.waiting_x_minutes, cyclePeriod);
+                        string waitingString = String.Format(Properties.Resources.waiting_x_minutes, cyclePeriod.ToString().PadLeft(2, '0'), "00");
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             this.status.Text = waitingString;
@@ -389,10 +389,20 @@ namespace IEDCollector
 
                         idling = true;
                         int waited = 0;
-
-                        while (waited < (cyclePeriod * 60 * 1000) && this.IsRunning) // ToDo : change this with user setting value
+                        int toWait = cyclePeriod * 60 * 1000;
+                        
+                        DateTime finished = DateTime.Now.AddMilliseconds(toWait);
+                        while (DateTime.Now.Ticks < finished.Ticks && this.IsRunning) // ToDo : change this with user setting value
                         {
                             Thread.Sleep(100);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                int secondsMissing = (int)((finished.Subtract(DateTime.Now).TotalMilliseconds / 1000));
+                                int mins = (int)Math.Floor((secondsMissing + 0.0) / 60.0);
+                                int secs = secondsMissing % 60;
+                                waitingString = String.Format(Properties.Resources.waiting_x_minutes, mins.ToString().PadLeft(2, '0'), secs.ToString().PadLeft(2, '0'));
+                                this.status.Text = waitingString;
+                            }, System.Windows.Threading.DispatcherPriority.Background);
                             waited += 100;
                         }
                         idling = false;

@@ -1546,16 +1546,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Waiting {0} minute.
-        /// </summary>
-        public static string waiting_x_minute {
-            get {
-                return ResourceManager.GetString("waiting_x_minute", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Waiting {0} minutes.
+        ///   Looks up a localized string similar to Waiting {0}:{1} (mm:ss).
         /// </summary>
         public static string waiting_x_minutes {
             get {
