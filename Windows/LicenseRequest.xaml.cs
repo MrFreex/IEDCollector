@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.IO;
 using Microsoft.IdentityModel.Tokens;
+using System.Xml.Linq;
 
 namespace IEDCollector.Windows
 {
@@ -24,11 +25,16 @@ namespace IEDCollector.Windows
 
         private void saveEmailFile()
         {
-            string[] fileLines =
-            {
-                String.Format("[{0}]IEDCollector License Request", fullName.Text),
-                String.Format("Hello,\n\nI'm {0} and I would like to request a license for IEDCollector.\n\nFull Name: {0}\nLocation: {1}\nRequest Id: {2}", fullName.Text, location.Text, new ComputerInfo().CpuId)
-            };
+            string cpuId = Base64UrlEncoder.Encode(new ComputerInfo().CpuId);
+            XDocument licenseRequest = new XDocument(
+                               new XElement("LicenseRequest",
+                                                  new XElement("FullName", fullName.Text),
+                                                                     new XElement("Location", location.Text),
+                                                                                        new XElement("RequestId", cpuId),
+                                                                                        new XElement("Date", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"))
+                                                                                                       )
+                               
+                                          );
 
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog()
             {
@@ -44,7 +50,8 @@ namespace IEDCollector.Windows
             {
                 try
                 {
-                    File.WriteAllLines(Path.Combine(dialog.SelectedPath, "License_Request.txt"), fileLines);
+                    licenseRequest.Save(Path.Combine(dialog.SelectedPath, cpuId + "_License_Request.xml"));
+                    //File.WriteAllText(Path.Combine(dialog.SelectedPath, "License_Request.txt"), fileLines);
                 } catch (IOException)
                 {
                     MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error); return;
