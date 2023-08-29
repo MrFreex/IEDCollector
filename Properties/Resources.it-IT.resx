@@ -123,6 +123,12 @@
   <data name="browse" xml:space="preserve">
     <value>Sfoglia</value>
   </data>
+  <data name="button_correct_configured_name" xml:space="preserve">
+    <value>Correggi il nome configurato</value>
+  </data>
+  <data name="button_keep_configured_name" xml:space="preserve">
+    <value>Mantieni il nome configurato</value>
+  </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancella</value>
   </data>
@@ -358,7 +364,7 @@
     <comment>Window title</comment>
   </data>
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
-    <value>Il nome configurato non corrisponde a quello del dispositivo, continuare ugualmente?</value>
+    <value>Il nome configurato non corrisponde con quello presente sul dispositivo IED. Nome dispositivo IED: '{0}', Nome configurato: '{1}'. Desideri mantenere il nome configurato o correggerlo con quello remoto?</value>
   </data>
   <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
     <value>Impossibile salvare il profilo. Non è consentita la presenza di più connessioni con la stessa sottocartella di log. Duplicati (Percorso: connessioni duplicate) : {0}</value>

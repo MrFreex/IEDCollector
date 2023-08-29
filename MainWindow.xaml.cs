@@ -1517,13 +1517,38 @@ namespace IEDCollector
 
                     try
                     {
-                        if (!ied.CrossCheckName())
+                        string deviceName = ied.CrossCheckName();
+                        if (deviceName != ied.config.name)
                         {
-                            MessageBoxResult askIfContinue = MessageBox.Show(Properties.Resources.messagebox_crosscheck_differs, Properties.Resources.warning, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                            //MessageBoxResult askIfContinue = MessageBox.Show(Properties.Resources.messagebox_crosscheck_differs, Properties.Resources.warning, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                            if (askIfContinue != MessageBoxResult.Yes)
+                            //if (askIfContinue != MessageBoxResult.Yes)
+                            //{
+                            //    return;
+                            //}
+
+                            TaskDialogButton useFoundName = new TaskDialogButton(Properties.Resources.button_correct_configured_name);
+                            TaskDialogButton keepName = new TaskDialogButton(Properties.Resources.button_keep_configured_name);
+
+                            TaskDialog dialog = new TaskDialog()
                             {
-                                return;
+                                WindowTitle = Properties.Resources.warning,
+                                MainInstruction = Properties.Resources.warning,
+                                Content = String.Format(Properties.Resources.messagebox_crosscheck_differs, deviceName, ied.config.name),
+                                Buttons =
+                                {
+                                    useFoundName,
+                                    keepName
+                                }
+                            };
+
+                            if (dialog.ShowDialog() == useFoundName)
+                            {
+                                ied.config.name = deviceName;
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    iedNameInput.Text = deviceName;
+                                });
                             }
                         }
                     }

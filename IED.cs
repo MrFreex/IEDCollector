@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 
@@ -145,16 +146,11 @@ namespace IEDCollector
             return IedClientError.IED_ERROR_OK;
         }
 
-        /// <summary>
-        /// Performs the name's cross check on the device
-        /// </summary>
-        /// <returns>True: CrossCheck Ok, False: CrossCheck differs</returns>
-        public bool CrossCheckName()
+        public List<string> readLogicalDevices()
         {
-            if (this.connection == null) throw new InvalidOperationException("Not connected");
             List<string> devices;
 
-            Globals.logs.log(String.Format("Performing name cross-check for '{0}'...", this.ToString()), LogLevel.Detailed);
+            
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
@@ -162,17 +158,52 @@ namespace IEDCollector
                 devices = this.Connection.GetServerDirectory();
             }
 
-            foreach (string device in devices)
+            return devices;
+        }
+
+        private bool allInclude(List<string> strings, string incl)
+        {
+            return strings.All(str => str.Contains(incl));
+        }
+
+        /// <summary>
+        /// Tries guessing the IED device name by reading the common prefix of all logical devices
+        /// </summary>
+        /// <returns>The guessed name</returns>
+        public string GuessDeviceName()
+        {
+            List<string> devices = readLogicalDevices();
+
+            string commonPrefix = devices[0].Substring(0, 1);
+
+            while (allInclude(devices, commonPrefix))
             {
-                if (!device.StartsWith(this.config.name))
-                {
-                    Globals.logs.log(String.Format("Cross check failed for '{0}': '{1}' is not the device's name", this.ToString(), this.config.name));
-                    return false;
-                }
+                commonPrefix = devices[0].Substring(0, commonPrefix.Length + 1);
             }
 
-            Globals.logs.log(String.Format("Cross check OK for '{0}'", this.ToString()), LogLevel.Detailed);
-            return true;
+            return commonPrefix.Substring(0, commonPrefix.Length - 1);
+        }
+
+        /// <summary>
+        /// Performs the name's cross check on the device
+        /// </summary>
+        /// <returns>!= null : Cross check ok, == null : cross check nok</returns>
+        public string CrossCheckName()
+        {
+            if (this.connection == null) throw new InvalidOperationException("Not connected");
+
+            Globals.logs.log(String.Format("Performing name cross-check for '{0}'...", this.ToString()), LogLevel.Detailed);
+
+            string deviceName = GuessDeviceName();
+
+            Globals.logs.log("Found device name: " + deviceName, LogLevel.Detailed);
+
+            if (deviceName == this.config.name)
+            {
+                Globals.logs.log(String.Format("Cross check OK for '{0}'", this.ToString()), LogLevel.Detailed);
+            }
+
+            return deviceName;
         }
 
         /// <summary>

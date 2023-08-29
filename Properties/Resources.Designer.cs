@@ -79,6 +79,24 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Correct configured name.
+        /// </summary>
+        public static string button_correct_configured_name {
+            get {
+                return ResourceManager.GetString("button_correct_configured_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep configured name.
+        /// </summary>
+        public static string button_keep_configured_name {
+            get {
+                return ResourceManager.GetString("button_keep_configured_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string cancel {
@@ -727,7 +745,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The configured name differs from the one found inside the IED. Continue anyway?.
+        ///   Looks up a localized string similar to The configured name differs from the one found inside the IED. Remote device name: &apos;{0}&apos;, Local configured name: &apos;{1}&apos;. Would you like to keep the configured name or correct it?.
         /// </summary>
         public static string messagebox_crosscheck_differs {
             get {
