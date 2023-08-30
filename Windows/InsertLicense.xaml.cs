@@ -52,7 +52,7 @@ namespace IEDCollector.Windows
             {
                 license = File.ReadAllText(this.licenseBox.Text);
             }
-            catch (IOException)
+            catch (Exception)
             {
                 MessageBox.Show(Properties.Resources.messagebox_licensefile_not_found, Properties.Resources.messagebox_licensefile_not_found_title, MessageBoxButton.OK, MessageBoxImage.Error); return;
             }
@@ -134,7 +134,9 @@ namespace IEDCollector.Windows
             if (dialog.ShowDialog() == true)
             {
                 string cpuId = Base64UrlEncoder.Encode(new ComputerInfo().CpuId);
-                File.WriteAllText(Path.Combine(dialog.SelectedPath, cpuId + "_License_Key.txt"), Security.License);
+                string finalPath = Path.Combine(dialog.SelectedPath, cpuId + "_License_Key.txt");
+                File.WriteAllText(finalPath, Security.License);
+                MessageBox.Show(String.Format(Properties.Resources.license_exported_to, finalPath), Properties.Resources.success, MessageBoxButton.OK);
             }
         }
     }

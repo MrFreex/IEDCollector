@@ -45,11 +45,13 @@ namespace IEDCollector.Windows
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
             };
 
+            string finalPath = Path.Combine(dialog.SelectedPath, cpuId + "_License_Request.xml");
+
             if (dialog.ShowDialog() == true)
             {
                 try
                 {
-                    licenseRequest.Save(Path.Combine(dialog.SelectedPath, cpuId + "_License_Request.xml"));
+                    licenseRequest.Save(finalPath);
                     //File.WriteAllText(Path.Combine(dialog.SelectedPath, "License_Request.txt"), fileLines);
                 }
                 catch (IOException)
@@ -57,7 +59,7 @@ namespace IEDCollector.Windows
                     MessageBox.Show(Properties.Resources.messagebox_error_saving_file, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error); return;
                 }
 
-                MessageBox.Show(Properties.Resources.messagebox_license_request_saved, Properties.Resources.messagebox_license_request_saved_title, MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(String.Format(Properties.Resources.messagebox_license_request_saved, finalPath), Properties.Resources.messagebox_license_request_saved_title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

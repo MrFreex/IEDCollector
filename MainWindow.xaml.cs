@@ -469,6 +469,38 @@ namespace IEDCollector
             isProfileSaved = false;
         }
 
+        private void addIedContextMenu(ListBoxItem add)
+        {
+            add.ContextMenu = new ContextMenu();
+            add.ContextMenu.Items.Add(new MenuItem()
+            {
+                Header = Properties.Resources.ied_move_up,
+                Tag = "up"
+            });
+            add.ContextMenu.Items.Add(new MenuItem()
+            {
+                Header = Properties.Resources.ied_move_down,
+                Tag = "down"
+            });
+
+            foreach (MenuItem item in add.ContextMenu.Items)
+            {
+                item.Click += (object sender, RoutedEventArgs e) =>
+                {
+                    if (item.Tag.Equals("up"))
+                    {
+                        MoveItem(-1, add);
+                    }
+                    else
+                    {
+                        MoveItem(1, add);
+                    }
+                };
+            }
+
+            
+        }
+
         public MainWindow()
         {
             //initCulture();
@@ -635,32 +667,7 @@ namespace IEDCollector
                 {
                     ListBoxItem add = new ListBoxItem();
 
-                    add.ContextMenu = new ContextMenu();
-                    add.ContextMenu.Items.Add(new MenuItem()
-                    {
-                        Header = "Move up",
-                        Tag = "up"
-                    });
-                    add.ContextMenu.Items.Add(new MenuItem()
-                    {
-                        Header = "Move down",
-                        Tag = "down"
-                    });
-
-                    foreach (MenuItem item in add.ContextMenu.Items)
-                    {
-                        item.Click += (object sender, RoutedEventArgs e) =>
-                        {
-                            if (item.Tag.Equals("up"))
-                            {
-                                MoveItem(-1, add);
-                            }
-                            else
-                            {
-                                MoveItem(1, add);
-                            }
-                        };
-                    }
+                    addIedContextMenu(add);
 
                     add.Content = ied.name;
                     add.Tag = ied;
@@ -847,15 +854,19 @@ namespace IEDCollector
 
             IEDConfig ied = new IEDConfig();
             ied.name = Properties.Resources.new_ied;
+            ied.username = "";
             ied.port = 102;
             ied.ip = "127.0.0.1";
-            ied.logsFolder = "";
+            ied.logsFolder = ied.name;
             ied.logEnabledExtensions = new Dictionary<string, bool>();
             ied.logEnabledFolders = new Dictionary<string, bool>();
+
+            
 
             Globals.currentProfile.IEDs.Add(ied);
             ListBoxItem toAdd = new ListBoxItem();
 
+            addIedContextMenu(toAdd);
 
             toAdd.Content = ied.name;
             toAdd.Tag = ied;
@@ -1103,6 +1114,7 @@ namespace IEDCollector
             Globals.currentProfile.IEDs.Add(cloned);
             ListBoxItem add = new ListBoxItem();
 
+            addIedContextMenu(add);
 
             add.Content = cloned.name;
             add.Tag = cloned;
@@ -1527,7 +1539,7 @@ namespace IEDCollector
                             //    return;
                             //}
 
-                            TaskDialogButton useFoundName = new TaskDialogButton(Properties.Resources.button_correct_configured_name);
+                            TaskDialogButton useFoundName = new TaskDialogButton(Properties.Resources.button_update_configured_name);
                             TaskDialogButton keepName = new TaskDialogButton(Properties.Resources.button_keep_configured_name);
 
                             TaskDialog dialog = new TaskDialog()
