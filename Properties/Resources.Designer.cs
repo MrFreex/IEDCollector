@@ -70,7 +70,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activate.
+        ///   Looks up a localized string similar to Activate License.
         /// </summary>
         public static string activate {
             get {
@@ -241,7 +241,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current license INVALID.
+        ///   Looks up a localized string similar to License Status: Inactive.
         /// </summary>
         public static string current_license_nok {
             get {
@@ -250,7 +250,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current license OK.
+        ///   Looks up a localized string similar to License Status: Active.
         /// </summary>
         public static string current_license_ok {
             get {
@@ -331,7 +331,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export to file.
+        ///   Looks up a localized string similar to Export.
         /// </summary>
         public static string export_to_file {
             get {
@@ -498,6 +498,15 @@ namespace IEDCollector.Properties {
         public static string ied_move_up {
             get {
                 return ResourceManager.GetString("ied_move_up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string import {
+            get {
+                return ResourceManager.GetString("import", resourceCulture);
             }
         }
         
@@ -1582,7 +1591,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Switch to free version.
+        ///   Looks up a localized string similar to Continue with Free Version.
         /// </summary>
         public static string switch_free_mode {
             get {

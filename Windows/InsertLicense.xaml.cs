@@ -3,6 +3,7 @@ using Ookii.Dialogs.Wpf;
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace IEDCollector.Windows
 {
@@ -24,6 +25,9 @@ namespace IEDCollector.Windows
             else
             {
                 license_ok_nok.Content = Properties.Resources.current_license_ok;
+                requestLink.IsEnabled = false;
+                freeModeButton.IsEnabled = false;
+                activateLicenseButton.IsEnabled = false;
             }
             //licenseBox.Text = Security.License;
 
@@ -138,6 +142,11 @@ namespace IEDCollector.Windows
                 File.WriteAllText(finalPath, Security.License);
                 MessageBox.Show(String.Format(Properties.Resources.license_exported_to, finalPath), Properties.Resources.success, MessageBoxButton.OK);
             }
+        }
+
+        private void licenseBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            activateLicenseButton.IsEnabled = File.Exists(licenseBox.Text);
         }
     }
 }

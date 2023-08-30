@@ -393,7 +393,7 @@ namespace IEDCollector
             {
                 InsertLicense askForLicense = new InsertLicense();
 
-                askForLicense.Description.Text = Properties.Resources.no_license_found_on_computer;
+                //askForLicense.Description.Text = Properties.Resources.no_license_found_on_computer;
 
                 askForLicense.removeLicenseButton.IsEnabled = false;
 
@@ -2356,7 +2356,7 @@ namespace IEDCollector
             bool freeMode = Security.IsFreeMode;
             InsertLicense window = new InsertLicense();
 
-            window.Description.Text = Properties.Resources.license_details;
+            //window.Description.Text = Properties.Resources.license_details;
 
             window.freeModeButton.IsEnabled = false;
 

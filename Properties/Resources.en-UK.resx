@@ -121,7 +121,7 @@
     <value>About</value>
   </data>
   <data name="activate" xml:space="preserve">
-    <value>Activate</value>
+    <value>Activate License</value>
   </data>
   <data name="browse" xml:space="preserve">
     <value>Browse</value>
@@ -182,10 +182,10 @@
     <comment>Window title</comment>
   </data>
   <data name="current_license_nok" xml:space="preserve">
-    <value>Current license is invalid</value>
+    <value>License Status: Inactive</value>
   </data>
   <data name="current_license_ok" xml:space="preserve">
-    <value>Current license is valid</value>
+    <value>License Status: Active</value>
   </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Cyclic Fetch</value>
@@ -217,7 +217,7 @@
     <comment>Tooltip</comment>
   </data>
   <data name="export_to_file" xml:space="preserve">
-    <value>Export to file</value>
+    <value>Export</value>
   </data>
   <data name="extensions" xml:space="preserve">
     <value>Extensions</value>
@@ -274,6 +274,9 @@
   </data>
   <data name="ied_move_up" xml:space="preserve">
     <value>Move up</value>
+  </data>
+  <data name="import" xml:space="preserve">
+    <value>Import</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Import profile</value>
@@ -648,7 +651,7 @@
     <comment>Window title?</comment>
   </data>
   <data name="switch_free_mode" xml:space="preserve">
-    <value>Switch to free version</value>
+    <value>Continue with Free Version</value>
   </data>
   <data name="transferring_from_x" xml:space="preserve">
     <value>Transferring from {0}</value>

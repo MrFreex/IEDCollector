@@ -275,6 +275,9 @@
   <data name="ied_move_up" xml:space="preserve">
     <value>Move up</value>
   </data>
+  <data name="import" xml:space="preserve">
+    <value>Import</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>
     <comment>Tooltip</comment>
