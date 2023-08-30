@@ -120,14 +120,17 @@
   <data name="about" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="activate" xml:space="preserve">
+    <value>Activate</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Browse</value>
   </data>
-  <data name="button_correct_configured_name" xml:space="preserve">
-    <value>Correct configured name</value>
-  </data>
   <data name="button_keep_configured_name" xml:space="preserve">
     <value>Keep configured name</value>
+  </data>
+  <data name="button_update_configured_name" xml:space="preserve">
+    <value>Update configured name</value>
   </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -213,6 +216,9 @@
     <value>Export profile</value>
     <comment>Tooltip</comment>
   </data>
+  <data name="export_to_file" xml:space="preserve">
+    <value>Export to file</value>
+  </data>
   <data name="extensions" xml:space="preserve">
     <value>Extensions</value>
   </data>
@@ -263,6 +269,12 @@
   <data name="ied_error_refused" xml:space="preserve">
     <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
   </data>
+  <data name="ied_move_down" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="ied_move_up" xml:space="preserve">
+    <value>Move up</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Import profile</value>
     <comment>Tooltip</comment>
@@ -284,6 +296,9 @@
   </data>
   <data name="license_details" xml:space="preserve">
     <value>License details</value>
+  </data>
+  <data name="license_exported_to" xml:space="preserve">
+    <value>The license has been exported to "{0}"</value>
   </data>
   <data name="license_key" xml:space="preserve">
     <value>License Key</value>
@@ -364,7 +379,7 @@
     <comment>Window title</comment>
   </data>
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
-    <value>The configured name differs from the one found inside the IED. Remote device name: '{0}', Local configured name: '{1}'. Would you like to keep the configured name or correct it?</value>
+    <value>The configured name differs from the one found inside the IED. IED name: '{0}', Configured name: '{1}'. Would you like to keep the configured name or update it?</value>
   </data>
   <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
     <value>Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}</value>
@@ -413,7 +428,7 @@
     <value>License not valid. Request a license if you have none.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>The file containing the license request was saved. Please email the file to geral@engiprot.pt</value>
+    <value>The file containing the license request was saved to "{0}". Please email the file to geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>License request file saved</value>
@@ -460,19 +475,19 @@
     <value>Thank you for requesting a license. You will hear from us as soon as possible.</value>
   </data>
   <data name="messagebox_tray_warning" xml:space="preserve">
-    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+    <value>The program is still running. Check your tray icon for more options. You may change this behaviour in the configuration window.</value>
   </data>
   <data name="metadata_difference" xml:space="preserve">
     <value>Difference</value>
   </data>
   <data name="metadata_window_file_doesntexist_error" xml:space="preserve">
-    <value>the file is not on the IED anymore</value>
+    <value>the file does not exist on the IED anymore</value>
   </data>
   <data name="metadata_window_not_connected_error" xml:space="preserve">
     <value>the IED is reachable but not accessible (credentials are wrong or the protocol is disabled)</value>
   </data>
   <data name="metadata_window_remote_file_unaccessible" xml:space="preserve">
-    <value>Remote file not accessible</value>
+    <value>Remote file inaccessible</value>
   </data>
   <data name="metadata_window_timeout_error" xml:space="preserve">
     <value>the IED is unreachable</value>
@@ -614,7 +629,7 @@
     <value>Size</value>
   </data>
   <data name="software_data_location" xml:space="preserve">
-    <value>Software data location</value>
+    <value>Data location</value>
   </data>
   <data name="source_filter" xml:space="preserve">
     <value>Source Filter</value>

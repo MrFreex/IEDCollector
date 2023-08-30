@@ -120,14 +120,17 @@
   <data name="about" xml:space="preserve">
     <value>À propos</value>
   </data>
+  <data name="activate" xml:space="preserve">
+    <value>Activer</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Traverser</value>
   </data>
-  <data name="button_correct_configured_name" xml:space="preserve">
-    <value>Correct configured name</value>
-  </data>
   <data name="button_keep_configured_name" xml:space="preserve">
-    <value>Keep configured name</value>
+    <value>Conserver le nom configuré</value>
+  </data>
+  <data name="button_update_configured_name" xml:space="preserve">
+    <value>Mettre à jour le nom configuré</value>
   </data>
   <data name="cancel" xml:space="preserve">
     <value>Annuler</value>
@@ -213,6 +216,9 @@
     <value>Exporte profil</value>
     <comment>Tooltip</comment>
   </data>
+  <data name="export_to_file" xml:space="preserve">
+    <value>Exporter vers un fichier</value>
+  </data>
   <data name="extensions" xml:space="preserve">
     <value>Rallonges</value>
   </data>
@@ -263,6 +269,12 @@
   <data name="ied_error_refused" xml:space="preserve">
     <value>L'IED répond mais refuse la connexion. Vérifiez les informations d'identification que vous avez saisies et si le protocole sélectionné est activé sur l'IED. Code d'erreur : {0}</value>
   </data>
+  <data name="ied_move_down" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="ied_move_up" xml:space="preserve">
+    <value>Move up</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Chargez profil</value>
     <comment>Tooltip</comment>
@@ -284,6 +296,9 @@
   </data>
   <data name="license_details" xml:space="preserve">
     <value>Détails de la licence</value>
+  </data>
+  <data name="license_exported_to" xml:space="preserve">
+    <value>La licence a été exportée vers "{0}"</value>
   </data>
   <data name="license_key" xml:space="preserve">
     <value>Clé de licence (licence key)</value>
@@ -364,13 +379,13 @@
     <comment>Window title</comment>
   </data>
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
-    <value>The configured name differs from the one found inside the IED. Remote device name: '{0}', Local configured name: '{1}'. Would you like to keep the configured name or correct it?</value>
+    <value>Le nom configuré diffère de celui trouvé dans l'IED. Nom dans l'IED: '{0}', Nom configuré: '{1}'. Voulez-vous conserver le nom configuré ou le mettre à jour?</value>
   </data>
   <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
-    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}</value>
+    <value>Impossible de poursuivre et enregistrer le profil. Il ne peut pas y avoir plusieurs connexions avec le même sous-dossier de journaux. Doublons (Chemin : IEDs qui l'utilisent): {0}.</value>
   </data>
   <data name="messagebox_duplicate_ied_name" xml:space="preserve">
-    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections: {0} .</value>
+    <value>Impossible de poursuivre et enregistrer le profil. Il ne peut pas y avoir plusieurs connexions avec le même nom de périphérique. Connexions dupliquées: {0}.</value>
   </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
     <value>Impossibile leggere la cartella remota</value>
@@ -413,7 +428,7 @@
     <value>Licence invalide, demandez-en une si vous ne l'avez pas encore reçue.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>Le fichier contenant la demande de licence a été enregistré. Veuillez envoyer le fichier par e-mail à geral@engiprot.pt</value>
+    <value>Le fichier contenant la demande de licence a été enregistré dans "{0}". Veuillez envoyer le fichier par e-mail à geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>Fichier de demande de licence enregistré</value>
@@ -423,7 +438,7 @@
     <value>Le chemin du fichier de log est utilisé par un autre logiciel.</value>
   </data>
   <data name="messagebox_metadata_window_error" xml:space="preserve">
-    <value>The program encountered an error while accessing a file on the IED: {0}. Only the local file metadata will be displayed.</value>
+    <value>Le programme a rencontré une erreur lors de l'accès au fichier sur l'IED: {0}. Seulement les métadonnées du fichier local seront affichées.</value>
   </data>
   <data name="messagebox_number_of_log_files_error" xml:space="preserve">
     <value>Le nombre de fichiers de log conservés doit être un nombre valide.</value>
@@ -460,25 +475,25 @@
     <value>Merci d'avoir demandé une licence. Vous recevrez une réponse à court terme.</value>
   </data>
   <data name="messagebox_tray_warning" xml:space="preserve">
-    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+    <value>Le programme est toujours en cours d'exécution. Vérifiez l'icône de votre barre d'état pour plus d'options. Vous pouvez modifier ce comportement dans la fenêtre de configuration.</value>
   </data>
   <data name="metadata_difference" xml:space="preserve">
     <value>Difference</value>
   </data>
   <data name="metadata_window_file_doesntexist_error" xml:space="preserve">
-    <value>the file is not on the IED anymore</value>
+    <value>le fichier n'existe plus sur l'IED</value>
   </data>
   <data name="metadata_window_not_connected_error" xml:space="preserve">
-    <value>the IED is reachable but not accessible (credentials are wrong or the protocol is disabled)</value>
+    <value>l'IED est atteignable mais pas accessible (les informations d'identification sont erronées ou le protocole est désactivé)</value>
   </data>
   <data name="metadata_window_remote_file_unaccessible" xml:space="preserve">
-    <value>Remote file not accessible</value>
+    <value>Fichier distant inaccessible</value>
   </data>
   <data name="metadata_window_timeout_error" xml:space="preserve">
-    <value>the IED is unreachable</value>
+    <value>l'IED est inatteignable</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
-    <value>Minimize to tray when closing the window</value>
+    <value>Réduire a la barre d'état lors de la fermeture de la fenêtre</value>
   </data>
   <data name="monitor_tab" xml:space="preserve">
     <value>Surveillance</value>

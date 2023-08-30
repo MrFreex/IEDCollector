@@ -120,14 +120,17 @@
   <data name="about" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="activate" xml:space="preserve">
+    <value>Activate</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Browse</value>
   </data>
-  <data name="button_correct_configured_name" xml:space="preserve">
-    <value>Correct configured name</value>
-  </data>
   <data name="button_keep_configured_name" xml:space="preserve">
     <value>Keep configured name</value>
+  </data>
+  <data name="button_update_configured_name" xml:space="preserve">
+    <value>Update configured name</value>
   </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -213,6 +216,9 @@
     <value>Export profile</value>
     <comment>Tooltip</comment>
   </data>
+  <data name="export_to_file" xml:space="preserve">
+    <value>Export to file</value>
+  </data>
   <data name="extensions" xml:space="preserve">
     <value>Extensions</value>
   </data>
@@ -263,6 +269,12 @@
   <data name="ied_error_refused" xml:space="preserve">
     <value>The IED is responsive but refused the connection. Check the credentials you entered and whether the IED has the selected protocol enabled. Error code: {0}</value>
   </data>
+  <data name="ied_move_down" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="ied_move_up" xml:space="preserve">
+    <value>Move up</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Import profile</value>
     <comment>Tooltip</comment>
@@ -284,6 +296,9 @@
   </data>
   <data name="license_details" xml:space="preserve">
     <value>License details</value>
+  </data>
+  <data name="license_exported_to" xml:space="preserve">
+    <value>The license has been exported to "{0}"</value>
   </data>
   <data name="license_key" xml:space="preserve">
     <value>License Key</value>
@@ -370,7 +385,7 @@
     <value>Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}</value>
   </data>
   <data name="messagebox_duplicate_ied_name" xml:space="preserve">
-    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections:\n {0} .</value>
+    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections: {0} .</value>
   </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
     <value>Error reading the device directory.</value>
@@ -420,7 +435,7 @@
     <value>License not valid. Request a license if you have none.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+    <value>The file containing the license request was saved to "{0}", please email the file to geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>License request file saved</value>
@@ -621,7 +636,7 @@
     <value>Size</value>
   </data>
   <data name="software_data_location" xml:space="preserve">
-    <value>Software data location</value>
+    <value>Data location</value>
   </data>
   <data name="source_filter" xml:space="preserve">
     <value>Source Filter</value>

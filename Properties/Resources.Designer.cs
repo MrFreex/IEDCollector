@@ -70,6 +70,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activate.
+        /// </summary>
+        public static string activate {
+            get {
+                return ResourceManager.GetString("activate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browse.
         /// </summary>
         public static string browse {
@@ -79,20 +88,20 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Correct configured name.
-        /// </summary>
-        public static string button_correct_configured_name {
-            get {
-                return ResourceManager.GetString("button_correct_configured_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Keep configured name.
         /// </summary>
         public static string button_keep_configured_name {
             get {
                 return ResourceManager.GetString("button_keep_configured_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update configured name.
+        /// </summary>
+        public static string button_update_configured_name {
+            get {
+                return ResourceManager.GetString("button_update_configured_name", resourceCulture);
             }
         }
         
@@ -322,6 +331,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export to file.
+        /// </summary>
+        public static string export_to_file {
+            get {
+                return ResourceManager.GetString("export_to_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extensions.
         /// </summary>
         public static string extensions {
@@ -466,6 +484,24 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string ied_move_down {
+            get {
+                return ResourceManager.GetString("ied_move_down", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string ied_move_up {
+            get {
+                return ResourceManager.GetString("ied_move_up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import profile.
         /// </summary>
         public static string import_profile {
@@ -525,6 +561,15 @@ namespace IEDCollector.Properties {
         public static string license_details {
             get {
                 return ResourceManager.GetString("license_details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The license has been exported to &quot;{0}&quot;.
+        /// </summary>
+        public static string license_exported_to {
+            get {
+                return ResourceManager.GetString("license_exported_to", resourceCulture);
             }
         }
         
@@ -763,7 +808,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections:\n {0} ..
+        ///   Looks up a localized string similar to Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections: {0} ..
         /// </summary>
         public static string messagebox_duplicate_ied_name {
             get {
@@ -889,7 +934,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file containing the license request was saved, please email the file content to geral@engiprot.pt.
+        ///   Looks up a localized string similar to The file containing the license request was saved to &quot;{0}&quot;, please email the file to geral@engiprot.pt.
         /// </summary>
         public static string messagebox_license_request_saved {
             get {
@@ -1483,7 +1528,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Software data location.
+        ///   Looks up a localized string similar to Data location.
         /// </summary>
         public static string software_data_location {
             get {

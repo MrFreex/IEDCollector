@@ -120,14 +120,17 @@
   <data name="about" xml:space="preserve">
     <value>Acerca</value>
   </data>
+  <data name="activate" xml:space="preserve">
+    <value>Activar</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Percorrer</value>
   </data>
-  <data name="button_correct_configured_name" xml:space="preserve">
-    <value>Correct configured name</value>
-  </data>
   <data name="button_keep_configured_name" xml:space="preserve">
-    <value>Keep configured name</value>
+    <value>Manter nome configurado</value>
+  </data>
+  <data name="button_update_configured_name" xml:space="preserve">
+    <value>Atualizar nome configurado</value>
   </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancelar</value>
@@ -213,6 +216,9 @@
     <value>Exportar perfil</value>
     <comment>Tooltip</comment>
   </data>
+  <data name="export_to_file" xml:space="preserve">
+    <value>Exportar para ficheiro</value>
+  </data>
   <data name="extensions" xml:space="preserve">
     <value>Extensões</value>
   </data>
@@ -263,6 +269,12 @@
   <data name="ied_error_refused" xml:space="preserve">
     <value>O IED responde, mas recusou a conexão. Verifique as credenciais inseridas e se o IED está com o protocolo selecionado habilitado. Código de erro: {0}</value>
   </data>
+  <data name="ied_move_down" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="ied_move_up" xml:space="preserve">
+    <value>Move up</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>
     <comment>Tooltip</comment>
@@ -284,6 +296,9 @@
   </data>
   <data name="license_details" xml:space="preserve">
     <value>Detalhes da licença</value>
+  </data>
+  <data name="license_exported_to" xml:space="preserve">
+    <value>A licença foi exportada para "{0}"</value>
   </data>
   <data name="license_key" xml:space="preserve">
     <value>Chave de licença (license key)</value>
@@ -364,13 +379,13 @@
     <comment>Window title</comment>
   </data>
   <data name="messagebox_crosscheck_differs" xml:space="preserve">
-    <value>The configured name differs from the one found inside the IED. Remote device name: '{0}', Local configured name: '{1}'. Would you like to keep the configured name or correct it?</value>
+    <value>O nome configurado difere do encontrado no IED. Nome no IED: '{0}', Nome configurado: '{1}'. Deseja manter o nome configurado ou atualizá-lo?</value>
   </data>
   <data name="messagebox_duplicate_ied_folders" xml:space="preserve">
-    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same logs subfolder. Duplicates (Path: ieds using it) : {0}</value>
+    <value>Não é possível continuar e salvar o perfil. Não podem existir múltiplas conexões com a mesma subpasta de logs. Duplicados (Caminho: IEDs a utilizar): {0}.</value>
   </data>
   <data name="messagebox_duplicate_ied_name" xml:space="preserve">
-    <value>Cannot proceed saving the profile. There cannot be multiple connections with the same device name. Duplicated connections: {0} .</value>
+    <value>Não é possível continuar e salvar o perfil. Não podem existir múltiplas conexões com o mesmo nome de dispositivo. Conexões duplicadas: {0}.</value>
   </data>
   <data name="messagebox_error_reading_device_dir" xml:space="preserve">
     <value>Não é possível ler a diretoria remota</value>
@@ -413,7 +428,7 @@
     <value>Licença inválida, solicite uma se ainda não a tiver recebido.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>O ficheiro contendo o pedido de licença foi guardado. Por favor envie o ficheiro por email para geral@engiprot.pt</value>
+    <value>O ficheiro que contém o pedido de licença foi guardado em "{0}". Por favor envie o ficheiro por email para geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>Arquivo de solicitação de licença salvo</value>
@@ -423,7 +438,7 @@
     <value>O caminho do arquivo de log está a ser usado por outro programa.</value>
   </data>
   <data name="messagebox_metadata_window_error" xml:space="preserve">
-    <value>The program encountered an error while accessing a file on the IED: {0}. Only the local file metadata will be displayed.</value>
+    <value>O programa encontrou um erro ao aceder ao arquivo no IED: {0}. Somente os metadados do arquivo local serão exibidos.</value>
   </data>
   <data name="messagebox_number_of_log_files_error" xml:space="preserve">
     <value>O número de arquivos de log mantidos deve ser um número válido.</value>
@@ -460,25 +475,25 @@
     <value>Obrigado por solicitar uma licença. Receberá uma resposta a curto prazo.</value>
   </data>
   <data name="messagebox_tray_warning" xml:space="preserve">
-    <value>The program is still running, check your tray icon for more options. You may change this behaviour in the configuration window.</value>
+    <value>O programa ainda está em execução. Verifique o ícone da bandeja para mais opções. Você pode alterar este comportamento na janela de configuração.</value>
   </data>
   <data name="metadata_difference" xml:space="preserve">
     <value>Diferença</value>
   </data>
   <data name="metadata_window_file_doesntexist_error" xml:space="preserve">
-    <value>the file is not on the IED anymore</value>
+    <value>o arquivo já não existe no IED</value>
   </data>
   <data name="metadata_window_not_connected_error" xml:space="preserve">
-    <value>the IED is reachable but not accessible (credentials are wrong or the protocol is disabled)</value>
+    <value>o IED é alcansável mas não está acessível (as credenciais estão erradas ou o protocolo está desabilitado)</value>
   </data>
   <data name="metadata_window_remote_file_unaccessible" xml:space="preserve">
-    <value>Remote file not accessible</value>
+    <value>Ficheiro remoto inacessível</value>
   </data>
   <data name="metadata_window_timeout_error" xml:space="preserve">
-    <value>the IED is unreachable</value>
+    <value>o IED é inalcansável</value>
   </data>
   <data name="minimize_to_tray_on_close" xml:space="preserve">
-    <value>Minimize to tray when closing the window</value>
+    <value>Minimizar para a bandeja ao fechar a janela</value>
   </data>
   <data name="monitor_tab" xml:space="preserve">
     <value>Monitorização</value>

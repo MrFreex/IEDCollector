@@ -120,14 +120,17 @@
   <data name="about" xml:space="preserve">
     <value>Contatti</value>
   </data>
+  <data name="activate" xml:space="preserve">
+    <value>Attiva</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Sfoglia</value>
   </data>
-  <data name="button_correct_configured_name" xml:space="preserve">
-    <value>Correggi il nome configurato</value>
-  </data>
   <data name="button_keep_configured_name" xml:space="preserve">
     <value>Mantieni il nome configurato</value>
+  </data>
+  <data name="button_update_configured_name" xml:space="preserve">
+    <value>Aggiorna il nome configurato</value>
   </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancella</value>
@@ -179,10 +182,10 @@
     <comment>Window title</comment>
   </data>
   <data name="current_license_nok" xml:space="preserve">
-    <value>Current license INVALID</value>
+    <value>Licenza attuale NON VALIDA</value>
   </data>
   <data name="current_license_ok" xml:space="preserve">
-    <value>Current license OK</value>
+    <value>Licenza attuale VALIDA</value>
   </data>
   <data name="cycle_fetch" xml:space="preserve">
     <value>Esecuzione ciclica</value>
@@ -212,6 +215,9 @@
   <data name="export_profile" xml:space="preserve">
     <value>Esporta profilo</value>
     <comment>Tooltip</comment>
+  </data>
+  <data name="export_to_file" xml:space="preserve">
+    <value>Esporta come file</value>
   </data>
   <data name="extensions" xml:space="preserve">
     <value>Estensioni</value>
@@ -263,6 +269,12 @@
   <data name="ied_error_refused" xml:space="preserve">
     <value>Il dispositivo IED è attivo, ma ha rifiutato la connessione. Controlla le credenziali e la configurazione del protocollo selezionato sul dispositivo IED. Codice errore: {0}</value>
   </data>
+  <data name="ied_move_down" xml:space="preserve">
+    <value>Sposta verso il basso</value>
+  </data>
+  <data name="ied_move_up" xml:space="preserve">
+    <value>Sposta verso l'alto</value>
+  </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importa profilo</value>
     <comment>Tooltip</comment>
@@ -285,11 +297,14 @@
   <data name="license_details" xml:space="preserve">
     <value>Dettagli della licenza</value>
   </data>
+  <data name="license_exported_to" xml:space="preserve">
+    <value>La licenza è stata esportata come "{0}"</value>
+  </data>
   <data name="license_key" xml:space="preserve">
     <value>Chiave di licenza (license key)</value>
   </data>
   <data name="license_key_file" xml:space="preserve">
-    <value>License Key File</value>
+    <value>File della licenza</value>
   </data>
   <data name="license_management" xml:space="preserve">
     <value>Gestione licenza</value>
@@ -324,7 +339,7 @@
     <value>Livello di log</value>
   </data>
   <data name="messagebox_activation_successful" xml:space="preserve">
-    <value>Congratulations! You have successfully activated the full version of IED Collector. Enjoy!</value>
+    <value>Congratulazioni! La versione completa di IED Collector è stata attivata.</value>
   </data>
   <data name="messagebox_buy_full_version" xml:space="preserve">
     <value>Acquista la versione completa per usufruire di questa funzionalità</value>
@@ -380,7 +395,7 @@
     <comment>{0} : Profile name, {1} : path, {2} : file name</comment>
   </data>
   <data name="messagebox_error_saving_file" xml:space="preserve">
-    <value>Error saving the file. Check the destination folder's permissions and whether it is read only.</value>
+    <value>Errore nel salvataggio del file. Controlla i permessi della cartella di destinazione.</value>
   </data>
   <data name="messagebox_error_saving_profile" xml:space="preserve">
     <value>Errore durante il salvataggio del profilo</value>
@@ -398,7 +413,7 @@
     <value>Impossibile connettersi all'IED. Codice errore: "{0}". Controlla le credenziali e riprova.</value>
   </data>
   <data name="messagebox_insert_valid_license" xml:space="preserve">
-    <value>Immetti una licenza valid</value>
+    <value>Immetti una licenza valida</value>
   </data>
   <data name="messagebox_invalid_ip" xml:space="preserve">
     <value>Indirizzo IP non valido</value>
@@ -413,7 +428,7 @@
     <value>Licenza non valida, richiedine una se non ne possiedi.</value>
   </data>
   <data name="messagebox_license_request_saved" xml:space="preserve">
-    <value>The file containing the license request was saved, please email the file content to geral@engiprot.pt</value>
+    <value>Il file contenente la richiesta è stato salvato come "{0}", per favore inviarlo via email a geral@engiprot.pt</value>
   </data>
   <data name="messagebox_license_request_saved_title" xml:space="preserve">
     <value>File di richiesta della licenza salvato</value>
@@ -614,7 +629,7 @@
     <value>Grandezza</value>
   </data>
   <data name="software_data_location" xml:space="preserve">
-    <value>Cartella dati del software</value>
+    <value>Cartella dati</value>
   </data>
   <data name="source_filter" xml:space="preserve">
     <value>Filtro</value>
