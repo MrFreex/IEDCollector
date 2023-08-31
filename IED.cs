@@ -369,7 +369,8 @@ namespace IEDCollector
                 try
                 {
                     this.connection.Abort();
-                    this.connection.Dispose();
+                    if (this.connection != null)
+                        this.connection.Dispose();
                 }
                 catch (IedConnectionException) { }
                 catch (NullReferenceException)

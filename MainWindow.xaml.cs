@@ -355,6 +355,8 @@ namespace IEDCollector
 
                 iedItem.Collapsed += (object sender, RoutedEventArgs e) =>
                 {
+                    if (!e.Source.Equals(iedItem)) return;
+                   
                     // Clean the fuck out of the memory 
                     iedItem.Items.Clear();
 
