@@ -115,6 +115,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear log.
+        /// </summary>
+        public static string clear_log {
+            get {
+                return ResourceManager.GetString("clear_log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clone selected connection.
         /// </summary>
         public static string clone_connection {

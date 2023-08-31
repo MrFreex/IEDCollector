@@ -100,7 +100,10 @@ namespace IEDCollector
                 Header = Properties.Resources.open_log_file
             };
 
-
+            MenuItem clearLog = new MenuItem()
+            {
+                Header = Properties.Resources.clear_log
+            };
 
             MenuItem logLevels = new MenuItem()
             {
@@ -119,8 +122,10 @@ namespace IEDCollector
             }
 
             openLogFile.Click += (object sender, RoutedEventArgs e) => Process.Start(this.filePath);
+            clearLog.Click += (object s, RoutedEventArgs e) => { foreach (TextBox output in outputs) output.Clear(); };
 
             actions.Items.Add(openLogFile);
+            actions.Items.Add(clearLog);
             actions.Items.Add(logLevels);
 
             this.context = actions;

@@ -135,6 +135,9 @@
   <data name="cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="clear_log" xml:space="preserve">
+    <value>Clear log</value>
+  </data>
   <data name="clone_connection" xml:space="preserve">
     <value>Cloner connexion</value>
     <comment>Tooltip</comment>
