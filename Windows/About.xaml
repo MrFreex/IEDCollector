@@ -12,11 +12,11 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <Image Margin="10" Width="198" Source="../Images/logo.png" Height="120" />
             <StackPanel Width="315">
-                <TextBlock Margin="10" FontWeight="Bold" Text="{x:Static p:Resources.ied_collector_version}" />
+                <TextBlock Margin="10" FontWeight="Bold" Text="{Binding VersionString}" />
                 <TextBlock TextWrapping="Wrap" Margin="10" Width="280" Height="52"><Run Text="{x:Static p:Resources.rights}"/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run Language="en-gb" Text=" "/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
                 <TextBlock TextWrapping="Wrap" HorizontalAlignment="Right" Margin="10,0,10,0">
                     <Run Text="{x:Static p:Resources.website}" />
-                    <Hyperlink>https://engiprot.pt</Hyperlink>
+                    <Hyperlink>https://www.engiprot.pt</Hyperlink>
                     <LineBreak />
                     <Run Text="{x:Static p:Resources.email}" />
                     <Hyperlink NavigateUri="mailto:geral@engiprot.pt">geral@engiprot.pt</Hyperlink>

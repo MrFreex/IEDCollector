@@ -258,7 +258,7 @@
     <value>En espera</value>
   </data>
   <data name="ied_collector_version" xml:space="preserve">
-    <value>IED Collector versión 1.0.0</value>
+    <value>IED Collector versión</value>
   </data>
   <data name="ied_download_x" xml:space="preserve">
     <value>[{1}] Cargar archivo '{0}'</value>

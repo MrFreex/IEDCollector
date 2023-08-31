@@ -274,14 +274,14 @@ namespace IEDCollector
 
                 XIed.Add(new XAttribute("name", iEDConfig.name));
                 XIed.Add(new XAttribute("ip", iEDConfig.ip));
-                XIed.Add(new XAttribute("username", iEDConfig.username));
-                XIed.Add(new XAttribute("password", iEDConfig.password));
+                XIed.Add(new XAttribute("username", iEDConfig.username ?? ""));
+                XIed.Add(new XAttribute("password", iEDConfig.password ?? ""));
                 XIed.Add(new XAttribute("port", iEDConfig.port));
                 XIed.Add(new XAttribute("logsFolder", iEDConfig.logsFolder));
                 XIed.Add(new XAttribute("logEnabledFolders", encodeDict(iEDConfig.logEnabledFolders)));
                 XIed.Add(new XAttribute("logEnabledExtensions", encodeDict(iEDConfig.logEnabledExtensions)));
                 XIed.Add(new XAttribute("includedInCollection", iEDConfig.includedInCollection.ToString()));
-                XIed.Add(new XAttribute("protocol", iEDConfig.protocol));
+                XIed.Add(new XAttribute("protocol", iEDConfig.protocol ?? ""));
 
                 XIeds.Add(XIed);
             }

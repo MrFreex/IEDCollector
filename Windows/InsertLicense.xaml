@@ -35,7 +35,7 @@
             <Label x:Name="license_ok_nok" Margin="0,5,0,0" Grid.Row="0" Content="{x:Static p:Resources.current_license_nok}" />
             <Label Grid.Column="0" Grid.Row="1" Content="{x:Static p:Resources.license_key_file}" />
             <TextBox Width="300" Margin="5" Grid.Column="1" x:Name="licenseBox"  Grid.Row="1"  HorizontalAlignment="Stretch" TextChanged="licenseBox_TextChanged" />
-            <Button Click="Browse_Click" Margin="5" Padding="5,2.5,5,2.5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.import}" />
+            <Button x:Name="importButton" Click="Browse_Click" Margin="5" Padding="5,2.5,5,2.5" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" Content="{x:Static p:Resources.import}" />
             <Button x:Name="export_license" Margin="5" Padding="5,2.5,5,2.5" Grid.Column="3" Grid.Row="1" Click="export_license_Click" Content="{x:Static p:Resources.export_to_file}" />
         </Grid>
         <Button Padding="5" Grid.Column="0" Grid.Row="1" Margin="10" Click="requestLink_Click" x:Name="requestLink" Content="{x:Static p:Resources.request_license}"/>

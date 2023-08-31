@@ -8,6 +8,12 @@
         xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
         Title="IED Collector" Height="500" Width="800" ResizeMode="CanResizeWithGrip" Closing="handleClosing" SizeToContent="Manual">
+    <Window.Resources>
+        <BitmapImage CacheOption="None" x:Key="HddIcon" UriSource="Icons/hdd-network-fill.jpg" />
+        <BitmapImage CacheOption="None" x:Key="FolderIcon" UriSource="Icons/folder-fill.jpg"/>
+        <BitmapImage CacheOption="None" x:Key="FileIcon" UriSource="Icons/file-plus-fill.jpg"/>
+        <BitmapImage CacheOption="None" x:Key="WrenchIcon" UriSource="Icons/wrench-adjustable.jpg"/>
+    </Window.Resources>
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
 
@@ -41,10 +47,10 @@
                             </Grid.ColumnDefinitions>
 
                             <TreeView Grid.Column="0" x:Name="iedTree" RenderTransformOrigin="0.5,0.505" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <TreeView.Background>
-                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
-                                </TreeView.Background>
-                            </TreeView>
+                            <TreeView.Background>
+                                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuColorKey}}"/>
+                            </TreeView.Background>
+                        </TreeView>
                             <GridSplitter Background="Gray" Grid.Column="1"
                                   Width="5"
                                   HorizontalAlignment="Stretch"

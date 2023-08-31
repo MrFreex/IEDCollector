@@ -258,7 +258,7 @@
     <value>Idling</value>
   </data>
   <data name="ied_collector_version" xml:space="preserve">
-    <value>IED Collector version  1.0.0</value>
+    <value>IED Collector version</value>
   </data>
   <data name="ied_download_x" xml:space="preserve">
     <value>[{1}] Download file '{0}'</value>

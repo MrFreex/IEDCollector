@@ -28,6 +28,7 @@ namespace IEDCollector.Windows
                 requestLink.IsEnabled = false;
                 freeModeButton.IsEnabled = false;
                 activateLicenseButton.IsEnabled = false;
+                importButton.IsEnabled = false;
             }
             //licenseBox.Text = Security.License;
 

@@ -448,7 +448,7 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IED Collector version  1.0.0.
+        ///   Looks up a localized string similar to IED Collector version.
         /// </summary>
         public static string ied_collector_version {
             get {

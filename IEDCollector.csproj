@@ -144,6 +144,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppInfo.cs" />
+    <Compile Include="OptimizedBitmapImage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -327,6 +329,10 @@
   <ItemGroup>
     <Resource Include="Icons\caret-down-fill.png" />
     <Resource Include="Icons\caret-up-fill.png" />
+    <Resource Include="Icons\file-plus-fill.jpg" />
+    <Resource Include="Icons\folder-fill.jpg" />
+    <Resource Include="Icons\hdd-network-fill.jpg" />
+    <Resource Include="Icons\wrench-adjustable.jpg" />
     <Content Include="References\Ookii.Dialogs.Wpf.dll" />
     <Content Include="References\Ookii.Dialogs.Wpf.pdb" />
     <Resource Include="Play.png" />

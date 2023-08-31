@@ -258,6 +258,8 @@ namespace IEDCollector
             saveProfile(null, null);
         }
 
+        bool stress = false;
+
         // Responsible for loading the list of IEDs from the profile and loading their file structure
         // The file structure is taken from the local folders and hence refers to the last fetched one.
         private void populateIedTree()
@@ -285,7 +287,7 @@ namespace IEDCollector
                 iconAndName.Children.Add(includedInCollection);
                 iconAndName.Children.Add(new Image()
                 {
-                    Source = new BitmapImage(new Uri("pack://application:,,,/Icons/hdd-network-fill.png")),
+                    Source = (BitmapImage)FindResource("HddIcon"),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 0, 5, 0)
@@ -309,7 +311,7 @@ namespace IEDCollector
                     {
                         Width = 16,
                         Height = 16,
-                        Source = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"))
+                        Source = (BitmapImage)FindResource("FolderIcon")
                     }
                 };
 
@@ -324,11 +326,45 @@ namespace IEDCollector
 
                 iedItem.Expanded += (object sender, RoutedEventArgs e) =>
                 {
+                    // Debug stress test
+                    /*
+                    if (!stress)
+                    {
+                        stress = true;
+                        new Thread(() =>
+                        {
+                            while (true)
+                            {
+                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = false);
+                                Thread.Sleep(500);
+                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = true);
+                                Thread.Sleep(500);
+                            }
+                        }).Start();
+                    }
+                    */
+
                     if (iedItem.Items.Count == 1 && iedItem.Items[0] is string)
                     {
+                        Mouse.OverrideCursor = Cursors.Wait;
                         iedItem.Items.Clear();
                         buildIedFilesTree(ied, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
+                        Mouse.OverrideCursor = null;
                     }
+                };
+
+                iedItem.Collapsed += (object sender, RoutedEventArgs e) =>
+                {
+                    // Clean the fuck out of the memory 
+                    iedItem.Items.Clear();
+
+                    new Thread(() =>
+                    {
+                        Thread.Sleep(1000);
+                        Application.Current.Dispatcher.Invoke(() => GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true));
+                    }).Start();
+                    
+                    iedItem.Items.Add("p");
                 };
 
 
@@ -1652,10 +1688,6 @@ namespace IEDCollector
             progress.Show(source.Token);
         }
 
-        private readonly BitmapImage folderIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/folder-fill.png"));
-        private readonly BitmapImage fileIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/file-plus-fill.png"));
-        private readonly BitmapImage wrenchicon = new BitmapImage(new Uri("pack://application:,,,/Icons/wrench-adjustable.png"));
-
         // Generates the files and folders of the IEDs in the iedTree
         // ! RECURSIVE !
         private void buildIedFilesTree(IEDConfig ied, TreeViewItem iedItem, string path)
@@ -1672,7 +1704,7 @@ namespace IEDCollector
 
                     iconAndName.Children.Add(new Image()
                     {
-                        Source = folderIcon,
+                        Source = (BitmapImage)FindResource("FolderIcon"),
                         Width = 16,
                         Height = 16,
 
@@ -1697,7 +1729,7 @@ namespace IEDCollector
                         {
                             Width = 16,
                             Height = 16,
-                            Source = folderIcon
+                            Source = (BitmapImage)FindResource("FolderIcon")
                         }
                     };
 
@@ -1731,7 +1763,7 @@ namespace IEDCollector
                 iconAndName.Orientation = Orientation.Horizontal;
                 iconAndName.Children.Add(new Image()
                 {
-                    Source = fileIcon,
+                    Source = (BitmapImage)FindResource("FileIcon"),
                     Width = 16,
                     Height = 16,
                     Margin = new Thickness(0, 2.5, 5, 2.5)
@@ -1753,7 +1785,7 @@ namespace IEDCollector
                     {
                         Width = 16,
                         Height = 16,
-                        Source = folderIcon
+                        Source = (BitmapImage)FindResource("FolderIcon")
                     }
                 };
 
@@ -1776,7 +1808,7 @@ namespace IEDCollector
                     {
                         Width = 16,
                         Height = 16,
-                        Source = wrenchicon
+                        Source = (BitmapImage)FindResource("HddIcon")
                     }
                 };
 
@@ -1977,8 +2009,11 @@ namespace IEDCollector
 
                     if (status == ExecutionResult.SUCCESS || status == ExecutionResult.PARTIAL)
                     {
-                        iedItem.Items.Clear();
-                        buildIedFilesTree(ied.config, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder));
+                        if (iedItem.IsExpanded)
+                        {
+                            iedItem.Items.Clear();
+                            buildIedFilesTree(ied.config, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.config.logsFolder));
+                        }
                     }
 
                     break;

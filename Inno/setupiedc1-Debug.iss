@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "IED Collector"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Engiprot LDA"
 #define SetupOutputName "IED Collector setup"
 #define MyAppURL "https://engiprot.pt/"
