@@ -3,3 +3,5 @@
 bin
 obj
 .idea
+Inno\Release\*.exe
+Inno\Debug\*.exe
