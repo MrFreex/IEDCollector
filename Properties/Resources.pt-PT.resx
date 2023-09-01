@@ -136,7 +136,7 @@
     <value>Cancelar</value>
   </data>
   <data name="clear_log" xml:space="preserve">
-    <value>Clear log</value>
+    <value>Limpar log</value>
   </data>
   <data name="clone_connection" xml:space="preserve">
     <value>Clonar conexão</value>
@@ -273,13 +273,13 @@
     <value>O IED responde, mas recusou a conexão. Verifique as credenciais inseridas e se o IED está com o protocolo selecionado habilitado. Código de erro: {0}</value>
   </data>
   <data name="ied_move_down" xml:space="preserve">
-    <value>Move down</value>
+    <value>Mover para baixo</value>
   </data>
   <data name="ied_move_up" xml:space="preserve">
-    <value>Move up</value>
+    <value>Mover para cima</value>
   </data>
   <data name="import" xml:space="preserve">
-    <value>Import</value>
+    <value>Importar</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>

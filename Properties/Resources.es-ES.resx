@@ -136,7 +136,7 @@
     <value>Anular</value>
   </data>
   <data name="clear_log" xml:space="preserve">
-    <value>Clear log</value>
+    <value>Borrar log</value>
   </data>
   <data name="clone_connection" xml:space="preserve">
     <value>Clonar conexión</value>
@@ -273,13 +273,13 @@
     <value>El IED responde pero rechazó la conexión. Verifique las credenciales que ingresó y si el IED tiene habilitado el protocolo seleccionado. Código de error: {0}</value>
   </data>
   <data name="ied_move_down" xml:space="preserve">
-    <value>Move down</value>
+    <value>Mover hacia abajo</value>
   </data>
   <data name="ied_move_up" xml:space="preserve">
-    <value>Move up</value>
+    <value>Mover hacia arriba</value>
   </data>
   <data name="import" xml:space="preserve">
-    <value>Import</value>
+    <value>Importar</value>
   </data>
   <data name="import_profile" xml:space="preserve">
     <value>Importar perfil</value>
