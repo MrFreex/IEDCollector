@@ -114,8 +114,13 @@ namespace IEDCollector
         /// Connects to the IED handling the IEDConnection exceptions
         /// </summary>
         /// <returns>IedClientError matching the outcome</returns>
-        public IedClientError connect()
+        public IedClientError connect(bool reset = false)
         {
+            if (reset)
+            {
+                this.Dispose();
+            }
+
             if (this.connection != null)
             {
                 throw new InvalidOperationException("Already connected");
@@ -273,19 +278,24 @@ namespace IEDCollector
 
             Globals.logs.log(String.Format("Reading file list for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root), LogLevel.Basic);
 
-            using (ConnStateHandler handler = new ConnStateHandler(this))
+            files = attempt<List<FileDirectoryEntry>>((int attemptN) =>
             {
-                try
+                using (ConnStateHandler handler = new ConnStateHandler(this))
                 {
-                    files = this.Connection.GetFileDirectory(root);
+                    try
+                    {
+                        return this.Connection.GetFileDirectory(root);
+                    }
+                    catch (IedConnectionException e)
+                    {
+                        Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root), LogLevel.Debug);
+                        //files = new List<FileDirectoryEntry>();
+                        throw;
+                    }
                 }
-                catch (IedConnectionException e)
-                {
-                    Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root), LogLevel.Debug);
-                    files = new List<FileDirectoryEntry>();
-                    //throw;
-                }
-            }
+            }, 10, "IED_GET_FILE_DIRECTORY");
+
+            
 
             Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>(new FileDirectoryEntryComparer());
 
@@ -348,10 +358,7 @@ namespace IEDCollector
         /// </summary>
         public void CloseNow()
         {
-            if (this.connection == null) return;
-            this.connection.Abort();
-            this.connection.Dispose();
-            this.connection = null;
+            this.Dispose();
         }
 
         /// <summary>
@@ -360,29 +367,11 @@ namespace IEDCollector
         public void Dispose()
         {
             if (this.connection == null) return;
-            Thread disposeWhenReady = new Thread(() =>
-            {
-                while (this.isWorking)
-                {
-                    Thread.Sleep(100);
-                }
-                try
-                {
-                    this.connection.Abort();
-                    if (this.connection != null)
-                        this.connection.Dispose();
-                }
-                catch (IedConnectionException) { }
-                catch (NullReferenceException)
-                {
-                    Globals.logs.log("Connection already disposed. ", LogLevel.Debug);
-                }
 
-                this.connection = null;
-            });
+            this.connection.Close();
+            this.connection.Dispose();
 
-
-            disposeWhenReady.Start();
+            this.connection = null;
         }
 
         public override string ToString()
@@ -404,7 +393,7 @@ namespace IEDCollector
         }
         */
 
-        private delegate bool Attempt();
+        private delegate T Attempt<T>(int attemptN);
 
         /// <summary>
         ///  Attempts to execute a predicate a number of times
@@ -412,20 +401,26 @@ namespace IEDCollector
         /// <param name="predicate">The predicate to execute</param>
         /// <param name="times">The max attempts</param>
         /// <returns>True if successful, False otherwise</returns>
-        private bool attempt(Attempt predicate, int times)
+        private T attempt<T>(Attempt<T> predicate, int times, string log_string)
         {
-            bool ret = false;
+            T ret = default(T);
+
+            bool ok = false;
             int i = 0;
             do
             {
                 try
                 {
-                    ret = predicate();
+                    ret = predicate(i);
+                    ok = !ret.Equals(default(T));
                 } catch (Exception)
                 {
-                    ret = false;
+                    ok = false;
                 }
-            } while (!ret && i < times);
+
+                Globals.logs.log(String.Format("[{2}] Attempt n. {0}/{3} {1}", i+1, ok ? "succeeded" : "failed", log_string, times), LogLevel.Detailed);
+                i++;
+            } while (!ok && i < times);
 
             return ret;
         }
@@ -523,24 +518,41 @@ namespace IEDCollector
                         destination = newDestination;
                     }
 
-                    using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
+                    attempt<bool>((int attemptN) =>
                     {
+                        if (attemptN > 0)
+                            this.connect(true);
 
-                        this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
+                        try
                         {
-                            writer.Write(data, 0, data.Length);
-                            if (size > 0)
+                            using (FileStream writer = new FileStream(destination, FileMode.OpenOrCreate))
                             {
-                                monitor.Progress += (sizeof(byte) * data.Length) / size;
-                            }
-                            else
-                            {
-                                monitor.IsIndeterminate = true;
-                            }
 
-                            return true;
-                        }, null);
-                    }
+                                this.Connection.GetFile(path.GetFileName(), (object parameter, byte[] data) =>
+                                {
+                                    writer.Write(data, 0, data.Length);
+                                    if (size > 0)
+                                    {
+                                        monitor.Progress += (sizeof(byte) * data.Length) / size;
+                                    }
+                                    else
+                                    {
+                                        monitor.IsIndeterminate = true;
+                                    }
+
+                                    return true;
+                                }, null);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }, 10, "IED_DOWNLOAD_FILE");
+
+                    
                 }
             }
             catch (IOException e)
