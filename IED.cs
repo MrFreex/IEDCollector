@@ -404,6 +404,32 @@ namespace IEDCollector
         }
         */
 
+        private delegate bool Attempt();
+
+        /// <summary>
+        ///  Attempts to execute a predicate a number of times
+        /// </summary>
+        /// <param name="predicate">The predicate to execute</param>
+        /// <param name="times">The max attempts</param>
+        /// <returns>True if successful, False otherwise</returns>
+        private bool attempt(Attempt predicate, int times)
+        {
+            bool ret = false;
+            int i = 0;
+            do
+            {
+                try
+                {
+                    ret = predicate();
+                } catch (Exception)
+                {
+                    ret = false;
+                }
+            } while (!ret && i < times);
+
+            return ret;
+        }
+
         /// <summary>
         /// Downloads a file from the IED
         /// </summary>

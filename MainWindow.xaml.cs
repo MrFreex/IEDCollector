@@ -1172,6 +1172,18 @@ namespace IEDCollector
             return Globals.currentProfile.IEDs[iedSelector.SelectedIndex];
         }
 
+        private List<T> copyToList<T>(ItemCollection items)
+        {
+            List<T> ret = new List<T>();
+
+            foreach(T item in items)
+            {
+                ret.Add(item);
+            }
+
+            return ret;
+        }
+
         // Saves the given connection to the profile
 
         private void saveIed(IEDConfig selectedIed)
@@ -1221,19 +1233,31 @@ namespace IEDCollector
 
             //selectedIed.logEnabledExtensions.Clear();
             selectedIed.logEnabledExtensions.Clear();
-            foreach (CheckBox extension in iedLogExtensionsIncludedInput.Items)
+
+            List<CheckBox> extensionsCopy = copyToList<CheckBox>(iedLogExtensionsIncludedInput.Items);
+
+            foreach (CheckBox extension in extensionsCopy)
             {
-                if (extension.Tag != null)
+                CheckBox final = extension;
+                if (extension.Tag == null)
                 {
-                    selectedIed.logEnabledExtensions[extension.Tag.ToString()] = (bool)extension.IsChecked;
+                    final = checkBoxInputToExtension(extension);
                 }
+
+                selectedIed.logEnabledExtensions[final.Tag.ToString()] = (bool)final.IsChecked;
             }
 
             selectedIed.logEnabledFolders.Clear();
 
-            foreach (CheckBox folder in iedLogFoldersIncludedInput.Items)
+            List<CheckBox> foldersCopy = copyToList<CheckBox>(iedLogFoldersIncludedInput.Items);
+
+            foreach (CheckBox folder in foldersCopy)
             {
-                selectedIed.logEnabledFolders[folder.Tag.ToString()] = (bool)folder.IsChecked;
+                CheckBox final = folder;
+                if (folder.Tag == null)
+                    final = checkBoxInputToFolder(folder);
+
+                selectedIed.logEnabledFolders[final.Tag.ToString()] = (bool)final.IsChecked;
             }
 
             isIedSaved = true;
@@ -2427,24 +2451,7 @@ namespace IEDCollector
             {
                 if (ev.Key == Key.Enter)
                 {
-                    string extension = input.Text;
-                    //addFileExtension(input.Text);
-                    if (!input.Text.StartsWith("."))
-                    {
-                        extension = "." + extension;
-                    }
-
-                    extension.Replace(" ", "");
-
-                    iedLogExtensionsIncludedInput.Items.Remove(item);
-                    iedLogExtensionsIncludedInput.Items.Add(new CheckBox()
-                    {
-                        IsChecked = true,
-                        Content = extension,
-                        Tag = extension
-                    });
-
-                    isIedSaved = false;
+                    checkBoxInputToExtension(item);
                 }
             };
 
@@ -2457,6 +2464,57 @@ namespace IEDCollector
 
             iedLogExtensionsIncludedInput.Items.Remove(iedLogExtensionsIncludedInput.SelectedItem);
             isIedSaved = false;
+        }
+
+        private CheckBox checkBoxInputToFolder(CheckBox item)
+        {
+            TextBox input = (TextBox)item.Content;
+            string extension = input.Text;
+            //addFileExtension(input.Text);
+
+            extension.Replace(" ", "%20");
+            extension.Replace("\\", "/");
+            extension.TrimStart('/');
+
+            CheckBox added = new CheckBox()
+            {
+                IsChecked = true,
+                Content = extension,
+                Tag = extension
+            };
+
+            iedLogFoldersIncludedInput.Items.Remove(item);
+            iedLogFoldersIncludedInput.Items.Add(added);
+
+            isIedSaved = false;
+
+            return added;
+        }
+
+        private CheckBox checkBoxInputToExtension(CheckBox item)
+        {
+            TextBox input = (TextBox)item.Content;
+            string extension = input.Text;
+            //addFileExtension(input.Text);
+            if (!input.Text.StartsWith("."))
+            {
+                extension = "." + extension;
+            }
+
+            extension.Replace(" ", "");
+            CheckBox added = new CheckBox()
+            {
+                IsChecked = true,
+                Content = extension,
+                Tag = extension
+            };
+
+            iedLogExtensionsIncludedInput.Items.Remove(item);
+            iedLogExtensionsIncludedInput.Items.Add(added);
+
+            isIedSaved = false;
+
+            return added;
         }
 
         private void addFolderButton_Click(object sender, RoutedEventArgs e)
@@ -2477,22 +2535,7 @@ namespace IEDCollector
             {
                 if (ev.Key == Key.Enter)
                 {
-                    string extension = input.Text;
-                    //addFileExtension(input.Text);
-
-                    extension.Replace(" ", "%20");
-                    extension.Replace("\\", "/");
-                    extension.TrimStart('/');
-
-                    iedLogFoldersIncludedInput.Items.Remove(item);
-                    iedLogFoldersIncludedInput.Items.Add(new CheckBox()
-                    {
-                        IsChecked = true,
-                        Content = extension,
-                        Tag = extension
-                    });
-
-                    isIedSaved = false;
+                    checkBoxInputToFolder(item);
                 }
             };
 
