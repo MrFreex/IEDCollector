@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:IEDCollector"
         xmlns:p="clr-namespace:IEDCollector.Properties"
         mc:Ignorable="d"
-        Title="IED Collector" Height="500" Width="800" ResizeMode="CanResizeWithGrip" Closing="handleClosing" SizeToContent="Manual">
+        Title="IED Collector - V1.0.1" Height="500" Width="800" ResizeMode="CanResizeWithGrip" Closing="handleClosing" SizeToContent="Manual">
     <Window.Resources>
         <BitmapImage CacheOption="None" x:Key="HddIcon" UriSource="Icons/hdd-network-fill.jpg" />
         <BitmapImage CacheOption="None" x:Key="FolderIcon" UriSource="Icons/folder-fill.jpg"/>
