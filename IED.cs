@@ -1,6 +1,7 @@
 ﻿using IEC61850.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -177,6 +178,7 @@ namespace IEDCollector
         /// <returns>The guessed name</returns>
         public string GuessDeviceName()
         {
+            
             List<string> devices = readLogicalDevices();
 
             string commonPrefix = devices[0].Substring(0, 1);
@@ -186,7 +188,10 @@ namespace IEDCollector
                 commonPrefix = devices[0].Substring(0, commonPrefix.Length + 1);
             }
 
-            return commonPrefix.Substring(0, commonPrefix.Length - 1);
+            //Debug.WriteLine("Device name: " + this.connection.GetMmsConnection().GetServerIdentity().revision);
+            //return this.connection.GetMmsConnection().GetServerIdentity().modelName;
+
+            return commonPrefix;
         }
 
         /// <summary>
@@ -561,6 +566,13 @@ namespace IEDCollector
             }
 
             return DownloadedFileState.DOWNLOADED;
+        }
+
+        public void ListenToTrigger()
+        {
+            this.connect(true);
+            //MmsConnection mms = this.connection.GetMmsConnection();
+            //mms.GetServerIdentity().modelName
         }
     }
 }

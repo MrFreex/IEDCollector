@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IEDCollector", "IEDCollecto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "License Generator", "..\License Generator\License Generator.csproj", "{F0439437-D650-4AF0-BCA8-F22698A4E959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "License Generator Rework", "..\License Generator Rework\License Generator Rework.csproj", "{AF675821-7C95-4703-9A2C-3F4B309F975D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "License Generator Rework", "..\License Generator Rework\License Generator Rework.csproj", "{AF675821-7C95-4703-9A2C-3F4B309F975D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IEDCollectorTests", "..\IEDCollectorTests\IEDCollectorTests.csproj", "{A7176678-50D7-445F-8B02-38B90E88C391}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AF675821-7C95-4703-9A2C-3F4B309F975D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF675821-7C95-4703-9A2C-3F4B309F975D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF675821-7C95-4703-9A2C-3F4B309F975D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7176678-50D7-445F-8B02-38B90E88C391}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7176678-50D7-445F-8B02-38B90E88C391}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7176678-50D7-445F-8B02-38B90E88C391}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7176678-50D7-445F-8B02-38B90E88C391}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
