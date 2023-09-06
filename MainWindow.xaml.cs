@@ -547,6 +547,8 @@ namespace IEDCollector
 
             InitializeComponent(); // Load all the WPF components
 
+            Main.main();
+
             Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) => // handle watchdog restart
             {
                 closeFromTray = true;

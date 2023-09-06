@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>IEDCollector.ico</ApplicationIcon>
+    <ApplicationIcon>Images\IEDCollector.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -76,6 +76,10 @@
     </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuane.SftpLite, Version=0.8.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>References\Nuane.SftpLite.dll</HintPath>
     </Reference>
     <Reference Include="Ookii.Dialogs.Wpf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -144,8 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppInfo.cs" />
-    <Compile Include="OptimizedBitmapImage.cs" />
+    <Compile Include="Lib\AppInfo.cs" />
+    <Compile Include="Lib\IParsable.cs" />
+    <Compile Include="Lib\XMLConfig.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -171,20 +177,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Services\SFTP-Server\SFTPServer.cs" />
     <Compile Include="Windows\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ComputerInfo.cs" />
+    <Compile Include="Lib\ComputerInfo.cs" />
     <Compile Include="Windows\Configuration.xaml.cs">
       <DependentUpon>Configuration.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FileMetadata.xaml.cs">
       <DependentUpon>FileMetadata.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileProgressMonitor.cs" />
-    <Compile Include="GlobalConfiguration.cs" />
-    <Compile Include="IED.cs" />
-    <Compile Include="ListBoxAsQueue.cs" />
+    <Compile Include="Lib\FileProgressMonitor.cs" />
+    <Compile Include="Services\Configuration\GlobalConfiguration.cs" />
+    <Compile Include="Services\Collection\IED.cs" />
+    <Compile Include="Lib\ListBoxAsQueue.cs" />
     <Compile Include="Windows\InsertLicense.xaml.cs">
       <DependentUpon>InsertLicense.xaml</DependentUpon>
     </Compile>
@@ -194,13 +201,13 @@
     <Compile Include="Windows\NewProfileDialog.xaml.cs">
       <DependentUpon>NewProfileDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profile.cs" />
+    <Compile Include="Services\Configuration\Profile.cs" />
     <Compile Include="Windows\Preferences.xaml.cs">
       <DependentUpon>Preferences.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Runner.cs" />
-    <Compile Include="Security.cs" />
-    <Compile Include="UserConfig.cs" />
+    <Compile Include="Services\Collection\Runner.cs" />
+    <Compile Include="Services\Licensing\Security.cs" />
+    <Compile Include="Services\Configuration\UserConfig.cs" />
     <Page Include="Windows\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -225,7 +232,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EmbeddedAssembly.cs" />
+    <Compile Include="Lib\EmbeddedAssembly.cs" />
     <Compile Include="Logs.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -238,10 +245,6 @@
     <Page Include="Windows\NewProfileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Play.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Preferences.xaml">
       <SubType>Designer</SubType>
@@ -333,9 +336,9 @@
     <Resource Include="Icons\folder-fill.jpg" />
     <Resource Include="Icons\hdd-network-fill.jpg" />
     <Resource Include="Icons\wrench-adjustable.jpg" />
+    <Content Include="References\Nuane.SftpLite.dll" />
     <Content Include="References\Ookii.Dialogs.Wpf.dll" />
     <Content Include="References\Ookii.Dialogs.Wpf.pdb" />
-    <Resource Include="Play.png" />
     <Resource Include="Icons\arrow-repeat.png" />
     <Resource Include="Icons\dash.png" />
     <Resource Include="Icons\folder-fill.png" />
@@ -348,16 +351,14 @@
     <Resource Include="Icons\pencil-fill.png" />
     <Resource Include="Icons\trash-fill.png" />
     <Resource Include="Icons\clipboard-fill.png" />
-    <Resource Include="clipboard-fill.png" />
     <Resource Include="Icons\folder-check.png" />
     <Resource Include="Icons\folder-plus.png" />
     <Resource Include="Icons\folder-x.png" />
     <Resource Include="Icons\hdd-network-fill.png" />
     <Resource Include="Icons\wrench-adjustable.png" />
     <Resource Include="Icons\file-earmark-text-fill.png" />
-    <Resource Include="file-earmark-text-fill.png" />
     <Resource Include="Icons\IEDCollector.ico" />
-    <Resource Include="IEDCollector.ico" />
+    <Resource Include="Images\IEDCollector.ico" />
     <Resource Include="Icons\database-fill-add.png" />
     <Resource Include="Icons\database-fill-down.png" />
     <Resource Include="Icons\database-fill-gear.png" />
@@ -373,7 +374,6 @@
     <EmbeddedResource Include="Embed\iec61850.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="Play.svg" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Locales\" />
