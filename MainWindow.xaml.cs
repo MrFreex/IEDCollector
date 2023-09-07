@@ -356,7 +356,7 @@ namespace IEDCollector
                 iedItem.Collapsed += (object sender, RoutedEventArgs e) =>
                 {
                     if (!e.Source.Equals(iedItem)) return;
-                   
+
                     // Clean the fuck out of the memory 
                     iedItem.Items.Clear();
 
@@ -365,7 +365,7 @@ namespace IEDCollector
                         Thread.Sleep(1000);
                         Application.Current.Dispatcher.Invoke(() => GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true));
                     }).Start();
-                    
+
                     iedItem.Items.Add("p");
                 };
 
@@ -536,7 +536,7 @@ namespace IEDCollector
                 };
             }
 
-            
+
         }
 
         public MainWindow()
@@ -901,7 +901,7 @@ namespace IEDCollector
             ied.logEnabledExtensions = new Dictionary<string, bool>();
             ied.logEnabledFolders = new Dictionary<string, bool>();
 
-            
+
 
             Globals.currentProfile.IEDs.Add(ied);
             ListBoxItem toAdd = new ListBoxItem();
@@ -1178,7 +1178,7 @@ namespace IEDCollector
         {
             List<T> ret = new List<T>();
 
-            foreach(T item in items)
+            foreach (T item in items)
             {
                 ret.Add(item);
             }
@@ -1925,7 +1925,7 @@ namespace IEDCollector
 
                 if (error != IedClientError.IED_ERROR_OK)
                 {
-                    
+
 
                     switch (error)
                     {

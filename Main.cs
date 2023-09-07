@@ -1,9 +1,6 @@
 ﻿using IEDCollector.Lib;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace IEDCollector
 {
@@ -14,7 +11,21 @@ namespace IEDCollector
 
         public static void main()
         {
-            new XMLConfig("C:\\Users\\fillo\\Desktop\\Projects\\Engiprot\\IEDCollector\\bin\\Debug\\DummyFile.txt").load();
+            Debug.WriteLine("MAIN");
+            new XMLConfig(@"C:\Users\fillo\Desktop\Projects\Engiprot\IEDCollector\bin\Debug\DummyFile.txt", new Dictionary<string, object>()
+            {
+                { "test", new Dictionary<string, object>()
+                    {
+                        {  "child1ofTest", "asd" },
+                        { "child2ofTest", "asd2" },
+                        { "child3ofTest", new Dictionary<string,object>()
+                            {
+                                { "asd", "asddd" }
+                            } 
+                        }
+                    } 
+                } 
+            });
 
         }
     }

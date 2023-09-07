@@ -1,11 +1,9 @@
 ﻿using IEC61850.Client;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading;
 
 namespace IEDCollector
 {
@@ -156,7 +154,7 @@ namespace IEDCollector
         {
             List<string> devices;
 
-            
+
 
             using (ConnStateHandler handler = new ConnStateHandler(this))
             {
@@ -178,7 +176,7 @@ namespace IEDCollector
         /// <returns>The guessed name</returns>
         public string GuessDeviceName()
         {
-            
+
             List<string> devices = readLogicalDevices();
 
             string commonPrefix = devices[0].Substring(0, 1);
@@ -300,7 +298,7 @@ namespace IEDCollector
                 }
             }, 10, "IED_GET_FILE_DIRECTORY");
 
-            
+
 
             Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>(new FileDirectoryEntryComparer());
 
@@ -418,12 +416,13 @@ namespace IEDCollector
                 {
                     ret = predicate(i);
                     ok = !ret.Equals(default(T));
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                     ok = false;
                 }
 
-                Globals.logs.log(String.Format("[{2}] Attempt n. {0}/{3} {1}", i+1, ok ? "succeeded" : "failed", log_string, times), LogLevel.Detailed);
+                Globals.logs.log(String.Format("[{2}] Attempt n. {0}/{3} {1}", i + 1, ok ? "succeeded" : "failed", log_string, times), LogLevel.Detailed);
                 i++;
             } while (!ok && i < times);
 
@@ -447,7 +446,7 @@ namespace IEDCollector
                 if (File.Exists(destination) && !overwrite && File.GetLastWriteTime(destination).Ticks >= DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks) return DownloadedFileState.SKIPPED_NEWER;
                 if (!Path.HasExtension(path.GetFileName())) return DownloadedFileState.SKIPPED_DIRECTORY; // Tried downloading a directory
 
-                
+
 
                 if (!this.config.logEnabledExtensions.TryGetValue(Path.GetExtension(path.GetFileName()), out filterPassed) || !filterPassed)
                 {
@@ -484,9 +483,9 @@ namespace IEDCollector
                     return DownloadedFileState.SKIPPED_FILTER;
                 }
             }
-            
 
-            
+
+
 
             try
             {
@@ -513,7 +512,8 @@ namespace IEDCollector
                         } while (File.Exists(newDestination));
 
                         string previous = Path.Combine(Path.GetDirectoryName(destination), Path.GetFileNameWithoutExtension(destination) + " (" + (append - 1) + ")" + Path.GetExtension(destination));
-                        if (File.Exists(previous)) {
+                        if (File.Exists(previous))
+                        {
                             if (File.GetLastWriteTime(previous).Ticks > DateTimeOffset.FromUnixTimeMilliseconds((long)path.GetLastModified()).Ticks)
                             {
                                 return DownloadedFileState.SKIPPED_NEWER;
@@ -557,7 +557,7 @@ namespace IEDCollector
                         return true;
                     }, 10, "IED_DOWNLOAD_FILE");
 
-                    
+
                 }
             }
             catch (IOException e)

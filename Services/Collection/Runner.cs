@@ -390,7 +390,7 @@ namespace IEDCollector
                         idling = true;
                         int waited = 0;
                         int toWait = cyclePeriod * 60 * 1000;
-                        
+
                         DateTime finished = DateTime.Now.AddMilliseconds(toWait);
                         while (DateTime.Now.Ticks < finished.Ticks && this.IsRunning) // ToDo : change this with user setting value
                         {

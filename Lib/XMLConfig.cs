@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -17,14 +12,43 @@ namespace IEDCollector.Lib
         public string File { get; set; }
         public XDocument Content { get; set; }
 
-        public XMLConfig(string filePath, XDocument defaultValue)
+        public XMLConfig(string filePath, Dictionary<string, object> defaultValue, string rootName)
         {
             this.File = filePath;
-            try { Load(); } catch (Exception e)
+            try { Load(); }
+            catch (Exception e)
             {
-                this.Content = defaultValue;
+                this.Content = new XDocument(this.ParseFromDict(defaultValue, rootName));
                 this.Save();
             }
+        }
+
+        public XMLConfig(string filePath, Dictionary<string, object> defaultValue) : this(filePath, defaultValue, "root")
+        {
+
+        }
+
+        private XElement ParseFromDict(Dictionary<string, object> dictionary, string elName)
+        {
+            //XElement finalEl = new XElement(elName);
+            XElement ret = new XElement(elName);
+
+            foreach (KeyValuePair<string, object> pair in dictionary)
+            {
+                XElement val;
+                if (pair.Value is Dictionary<string, object>)
+                {
+                    val = ParseFromDict((Dictionary<string, object>)pair.Value, pair.Key);
+                }
+                else
+                {
+                    val = new XElement(pair.Key, pair.Value);
+                }
+
+                ret.Add(val);
+            }
+
+            return ret;
         }
 
         private void Save()
@@ -38,7 +62,7 @@ namespace IEDCollector.Lib
             this.Get(new List<string>());
         }
 
-        public string Get (List<string> path)
+        public string Get(List<string> path)
         {
             //throw new NotImplementedException();
 
@@ -71,7 +95,8 @@ namespace IEDCollector.Lib
             return Boolean.Parse(Get(path));
         }
 
-        public void Set<T>(List<string> path, T value) {
+        public void Set<T>(List<string> path, T value)
+        {
             XElement current = this.Content.Root;
             for (int i = 0; i < path.Count; i++)
             {

@@ -3,7 +3,6 @@ using Ookii.Dialogs.Wpf;
 using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace IEDCollector.Windows
 {
