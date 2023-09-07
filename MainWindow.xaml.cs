@@ -2447,6 +2447,8 @@ namespace IEDCollector
                 IsChecked = true
             };
 
+            isIedSaved = false;
+
             input.KeyDown += (object s, KeyEventArgs ev) =>
             {
                 if (ev.Key == Key.Enter)
@@ -2530,6 +2532,8 @@ namespace IEDCollector
                 Content = input,
                 IsChecked = true
             };
+
+            isIedSaved = false;
 
             input.KeyDown += (object s, KeyEventArgs ev) =>
             {
