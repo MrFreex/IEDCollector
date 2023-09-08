@@ -282,7 +282,7 @@ namespace IEDCollector
 
 
             Globals.logs.log(String.Format("Reading file list for IED '[{0}] {1}' root: '{2}'", this.config.name, this.config.ip, root), LogLevel.Basic);
-
+            IedConnectionException e = null;
             files = attempt<List<FileDirectoryEntry>>((int attemptN) =>
             {
                 using (ConnStateHandler handler = new ConnStateHandler(this))
@@ -291,16 +291,20 @@ namespace IEDCollector
                     {
                         return this.Connection.GetFileDirectory(root);
                     }
-                    catch (IedConnectionException e)
+                    catch (IedConnectionException eI)
                     {
                         Globals.logs.log(String.Format("{1} Error: {0}", e.ToString(), root), LogLevel.Debug);
                         //files = new List<FileDirectoryEntry>();
-                        throw;
+                        e = eI;
+                        return null;
                     }
                 }
             }, 10, "IED_GET_FILE_DIRECTORY");
 
-            
+            if (files == null && e != null)
+            {
+                throw e;
+            }
 
             Dictionary<EditableFileDirectoryEntry, bool> completeTree = new Dictionary<EditableFileDirectoryEntry, bool>(new FileDirectoryEntryComparer());
 
@@ -421,7 +425,11 @@ namespace IEDCollector
                 } catch (Exception)
                 {
                     ok = false;
+                    
                 }
+
+                if (!ok)
+                    Debug.WriteLine("Attempt NOK");
 
                 Globals.logs.log(String.Format("[{2}] Attempt n. {0}/{3} {1}", i+1, ok ? "succeeded" : "failed", log_string, times), LogLevel.Detailed);
                 i++;
@@ -526,7 +534,7 @@ namespace IEDCollector
                     attempt<bool>((int attemptN) =>
                     {
                         if (attemptN > 0)
-                            this.connect(true);
+                            if (this.connect(true) != IedClientError.IED_ERROR_OK) return false;
 
                         try
                         {

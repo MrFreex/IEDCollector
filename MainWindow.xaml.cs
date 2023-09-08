@@ -595,6 +595,57 @@ namespace IEDCollector
 
             Globals.logs.log("Software started");
 
+            
+
+            //ied.connect();
+            /* DEBUG THREAD
+            new Thread(() =>
+            {
+                IED ied = new IED(new IEDConfig
+                {
+                    ip = "10.1.21.201",
+                    port = 102,
+                    username = "",
+                    password = "",
+                    logsFolder = "logs",
+                    logEnabledFolders = new Dictionary<string, bool>(),
+                    logEnabledExtensions = new Dictionary<string, bool>(),
+                    includedInCollection = true,
+                    protocol = "IEC61850",
+                });
+
+                Debug.WriteLine("Debug thread started");
+
+                bool ok = true;
+                while (ok)
+                {
+                    IedClientError err = IedClientError.IED_ERROR_OK;
+                    try {
+                        err = ied.connect(true);
+                        ok = err == IedClientError.IED_ERROR_OK || err == IedClientError.IED_ERROR_TIMEOUT;
+                    } catch (Exception ex) { Console.WriteLine(ex.Message); ok = false; }
+
+                    if (err == IedClientError.IED_ERROR_OK)
+                    {
+                        try
+                        {
+                            List<EditableFileDirectoryEntry> files = ied.ReadFileTree("");
+                            ok = files.Count > 0;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            ok = false;
+                        }
+                    }
+                    
+
+                    Thread.Sleep(100);
+                }
+            }).Start();
+            */
+            
+
             // Load the options.xml file in the programData root folder, it contains the data path for each user
 
             Globals.globalConfiguration = new GlobalConfiguration();
