@@ -19,143 +19,23 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using NotifyIcon = System.Windows.Forms.NotifyIcon;
 
+//Internal imports
+using IEDCollector.Services.Configuration;
+
 namespace IEDCollector
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-
-    static class Globals
-    {
-        public const string FOLDERSNAME = "IEDCollector";
-        public static OnProfileChange profileChangeHandler = null;
-        public static Runner currentProcess = null;
-        public static UserConfig config = null;
-        private static bool? freeMode = null;
-
-        public static bool IsFreeMode
-        {
-            get { return freeMode ?? true; }
-            set
-            {
-                if (freeMode == null)
-                {
-                    freeMode = value;
-
-                }
-            }
-        }
-
-
-        public delegate void OnProfileChange(bool renameOnly);
-
-        public static Profile currentProfile
-        {
-            get { return currProfile; }
-            set
-            {
-                currProfile = value;
-                if (profileChangeHandler != null)
-                {
-                    profileChangeHandler(false);
-                }
-            }
-        }
-
-        private static Profile currProfile;
-
-        public static Logs logs;
-        public static GlobalConfiguration globalConfiguration;
-    }
-
-    static class ConfigFolder
-    {
-
-        private static string folderPath;
-
-        public static string Path { get { return folderPath; } set { setFolderPath(value); } }
-
-        public const string LOGS = "logs";
-        public const string LOCALES = "locales";
-        public const string PROFILES = "profiles";
-        public const string IEDLOGSROOT = "IEDlogs";
-
-        public const string LASTPROFILEFILE = ".lastprofile";
-
-        public static string extend(string constant)
-        {
-            return System.IO.Path.Combine(folderPath, constant);
-        }
-
-        private static void setFolderPath(string folderPath)
-        {
-            ConfigFolder.folderPath = folderPath;
-        }
-    }
-
-    class FileData
-    {
-        private string fileName;
-
-        public FileData(string fileName) { this.fileName = fileName; }
-
-        public string getFileName() { return fileName; }
-    }
-
-    internal enum Language
-    {
-        English, Portuguese, Italian, Spanish, French
-    }
-
-
-
-    internal class Lang
-    {
-        public static Language language
-        {
-            get
-            {
-                using (RegistryKey licenseStorage = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
-                {
-                    if (licenseStorage == null) return Language.English;
-
-                    object value = licenseStorage.GetValue(Lang.LANGUAGE);
-
-                    if (value == null) return Language.English;
-
-                    Language license = (Language)int.Parse(value.ToString());
-
-                    return license;
-                }
-            }
-
-            set
-            {
-                using (RegistryKey licenseStorage = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Globals.FOLDERSNAME))
-                {
-                    licenseStorage.SetValue(Lang.LANGUAGE, ((int)value).ToString());
-                }
-            }
-        }
-
-        public static readonly Dictionary<Language, string> LanguageToCulture = new Dictionary<Language, string>()
-        {
-            { Language.English, "en-UK" },
-            { Language.Portuguese, "pt-PT" },
-            { Language.Italian, "it-IT" },
-            { Language.Spanish, "es-ES" },
-            { Language.French, "fr-FR" },
-            //{ Language.German, "de-de" },
-        };
-
-        public const string LANGUAGE = "language";
-    }
-
-
     public partial class MainWindow : Window
     {
-        private bool isIedSaved
+        private bool profileSaved = true;
+        private bool canExecute = false;
+        private bool isRunning = false;
+        private bool iedSaved = true;
+
+        private bool IsIedSaved
         {
             get
             {
@@ -186,8 +66,7 @@ namespace IEDCollector
                 iedSaved = value;
             }
         }
-        private bool iedSaved = true;
-        private bool isProfileSaved
+        private bool IsProfileSaved
         {
             get { return profileSaved; }
             set
@@ -201,10 +80,6 @@ namespace IEDCollector
                 profileSaved = value;
             }
         }
-        private bool profileSaved = true;
-
-        private bool canExecute = false;
-
         public bool CanExecute
         {
             set
@@ -220,9 +95,6 @@ namespace IEDCollector
                 return canExecute;
             }
         }
-
-        private bool isRunning = false;
-
         public bool IsRunning
         {
             set
@@ -250,295 +122,7 @@ namespace IEDCollector
             ConfigFolder.IEDLOGSROOT
         };
 
-        // Event handler for the checkboxes in the iedTree
-        private void iedCheckedUnchecked(IEDConfig c, bool isChecked)
-        {
-            c.includedInCollection = isChecked;
-
-            saveProfile(null, null);
-        }
-
-        bool stress = false;
-
-        // Responsible for loading the list of IEDs from the profile and loading their file structure
-        // The file structure is taken from the local folders and hence refers to the last fetched one.
-        private void populateIedTree()
-        {
-            iedTree.Items.Clear();
-
-            foreach (IEDConfig ied in Globals.currentProfile.IEDs)
-            {
-                TreeViewItem iedItem = new TreeViewItem();
-                StackPanel iconAndName = new StackPanel();
-
-                iconAndName.Orientation = Orientation.Horizontal;
-                CheckBox includedInCollection = new CheckBox();
-                includedInCollection.IsChecked = ied.includedInCollection;
-
-                includedInCollection.Checked += (object sender, RoutedEventArgs e) =>
-                {
-                    iedCheckedUnchecked(ied, true);
-                };
-                includedInCollection.Unchecked += (object sender, RoutedEventArgs e) =>
-                {
-                    iedCheckedUnchecked(ied, false);
-                };
-
-                iconAndName.Children.Add(includedInCollection);
-                iconAndName.Children.Add(new Image()
-                {
-                    Source = (BitmapImage)FindResource("HddIcon"),
-                    Width = 16,
-                    Height = 16,
-                    Margin = new Thickness(0, 0, 5, 0)
-                });
-                iconAndName.Children.Add(new TextBlock()
-                {
-                    Text = String.Format("[{0}] {1}", ied.name, ied.ip)
-                });
-
-                iedItem.Header = iconAndName;
-                iedItem.Tag = new IED(ied);
-                //iedItem.IsExpanded = true;
-                //iedItem.MouseDoubleClick += (object sender, MouseButtonEventArgs e) => Process.Start(ied.logsFolder);
-
-                ContextMenu actions = new ContextMenu();
-
-                MenuItem open = new MenuItem()
-                {
-                    Header = Properties.Resources.open,
-                    Icon = new Image()
-                    {
-                        Width = 16,
-                        Height = 16,
-                        Source = (BitmapImage)FindResource("FolderIcon")
-                    }
-                };
-
-                open.Click += (object sender, RoutedEventArgs e) => Process.Start(Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
-
-                actions.Items.Add(open);
-
-                iedItem.ContextMenu = actions;
-
-                iedItem.Items.Add("p");
-
-
-                iedItem.Expanded += (object sender, RoutedEventArgs e) =>
-                {
-                    // Debug stress test
-                    /*
-                    if (!stress)
-                    {
-                        stress = true;
-                        new Thread(() =>
-                        {
-                            while (true)
-                            {
-                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = false);
-                                Thread.Sleep(500);
-                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = true);
-                                Thread.Sleep(500);
-                            }
-                        }).Start();
-                    }
-                    */
-
-                    if (iedItem.Items.Count == 1 && iedItem.Items[0] is string)
-                    {
-                        Mouse.OverrideCursor = Cursors.Wait;
-                        iedItem.Items.Clear();
-                        buildIedFilesTree(ied, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
-                        Mouse.OverrideCursor = null;
-                    }
-                };
-
-                iedItem.Collapsed += (object sender, RoutedEventArgs e) =>
-                {
-                    if (!e.Source.Equals(iedItem)) return;
-
-                    // Clean the fuck out of the memory 
-                    iedItem.Items.Clear();
-
-                    new Thread(() =>
-                    {
-                        Thread.Sleep(1000);
-                        Application.Current.Dispatcher.Invoke(() => GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true));
-                    }).Start();
-
-                    iedItem.Items.Add("p");
-                };
-
-
-
-                iedTree.Items.Add(iedItem);
-            }
-
-
-            if (iedTree.Items.Count == 0)
-            {
-                iedTree.IsEnabled = false;
-                iedTree.Items.Add("No IEDs configured");
-
-                this.CanExecute = false;
-            }
-            else
-            {
-                iedTree.IsEnabled = true;
-                this.CanExecute = true;
-            }
-        }
-
-        // Adds the profile items to the selector
-        public void buildProfileSelector()
-        {
-            string[] profiles = Directory.GetFiles(ConfigFolder.extend(ConfigFolder.PROFILES), String.Format("*{0}", Profile.PROFILEEXTENSION));
-            profileSelector.Items.Clear();
-            profileSelector.IsEnabled = false;
-            foreach (string file in profiles)
-            {
-                string profileName = Path.GetFileNameWithoutExtension(file);
-                ComboBoxItem profile = new ComboBoxItem()
-                {
-                    Content = profileName,
-                    Tag = new Profile(profileName)
-                };
-
-                profileSelector.Items.Add(profile);
-            }
-            profileSelector.IsEnabled = true;
-        }
-
-        // On application startup, it is responsible to determine whether the user has a license or not.
-        // It also handles the "Switch to free mode" button.
-        // @return : true if the user has a valid license or opted for the free version, false otherwise.
-        public bool verifyLicense()
-        {
-
-            SecurityValidationResult res = Security.validate();
-
-            if (Security.IsFreeMode)
-            {
-                Globals.IsFreeMode = true;
-                return true;
-            }
-
-            Globals.IsFreeMode = false;
-
-            if (res == SecurityValidationResult.OK) return true;
-
-            if (res == SecurityValidationResult.UNSET || res == SecurityValidationResult.INVALID)
-            {
-                InsertLicense askForLicense = new InsertLicense();
-
-                //askForLicense.Description.Text = Properties.Resources.no_license_found_on_computer;
-
-                askForLicense.removeLicenseButton.IsEnabled = false;
-
-                askForLicense.ShowDialog();
-
-                if (Security.IsFreeMode)
-                {
-                    Globals.IsFreeMode = true;
-                    return true;
-                }
-
-                try
-                {
-                    string license = File.ReadAllText(askForLicense.licenseBox.Text);
-
-                    if (Security.validateLicense(license))
-                    {
-                        Security.setLicense(license);
-                        MessageBox.Show(Properties.Resources.messagebox_activation_successful, Properties.Resources.success, MessageBoxButton.OK);
-                        return true;
-                    }
-                    else
-                    {
-                        Application.Current.Shutdown();
-                        return false;
-                    }
-                }
-                catch (IOException)
-                {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
-        // Taken from IEDExplorer, helps resolve the iec61850 dlls
-        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            Globals.logs.log(String.Format("Loading assembly {0}", args.Name), LogLevel.Debug);
-            return EmbeddedAssembly.Get(args.Name);
-        }
-
-
         // Entry point
-
-        private BitmapImage upIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/caret-up-fill.png"));
-        private BitmapImage downIcon = new BitmapImage(new Uri("pack://application:,,,/Icons/caret-down-fill.png"));
-
-        public void MoveItem(int direction, ListBoxItem item)
-        {
-            // Checking selected item
-
-            // Calculate new index using move direction
-            int newIndex = iedSelector.Items.IndexOf(item) + direction;
-
-            // Checking bounds of the range
-            if (newIndex < 0 || newIndex >= iedSelector.Items.Count)
-                return; // Index out of range - nothing to do
-
-            ListBoxItem selected = item;
-
-            // Removing removable element
-            iedSelector.Items.Remove(selected);
-            Globals.currentProfile.IEDs.Remove((IEDConfig)selected.Tag);
-            // Insert it in new position
-
-            Globals.currentProfile.IEDs.Insert(newIndex, (IEDConfig)selected.Tag);
-            iedSelector.Items.Insert(newIndex, selected);
-            // Restore selection
-            //iedSelector.SetSelected(newIndex, true);
-
-            isProfileSaved = false;
-        }
-
-        private void addIedContextMenu(ListBoxItem add)
-        {
-            add.ContextMenu = new ContextMenu();
-            add.ContextMenu.Items.Add(new MenuItem()
-            {
-                Header = Properties.Resources.ied_move_up,
-                Tag = "up"
-            });
-            add.ContextMenu.Items.Add(new MenuItem()
-            {
-                Header = Properties.Resources.ied_move_down,
-                Tag = "down"
-            });
-
-            foreach (MenuItem item in add.ContextMenu.Items)
-            {
-                item.Click += (object sender, RoutedEventArgs e) =>
-                {
-                    if (item.Tag.Equals("up"))
-                    {
-                        MoveItem(-1, add);
-                    }
-                    else
-                    {
-                        MoveItem(1, add);
-                    }
-                };
-            }
-
-
-        }
-
         public MainWindow()
         {
             //initCulture();
@@ -546,8 +130,6 @@ namespace IEDCollector
             if (!verifyLicense()) return;
 
             InitializeComponent(); // Load all the WPF components
-
-            Main.main();
 
             Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) => // handle watchdog restart
             {
@@ -816,6 +398,291 @@ namespace IEDCollector
 
         }
 
+        // Event handler for the checkboxes in the iedTree
+        private void iedCheckedUnchecked(IEDConfig c, bool isChecked)
+        {
+            c.includedInCollection = isChecked;
+
+            saveProfile(null, null);
+        }
+
+        //bool stress = false;
+
+        // Responsible for loading the list of IEDs from the profile and loading their file structure
+        // The file structure is taken from the local folders and hence refers to the last fetched one.
+        private void populateIedTree()
+        {
+            iedTree.Items.Clear();
+
+            foreach (IEDConfig ied in Globals.currentProfile.IEDs)
+            {
+                TreeViewItem iedItem = new TreeViewItem();
+                StackPanel iconAndName = new StackPanel();
+
+                iconAndName.Orientation = Orientation.Horizontal;
+                CheckBox includedInCollection = new CheckBox();
+                includedInCollection.IsChecked = ied.includedInCollection;
+
+                includedInCollection.Checked += (object sender, RoutedEventArgs e) =>
+                {
+                    iedCheckedUnchecked(ied, true);
+                };
+                includedInCollection.Unchecked += (object sender, RoutedEventArgs e) =>
+                {
+                    iedCheckedUnchecked(ied, false);
+                };
+
+                iconAndName.Children.Add(includedInCollection);
+                iconAndName.Children.Add(new Image()
+                {
+                    Source = (BitmapImage)FindResource("HddIcon"),
+                    Width = 16,
+                    Height = 16,
+                    Margin = new Thickness(0, 0, 5, 0)
+                });
+                iconAndName.Children.Add(new TextBlock()
+                {
+                    Text = String.Format("[{0}] {1}", ied.name, ied.ip)
+                });
+
+                iedItem.Header = iconAndName;
+                iedItem.Tag = new IED(ied);
+                //iedItem.IsExpanded = true;
+                //iedItem.MouseDoubleClick += (object sender, MouseButtonEventArgs e) => Process.Start(ied.logsFolder);
+
+                ContextMenu actions = new ContextMenu();
+
+                MenuItem open = new MenuItem()
+                {
+                    Header = Properties.Resources.open,
+                    Icon = new Image()
+                    {
+                        Width = 16,
+                        Height = 16,
+                        Source = (BitmapImage)FindResource("FolderIcon")
+                    }
+                };
+
+                open.Click += (object sender, RoutedEventArgs e) => Process.Start(Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
+
+                actions.Items.Add(open);
+
+                iedItem.ContextMenu = actions;
+
+                iedItem.Items.Add("p");
+
+
+                iedItem.Expanded += (object sender, RoutedEventArgs e) =>
+                {
+                    // Debug stress test
+                    /*
+                    if (!stress)
+                    {
+                        stress = true;
+                        new Thread(() =>
+                        {
+                            while (true)
+                            {
+                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = false);
+                                Thread.Sleep(500);
+                                Application.Current.Dispatcher.Invoke(() => iedItem.IsExpanded = true);
+                                Thread.Sleep(500);
+                            }
+                        }).Start();
+                    }
+                    */
+
+                    if (iedItem.Items.Count == 1 && iedItem.Items[0] is string)
+                    {
+                        Mouse.OverrideCursor = Cursors.Wait;
+                        iedItem.Items.Clear();
+                        buildIedFilesTree(ied, iedItem, Path.Combine(Globals.currentProfile.Settings.RootFolder, ied.logsFolder));
+                        Mouse.OverrideCursor = null;
+                    }
+                };
+
+                iedItem.Collapsed += (object sender, RoutedEventArgs e) =>
+                {
+                    if (!e.Source.Equals(iedItem)) return;
+
+                    // Clean the fuck out of the memory 
+                    iedItem.Items.Clear();
+
+                    new Thread(() =>
+                    {
+                        Thread.Sleep(1000);
+                        Application.Current.Dispatcher.Invoke(() => GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true));
+                    }).Start();
+
+                    iedItem.Items.Add("p");
+                };
+
+
+
+                iedTree.Items.Add(iedItem);
+            }
+
+
+            if (iedTree.Items.Count == 0)
+            {
+                iedTree.IsEnabled = false;
+                iedTree.Items.Add("No IEDs configured");
+
+                this.CanExecute = false;
+            }
+            else
+            {
+                iedTree.IsEnabled = true;
+                this.CanExecute = true;
+            }
+        }
+
+        // Adds the profile items to the selector
+        public void buildProfileSelector()
+        {
+            string[] profiles = Directory.GetFiles(ConfigFolder.extend(ConfigFolder.PROFILES), String.Format("*{0}", Profile.PROFILEEXTENSION));
+            profileSelector.Items.Clear();
+            profileSelector.IsEnabled = false;
+            foreach (string file in profiles)
+            {
+                string profileName = Path.GetFileNameWithoutExtension(file);
+                ComboBoxItem profile = new ComboBoxItem()
+                {
+                    Content = profileName,
+                    Tag = new Profile(profileName)
+                };
+
+                profileSelector.Items.Add(profile);
+            }
+            profileSelector.IsEnabled = true;
+        }
+
+        // On application startup, it is responsible to determine whether the user has a license or not.
+        // It also handles the "Switch to free mode" button.
+        // @return : true if the user has a valid license or opted for the free version, false otherwise.
+        public bool verifyLicense()
+        {
+
+            SecurityValidationResult res = Security.validate();
+
+            if (Security.IsFreeMode)
+            {
+                Globals.IsFreeMode = true;
+                return true;
+            }
+
+            Globals.IsFreeMode = false;
+
+            if (res == SecurityValidationResult.OK) return true;
+
+            if (res == SecurityValidationResult.UNSET || res == SecurityValidationResult.INVALID)
+            {
+                InsertLicense askForLicense = new InsertLicense();
+
+                //askForLicense.Description.Text = Properties.Resources.no_license_found_on_computer;
+
+                askForLicense.removeLicenseButton.IsEnabled = false;
+
+                askForLicense.ShowDialog();
+
+                if (Security.IsFreeMode)
+                {
+                    Globals.IsFreeMode = true;
+                    return true;
+                }
+
+                try
+                {
+                    string license = File.ReadAllText(askForLicense.licenseBox.Text);
+
+                    if (Security.validateLicense(license))
+                    {
+                        Security.setLicense(license);
+                        MessageBox.Show(Properties.Resources.messagebox_activation_successful, Properties.Resources.success, MessageBoxButton.OK);
+                        return true;
+                    }
+                    else
+                    {
+                        Application.Current.Shutdown();
+                        return false;
+                    }
+                }
+                catch (IOException)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        // Taken from IEDExplorer, helps resolve the iec61850 dlls
+        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            Globals.logs.log(String.Format("Loading assembly {0}", args.Name), LogLevel.Debug);
+            return EmbeddedAssembly.Get(args.Name);
+        }
+
+        public void MoveItem(int direction, ListBoxItem item)
+        {
+            // Checking selected item
+
+            // Calculate new index using move direction
+            int newIndex = iedSelector.Items.IndexOf(item) + direction;
+
+            // Checking bounds of the range
+            if (newIndex < 0 || newIndex >= iedSelector.Items.Count)
+                return; // Index out of range - nothing to do
+
+            ListBoxItem selected = item;
+
+            // Removing removable element
+            iedSelector.Items.Remove(selected);
+            Globals.currentProfile.IEDs.Remove((IEDConfig)selected.Tag);
+            // Insert it in new position
+
+            Globals.currentProfile.IEDs.Insert(newIndex, (IEDConfig)selected.Tag);
+            iedSelector.Items.Insert(newIndex, selected);
+            // Restore selection
+            //iedSelector.SetSelected(newIndex, true);
+
+            IsProfileSaved = false;
+        }
+
+        private void addIedContextMenu(ListBoxItem add)
+        {
+            add.ContextMenu = new ContextMenu();
+            add.ContextMenu.Items.Add(new MenuItem()
+            {
+                Header = Properties.Resources.ied_move_up,
+                Tag = "up"
+            });
+            add.ContextMenu.Items.Add(new MenuItem()
+            {
+                Header = Properties.Resources.ied_move_down,
+                Tag = "down"
+            });
+
+            foreach (MenuItem item in add.ContextMenu.Items)
+            {
+                item.Click += (object sender, RoutedEventArgs e) =>
+                {
+                    if (item.Tag.Equals("up"))
+                    {
+                        MoveItem(-1, add);
+                    }
+                    else
+                    {
+                        MoveItem(1, add);
+                    }
+                };
+            }
+
+
+        }
+
+        
+
         private void toggleIedButtonsEnabled(bool toggle)
         {
             newIedBtn.IsEnabled = toggle;
@@ -889,8 +756,8 @@ namespace IEDCollector
                 iedSelector.IsEnabled = true;
             }
 
-            isProfileSaved = false;
-            isIedSaved = true;
+            IsProfileSaved = false;
+            IsIedSaved = true;
 
             IEDConfig ied = new IEDConfig();
             ied.name = Properties.Resources.new_ied;
@@ -949,31 +816,11 @@ namespace IEDCollector
 
                 Globals.currentProfile.IEDs.RemoveAt(index);
                 iedSelector.Items.RemoveAt(index);
-                isProfileSaved = false;
+                IsProfileSaved = false;
             }
         }
 
-        /* OLD, USED WHEN profileSelector didn't exist
-        private void loadProfile(object sender, RoutedEventArgs e)
-        {
-            Ookii.Dialogs.Wpf.VistaOpenFileDialog dialog = new Ookii.Dialogs.Wpf.VistaOpenFileDialog();
-            dialog.CheckFileExists = true;
-            dialog.CheckPathExists = true;
-
-            dialog.Title = "Select a profile to load";
-            dialog.DefaultExt = Profile.PROFILEEXTENSION;
-            dialog.Filter = String.Format("Alf profiles (*{0})|*{0}", Profile.PROFILEEXTENSION);
-            dialog.InitialDirectory = ConfigFolder.extend(ConfigFolder.PROFILES);
-            dialog.ValidateNames = true;
-            Nullable<bool> profileSelected = dialog.ShowDialog();
-
-            if (profileSelected != null && (bool)profileSelected)
-            {
-                Globals.currentProfile = new Profile(Path.GetFileName(dialog.FileName));
-                isProfileSaved = true;
-            }
-        }
-        */
+        
         private bool skipAtNext = false;
 
         // Called when the user changes the selected connection
@@ -995,7 +842,7 @@ namespace IEDCollector
                 return;
             }
 
-            if (!isIedSaved)
+            if (!IsIedSaved)
             {
                 MessageBoxResult messageBoxResult = MessageBox.Show(Properties.Resources.messagebox_save_connection, Properties.Resources.messagebox_save_connection_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                 if (messageBoxResult.Equals(MessageBoxResult.Yes))
@@ -1009,7 +856,7 @@ namespace IEDCollector
                 }
             }
 
-            isIedSaved = true;
+            IsIedSaved = true;
             IEDConfig selectedIed = getSelectedIed();
 
             if (selectedIed == null)
@@ -1042,8 +889,8 @@ namespace IEDCollector
                 add.Content = extension.Key;
                 add.IsChecked = extension.Value;
                 add.Tag = extension.Key;
-                add.Checked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
-                add.Unchecked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
+                add.Checked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
+                add.Unchecked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
                 iedLogExtensionsIncludedInput.Items.Add(add);
             }
 
@@ -1052,20 +899,20 @@ namespace IEDCollector
                 CheckBox add = new CheckBox();
                 add.Content = folder.Key.Equals(String.Empty) ? "/" : folder.Key;
                 add.IsChecked = folder.Value;
-                add.Checked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
-                add.Unchecked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
+                add.Checked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
+                add.Unchecked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
                 add.Tag = folder.Key;
                 iedLogFoldersIncludedInput.Items.Add(add);
             }
 
-            isIedSaved = true;
+            IsIedSaved = true;
         }
 
         // Called on the click of the "Create Profile" button
 
         private void createProfile(object sender, RoutedEventArgs e)
         {
-            if (Globals.currentProfile != null && !isProfileSaved)
+            if (Globals.currentProfile != null && !IsProfileSaved)
             {
                 TaskDialog dialog = new TaskDialog();
 
@@ -1262,8 +1109,8 @@ namespace IEDCollector
                 selectedIed.logEnabledFolders[final.Tag.ToString()] = (bool)final.IsChecked;
             }
 
-            isIedSaved = true;
-            isProfileSaved = false;
+            IsIedSaved = true;
+            IsProfileSaved = false;
         }
 
         // Called when the "Save connection" button is pressed
@@ -1363,20 +1210,20 @@ namespace IEDCollector
                 iedLogFolderInput.Text = iedNameInput.Text;
             }
             previousConnectionName = iedNameInput.Text;
-            isIedSaved = false;
+            IsIedSaved = false;
         }
 
         // Updates the bool "isIedSaved" to match the field status
         private void iedFieldChanged(object sender, object e)
         {
-            isIedSaved = false;
+            IsIedSaved = false;
         }
 
         // Called when the "Save profile" button is pressed
 
         private void saveProfile(object sender, RoutedEventArgs e)
         {
-            isProfileSaved = true;
+            IsProfileSaved = true;
 
             Globals.currentProfile.Settings.RootFolder = rootFolderInput.Text;
             Globals.currentProfile.Settings.PollingInterval = pollingInterval.Value == null ? 10 : (int)pollingInterval.Value;
@@ -1517,7 +1364,7 @@ namespace IEDCollector
 
                 }
 
-                if (!isProfileSaved || !isIedSaved)
+                if (!IsProfileSaved || !IsIedSaved)
                 {
                     MessageBoxResult res = MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if (res.Equals(MessageBoxResult.Yes))
@@ -1671,8 +1518,8 @@ namespace IEDCollector
                             extensionBox.Content = extension.Key;
                             extensionBox.Tag = extension.Key;
                             extensionBox.IsChecked = extension.Value;
-                            extensionBox.Checked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
-                            extensionBox.Unchecked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
+                            extensionBox.Checked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
+                            extensionBox.Unchecked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
                             iedLogExtensionsIncludedInput.Items.Add(extensionBox);
                         }
 
@@ -1690,12 +1537,12 @@ namespace IEDCollector
                             folderBox.Content = folder.Key.Equals(String.Empty) ? "/" : folder.Key;
                             folderBox.Tag = folder.Key;
                             folderBox.IsChecked = folder.Value;
-                            folderBox.Checked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
-                            folderBox.Unchecked += (object r, RoutedEventArgs args) => { isIedSaved = false; };
+                            folderBox.Checked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
+                            folderBox.Unchecked += (object r, RoutedEventArgs args) => { IsIedSaved = false; };
                             iedLogFoldersIncludedInput.Items.Add(folderBox);
                         }
 
-                        this.isIedSaved = false;
+                        this.IsIedSaved = false;
 
                         fetchDataText.Text = Properties.Resources.fetch_data;
 
@@ -2222,7 +2069,7 @@ namespace IEDCollector
             if (e.AddedItems.Count == 0 && e.RemovedItems.Count > 0) Globals.currentProfile = null;
             if (e.AddedItems.Count == 0 || !profileSelector.IsEnabled) return;
 
-            if (!isIedSaved || !isProfileSaved)
+            if (!IsIedSaved || !IsProfileSaved)
             {
                 TaskDialog askToSave = new TaskDialog();
                 askToSave.MainIcon = TaskDialogIcon.Warning;
@@ -2247,8 +2094,8 @@ namespace IEDCollector
 
                 ((ComboBoxItem)e.RemovedItems[0]).Content = Globals.currentProfile.Name;
 
-                isProfileSaved = true;
-                isIedSaved = true;
+                IsProfileSaved = true;
+                IsIedSaved = true;
             }
 
             ComboBoxItem profileCombo = (ComboBoxItem)e.AddedItems[0];
@@ -2289,7 +2136,7 @@ namespace IEDCollector
         private void profileFieldChanged(object sender, TextChangedEventArgs e)
         {
             if (Globals.currentProfile == null || rootFolderInput.Text == Globals.currentProfile.Settings.RootFolder) return;
-            isProfileSaved = false;
+            IsProfileSaved = false;
         }
 
         // Tells the software the profile is not saved when its root folder or polling interval field varies
@@ -2297,7 +2144,7 @@ namespace IEDCollector
         private void profileFieldChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (Globals.currentProfile == null || pollingInterval.Value == Globals.currentProfile.Settings.PollingInterval) return;
-            isProfileSaved = false;
+            IsProfileSaved = false;
         }
 
         // Called when the "Browse" button is clicked in the profile root folder selection
@@ -2375,7 +2222,7 @@ namespace IEDCollector
 
             if (res != null && (bool)res)
             {
-                if (!isProfileSaved)
+                if (!IsProfileSaved)
                 {
                     MessageBoxResult r = MessageBox.Show(Properties.Resources.messagebox_save_changes, Properties.Resources.messagebox_save_changes_title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 
@@ -2465,7 +2312,7 @@ namespace IEDCollector
             if (iedLogExtensionsIncludedInput.SelectedItem == null) return;
 
             iedLogExtensionsIncludedInput.Items.Remove(iedLogExtensionsIncludedInput.SelectedItem);
-            isIedSaved = false;
+            IsIedSaved = false;
         }
 
         private CheckBox checkBoxInputToFolder(CheckBox item)
@@ -2488,7 +2335,7 @@ namespace IEDCollector
             iedLogFoldersIncludedInput.Items.Remove(item);
             iedLogFoldersIncludedInput.Items.Add(added);
 
-            isIedSaved = false;
+            IsIedSaved = false;
 
             return added;
         }
@@ -2514,7 +2361,7 @@ namespace IEDCollector
             iedLogExtensionsIncludedInput.Items.Remove(item);
             iedLogExtensionsIncludedInput.Items.Add(added);
 
-            isIedSaved = false;
+            IsIedSaved = false;
 
             return added;
         }
@@ -2549,7 +2396,7 @@ namespace IEDCollector
             if (iedLogFoldersIncludedInput.SelectedItem == null) return;
 
             iedLogFoldersIncludedInput.Items.Remove(iedLogFoldersIncludedInput.SelectedItem);
-            isIedSaved = false;
+            IsIedSaved = false;
         }
     }
 }
