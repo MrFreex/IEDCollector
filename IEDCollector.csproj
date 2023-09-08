@@ -148,10 +148,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Globals.cs" />
     <Compile Include="Lib\AppInfo.cs" />
+    <Compile Include="Lib\FileData.cs" />
     <Compile Include="Lib\IParsable.cs" />
     <Compile Include="Lib\XMLConfig.cs" />
-    <Compile Include="Main.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -177,6 +178,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Services\Configuration\ConfigFolder.cs" />
+    <Compile Include="Services\Localization\Lang.cs" />
+    <Compile Include="Services\Localization\Language.cs" />
     <Compile Include="Services\SFTP-Server\SFTPServer.cs" />
     <Compile Include="Windows\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
