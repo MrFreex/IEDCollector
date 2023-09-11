@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 using System.Windows;
+using IEDCollector.Services.Localization;
 
 namespace IEDCollector
 {

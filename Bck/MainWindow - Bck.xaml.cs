@@ -21,9 +21,8 @@ using NotifyIcon = System.Windows.Forms.NotifyIcon;
 
 //Internal imports
 using IEDCollector.Services.Configuration;
-using System.Windows.Data;
 
-namespace IEDCollector
+namespace IEDCollectorBck
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -101,8 +100,8 @@ namespace IEDCollector
             set
             {
                 CanExecute = !value;
-                //menuOpenConfiguration.IsEnabled = !value;
-                //menuOpenPreferences.IsEnabled = !value;
+                menuOpenConfiguration.IsEnabled = !value;
+                menuOpenPreferences.IsEnabled = !value;
                 openLicenseButton.IsEnabled = !value;
                 stop.IsEnabled = value;
                 configurationModeTab.IsEnabled = !value;
@@ -114,7 +113,6 @@ namespace IEDCollector
                 return isRunning;
             }
         }
-        public bool IsIdle => !IsRunning;
 
         private static readonly string[] NEEDEDFOLDERS =
         {
@@ -124,19 +122,15 @@ namespace IEDCollector
             ConfigFolder.IEDLOGSROOT
         };
 
-        // Converters
-
-        
-
         // Entry point
         public MainWindow()
         {
             //initCulture();
 
             if (!verifyLicense()) return;
-            this.DataContext = this;
-            
+
             InitializeComponent(); // Load all the WPF components
+
             Application.Current.SessionEnding += (object sender, SessionEndingCancelEventArgs e) => // handle watchdog restart
             {
                 closeFromTray = true;
@@ -722,7 +716,7 @@ namespace IEDCollector
         private void openConfiguration(object sender, RoutedEventArgs e)
         {
             //TODO: Add logged in check (v2)
-            Debug.WriteLine(IsIdle);
+
             Configuration configuration = new Configuration();
 
             if (Globals.config.config.logFilesKept < 0)

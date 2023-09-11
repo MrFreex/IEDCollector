@@ -148,9 +148,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\MainWindow\IedTree.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Lib\AppInfo.cs" />
     <Compile Include="Lib\FileData.cs" />
+    <Compile Include="Lib\InverseBooleanConverter.cs" />
     <Compile Include="Lib\IParsable.cs" />
     <Compile Include="Lib\XMLConfig.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -380,7 +382,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Locales\" />
+    <Folder Include="Bck\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

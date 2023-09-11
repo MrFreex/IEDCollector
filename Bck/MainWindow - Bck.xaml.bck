@@ -16,9 +16,16 @@
     </Window.Resources>
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Menu DockPanel.Dock="Top">
+
+            <!-- <MenuItem Header="_File"> -->
+            <!-- <MenuItem Header="Login" /> -->
+            <!-- <MenuItem Header="Load" /> -->
+            <!-- <MenuItem Header="Save" /> -->
+            <!-- </MenuItem> -->
+
             <MenuItem Header="{x:Static p:Resources.options}">
-                <MenuItem IsEnabled="{Binding Path=IsIdle}" x:Name="menuOpenConfiguration" Header="{x:Static p:Resources.configuration}" Click="openConfiguration"/>
-                <MenuItem IsEnabled="{Binding Path=IsIdle}" x:Name="menuOpenPreferences" Header="{x:Static p:Resources.preferences}" Click="openPreferences"/>
+                <MenuItem x:Name="menuOpenConfiguration" Header="{x:Static p:Resources.configuration}" Click="openConfiguration"/>
+                <MenuItem x:Name="menuOpenPreferences" Header="{x:Static p:Resources.preferences}" Click="openPreferences"/>
             </MenuItem>
             <MenuItem Header="{x:Static p:Resources.about}" Click="openAbout"/>
             <MenuItem x:Name="openLicenseButton" Header="{x:Static p:Resources.license}" Click="openLicenseWindow"/>
