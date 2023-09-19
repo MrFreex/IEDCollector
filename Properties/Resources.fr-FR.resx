@@ -123,6 +123,9 @@
   <data name="activate" xml:space="preserve">
     <value>Activer</value>
   </data>
+  <data name="another_instance_running" xml:space="preserve">
+    <value>Another instance of IED Collector is already running, check the tray to check if it is minimized.</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Traverser</value>
   </data>

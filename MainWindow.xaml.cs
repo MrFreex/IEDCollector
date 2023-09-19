@@ -539,9 +539,30 @@ namespace IEDCollector
             
         }
 
+        static bool IsAlreadyRunning()
+        {
+            // Get the current process
+            Process currentProcess = Process.GetCurrentProcess();
+
+            // Get all processes with the same name as the current process
+            Process[] processes = Process.GetProcessesByName(currentProcess.ProcessName);
+
+            // Check if there are more than one processes. 
+            // If yes, then more than one instance of the application is running.
+            // Exclude the current process from the count.
+            return processes.Where(p => p.Id != currentProcess.Id).Any();
+        }
+
         public MainWindow()
         {
             //initCulture();
+
+            if (IsAlreadyRunning())
+            {
+                MessageBox.Show(Properties.Resources.another_instance_running, Properties.Resources.error, MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+                return;
+            }
 
             if (!verifyLicense()) return;
 

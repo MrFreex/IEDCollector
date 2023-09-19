@@ -123,6 +123,9 @@
   <data name="activate" xml:space="preserve">
     <value>Attiva</value>
   </data>
+  <data name="another_instance_running" xml:space="preserve">
+    <value>Un'altra istanza di IED Collector è già in esecuzione. Controlla il tray per verificare se un'istanza è attiva in background.</value>
+  </data>
   <data name="browse" xml:space="preserve">
     <value>Sfoglia</value>
   </data>

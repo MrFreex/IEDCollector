@@ -79,6 +79,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another instance of IED Collector is already running, check the tray to check if it is minimized..
+        /// </summary>
+        public static string another_instance_running {
+            get {
+                return ResourceManager.GetString("another_instance_running", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browse.
         /// </summary>
         public static string browse {
