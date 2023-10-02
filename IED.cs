@@ -299,7 +299,7 @@ namespace IEDCollector
                         return null;
                     }
                 }
-            }, 10, "IED_GET_FILE_DIRECTORY");
+            }, Globals.config.config.fetchAttempts, "IED_GET_FILE_DIRECTORY");
 
             if (files == null && e != null)
             {
@@ -563,7 +563,7 @@ namespace IEDCollector
                         }
 
                         return true;
-                    }, 10, "IED_DOWNLOAD_FILE");
+                    }, Globals.config.config.fetchAttempts, "IED_DOWNLOAD_FILE");
 
                     
                 }

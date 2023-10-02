@@ -935,6 +935,7 @@ namespace IEDCollector
             configuration.startWithWindows.IsChecked = Globals.config.config.startWithWindows;
             configuration.minimizeToTray.IsChecked = Globals.config.config.minimizeToTray;
             configuration.dataLocation.Text = ConfigFolder.Path;
+            configuration.fetchAttempts.Value = Globals.config.config.fetchAttempts;
 
             configuration.Show();
         }

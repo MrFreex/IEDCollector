@@ -80,6 +80,8 @@ namespace IEDCollector
             config.logFilesKept = (bool)keepAllLogFiles.IsChecked ? -1 : int.Parse(logFilesKept.Text);
             config.startWithWindows = (bool)startWithWindows.IsChecked;
             config.minimizeToTray = (bool)minimizeToTray.IsChecked;
+            if (fetchAttempts.Value != null)
+                config.fetchAttempts = (int)fetchAttempts.Value;
 
 
             config.logLevel = (LogLevel)((ComboBoxItem)logLevels.SelectedItem).Tag;

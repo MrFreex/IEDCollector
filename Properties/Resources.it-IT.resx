@@ -235,6 +235,9 @@
     <value>Sincronizzazione dati IED</value>
     <comment>Window title</comment>
   </data>
+  <data name="fetch_attempts" xml:space="preserve">
+    <value>Tentativi in caso di errore</value>
+  </data>
   <data name="fetch_data" xml:space="preserve">
     <value>Sincronizza</value>
   </data>

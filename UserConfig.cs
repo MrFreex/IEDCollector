@@ -14,12 +14,14 @@ namespace IEDCollector
         public bool startWithWindows;
         public bool minimizeToTray;
         public bool resumePollingOnStartup;
+        public int fetchAttempts;
 
         public const string LOGFILESKEPT = "logFilesKept";
         public const string LOGLEVEL = "logLevel";
         public const string STARTWITHWINDOWS = "startWithWindows";
         public const string RESUMEPOLLINGONSTARTUP = "resumePollingOnStartup";
         public const string MINIMIZETOTRAY = "minimizeToTray";
+        public const string FETCHATTEMPTS = "fetchAttempts";
     }
 
     internal class FSyncPreferences // Unused, but kept for future use
@@ -72,7 +74,8 @@ namespace IEDCollector
                 startWithWindows = false,
                 resumePollingOnStartup = false,
                 minimizeToTray = true,
-                logLevel = LogLevel.Basic
+                logLevel = LogLevel.Basic,
+                fetchAttempts = 3
             };
             /*
             FSyncPreferences preferences = this.preferences != null ? this.preferences : new FSyncPreferences()
@@ -92,7 +95,7 @@ namespace IEDCollector
                 }
             }
 
-            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup), new XElement(FSyncConfiguration.MINIMIZETOTRAY, config.minimizeToTray)), new XElement("preferences"/*, new XElement(FSyncPreferences.LANGUAGE, (int)preferences.language)*/)));
+            XDocument Xconfig = new XDocument(new XElement("root", new XElement("configuration", new XElement(FSyncConfiguration.LOGFILESKEPT, config.logFilesKept), new XElement(FSyncConfiguration.LOGLEVEL, ((int)config.logLevel)), new XElement(FSyncConfiguration.FETCHATTEMPTS, config.fetchAttempts), new XElement(FSyncConfiguration.STARTWITHWINDOWS, config.startWithWindows), new XElement(FSyncConfiguration.RESUMEPOLLINGONSTARTUP, config.resumePollingOnStartup), new XElement(FSyncConfiguration.MINIMIZETOTRAY, config.minimizeToTray)), new XElement("preferences"/*, new XElement(FSyncPreferences.LANGUAGE, (int)preferences.language)*/)));
 
             try
             {
@@ -129,7 +132,8 @@ namespace IEDCollector
                     logLevel = (LogLevel)int.Parse(getXmlValue(configurationNode, FSyncConfiguration.LOGLEVEL, 0)),
                     startWithWindows = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.STARTWITHWINDOWS, false)),
                     resumePollingOnStartup = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.RESUMEPOLLINGONSTARTUP, false)),
-                    minimizeToTray = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.MINIMIZETOTRAY, true))
+                    minimizeToTray = bool.Parse(getXmlValue(configurationNode, FSyncConfiguration.MINIMIZETOTRAY, true)),
+                    fetchAttempts = int.Parse(getXmlValue<int>(configurationNode, FSyncConfiguration.FETCHATTEMPTS, 3))
                 };
             }
             catch (Exception)

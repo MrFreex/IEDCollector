@@ -367,6 +367,15 @@ namespace IEDCollector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetch Attempts.
+        /// </summary>
+        public static string fetch_attempts {
+            get {
+                return ResourceManager.GetString("fetch_attempts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Synchronize.
         /// </summary>
         public static string fetch_data {
